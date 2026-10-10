@@ -7,7 +7,7 @@ type Peak = { name: string; elevation: number; region: string };
 
 const peaks: Peak[] = [
   { name: "Halti", elevation: 1324, region: "Enontekiö, Lapland" },
-  { name: "Sokosti", elevation: 718, region: "Salla, Lapland" },
+  { name: "Sokosti", elevation: 718, region: "Urho Kekkonen National Park, Lapland" },
   { name: "Taivaskero", elevation: 807, region: "Pallas-Yllästunturi, Lapland" },
   { name: "Ukko-Koli", elevation: 347, region: "Koli, North Karelia" },
   { name: "Saana", elevation: 1029, region: "Kilpisjärvi, Lapland" },
