@@ -1,10 +1,16 @@
 import Image from "next/image";
 import heroImage from "@/public/images/hero.jpg";
 
-// Full-bleed opening screen. The header overlays its top edge.
+// Full-width opening section at the photo's own aspect ratio, so the image is
+// never cropped on laptop and desktop screens. On narrow phones a minimum
+// height keeps the text clear of the header, which crops the sides slightly.
+// The header overlays its top edge.
 export function Hero() {
   return (
-    <section className="relative isolate flex min-h-svh items-center justify-center overflow-hidden px-6 text-center text-white">
+    <section
+      style={{ aspectRatio: `${heroImage.width} / ${heroImage.height}` }}
+      className="relative isolate flex min-h-[32rem] w-full items-center justify-center overflow-hidden px-6 text-center text-white"
+    >
       <Image
         src={heroImage}
         alt=""
@@ -17,11 +23,15 @@ export function Hero() {
       {/* Darkens the photo so the white text stays readable. */}
       <div aria-hidden="true" className="absolute inset-0 -z-10 bg-black/45" />
 
-      <div className="max-w-3xl">
-        <h1 className="font-heading text-5xl font-medium leading-[1.05] tracking-tight text-balance sm:text-7xl">
-          Remember Your Adventures
+      <div>
+        {/* Wide windows (aspect ratio 3:2 or wider) fit the heading on one
+            line; narrower windows break it after "Your". Font sizes scale with
+            the window width, like the image does. */}
+        <h1 className="font-heading text-[clamp(2.5rem,8vw,5rem)] font-medium leading-[1.05] tracking-tight wide:whitespace-nowrap wide:text-[clamp(2.5rem,6vw,7rem)]">
+          Remember Your
+          <br className="wide:hidden" /> Adventures
         </h1>
-        <p className="mx-auto mt-5 max-w-md font-heading text-lg text-white/90 text-pretty sm:text-xl">
+        <p className="mx-auto mt-5 max-w-md font-heading text-[clamp(1.125rem,1.5vw,1.5rem)] text-white/90 text-pretty wide:max-w-none">
           The tool you need for tracking your wildest achievements
         </p>
       </div>
