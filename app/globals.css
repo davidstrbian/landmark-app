@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* Windows at least as wide as the 3:2 hero photo, e.g. a full-screen laptop browser. */
+/* Windows with a 3:2 or wider aspect ratio, e.g. a full-screen laptop browser. */
 @custom-variant wide (@media (min-aspect-ratio: 3/2));
 
 :root {

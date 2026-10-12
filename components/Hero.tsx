@@ -1,15 +1,13 @@
 import Image from "next/image";
 import heroImage from "@/public/images/hero.jpg";
 
-// Full-width opening section at the photo's own aspect ratio, so the image is
-// never cropped on laptop and desktop screens. On narrow phones a minimum
-// height keeps the text clear of the header, which crops the sides slightly.
-// The header overlays its top edge.
+// Full-width opening banner with a fixed 1585×685 shape at every screen
+// width; the photo is cropped to fill it. On narrow screens a minimum height
+// keeps the text clear of the header. The header overlays its top edge.
 export function Hero() {
   return (
     <section
-      style={{ aspectRatio: `${heroImage.width} / ${heroImage.height}` }}
-      className="relative isolate flex min-h-[32rem] w-full items-center justify-center overflow-hidden px-6 text-center text-white"
+      className="relative isolate flex aspect-[1585/685] min-h-[26rem] w-full items-center justify-center overflow-hidden px-6 text-center text-white"
     >
       <Image
         src={heroImage}
