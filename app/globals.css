@@ -1,29 +1,16 @@
 @import "tailwindcss";
 
 :root {
-  --background: #f3f0e8;
-  --foreground: #1b2a23;
-  --card: #fbf9f4;
-  --muted: #667269;
-  --border: #d9d3c4;
-  --primary: #1f4d3a;
-  --primary-foreground: #f3f0e8;
-  --accent: #c9751f;
-  --contour: rgba(31, 77, 58, 0.09);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0e1613;
-    --foreground: #ebe7da;
-    --card: #15201b;
-    --muted: #93a096;
-    --border: #25352d;
-    --primary: #86c9a5;
-    --primary-foreground: #0e1613;
-    --accent: #f0a24f;
-    --contour: rgba(134, 201, 165, 0.09);
-  }
+  --background: #fafaf7;
+  --foreground: #1a1f1c;
+  --card: #ffffff;
+  --muted: #5c645f;
+  --subtle: #eef0ec;
+  --border: #e3e5df;
+  --primary: #1f6f54;
+  --primary-hover: #185a44;
+  --primary-soft: #e6f1ec;
+  --primary-foreground: #ffffff;
 }
 
 @theme inline {
@@ -31,13 +18,20 @@
   --color-foreground: var(--foreground);
   --color-card: var(--card);
   --color-muted: var(--muted);
+  --color-subtle: var(--subtle);
   --color-border: var(--border);
   --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-soft: var(--primary-soft);
   --color-primary-foreground: var(--primary-foreground);
-  --color-accent: var(--accent);
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-serif: var(--font-fraunces);
+  --shadow-soft: 0 1px 2px rgb(26 31 28 / 0.04), 0 4px 16px rgb(26 31 28 / 0.05);
+  --shadow-lift: 0 2px 4px rgb(26 31 28 / 0.05), 0 12px 32px rgb(26 31 28 / 0.09);
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
 }
 
 body {
@@ -46,19 +40,25 @@ body {
   font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
 
-.contours {
-  background-image: repeating-radial-gradient(
-    circle at 85% 0%,
-    transparent 0,
-    transparent 22px,
-    var(--contour) 22px,
-    var(--contour) 23px
-  );
-  mask-image: linear-gradient(to bottom, black 30%, transparent 100%);
+/* Lock page scroll while a modal dialog is open. */
+html:has(dialog[open]) {
+  overflow: hidden;
+}
+
+dialog::backdrop {
+  background: rgb(26 31 28 / 0.4);
+  backdrop-filter: blur(4px);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;
   }
 }

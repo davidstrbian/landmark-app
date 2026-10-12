@@ -1,28 +1,29 @@
-import PeakChecklist from "./peak-checklist";
+import { Footer } from "@/components/Footer";
+import { Header } from "@/components/Header";
+import { getLandmarks } from "@/lib/landmarks";
+import { Tracker } from "./tracker";
 
-export default function Home() {
+export default async function Home() {
+  const landmarks = await getLandmarks();
+
   return (
-    <main className="relative flex-1 overflow-hidden">
-      <div
-        aria-hidden="true"
-        className="contours pointer-events-none absolute inset-x-0 top-0 h-[28rem]"
-      />
-      <div className="relative mx-auto w-full max-w-3xl px-6 pb-24 pt-16 sm:pt-24">
-        <header className="mb-12 sm:mb-16">
-          <p className="mb-5 font-mono text-xs uppercase tracking-[0.2em] text-accent">
-            Landmark Tracker · Suomi
-          </p>
-          <h1 className="font-serif text-5xl font-medium leading-[1.05] tracking-tight text-balance sm:text-6xl">
-            Five fells, one summit at a time.
+    <>
+      <Header />
+      <main id="top" className="mx-auto w-full max-w-6xl flex-1 px-5 pt-14 sm:px-8 sm:pt-20">
+        <div className="max-w-3xl">
+          <p className="text-sm font-medium text-primary">Finland · V0.1</p>
+          <h1 className="mt-3 text-4xl font-semibold leading-[1.08] tracking-tight text-balance sm:text-6xl">
+            Explore Finland, one landmark at a time.
           </h1>
-          <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted text-pretty">
-            Track the peaks, trails and adventures you&apos;ve earned across
-            Finland. Start with the icons — from the roof of the country to the
-            hills of Karelia.
+          <p className="mt-5 max-w-2xl text-lg leading-relaxed text-muted text-pretty">
+            From Halti on the Norwegian border to the islands of the
+            Archipelago Sea, keep track of the fells, national parks and
+            natural sights you&apos;ve visited.
           </p>
-        </header>
-        <PeakChecklist />
-      </div>
-    </main>
+        </div>
+        <Tracker landmarks={landmarks} />
+      </main>
+      <Footer />
+    </>
   );
 }

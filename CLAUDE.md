@@ -6,26 +6,34 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Landmark Tracker: a small app for tracking peaks, trails and adventures. Next.js 16 (App Router) with React 19, TypeScript (strict) and Tailwind CSS v4.
+Finland Landmark Tracker (V0.1): a single-page app for browsing Finland's fells, national parks and natural landmarks and marking them visited. Next.js 16 (App Router), React 19, TypeScript (strict), Tailwind CSS v4, `lucide-react` icons. Deploy target is Vercel. There's no backend: visited state lives in `localStorage`. Supabase and auth are planned for V0.2.
+
+Out of scope for V0.1: accounts, Supabase, map view, social features, other countries, user-submitted landmarks, i18n.
 
 ## Commands
 
 ```bash
-npm ci            # install dependencies (node_modules is needed for the Next docs referenced in AGENTS.md)
-npm run dev       # dev server on http://localhost:3000
-npm run build     # production build; also type-checks the project
-npm run start     # serve the production build
-npm run lint      # ESLint (flat config: next core-web-vitals + typescript)
+npm ci              # install dependencies (node_modules is needed for the Next docs referenced in AGENTS.md)
+npm run dev         # dev server on http://localhost:3000
+npm run typecheck   # tsc --noEmit
+npm run lint        # ESLint (next core-web-vitals + typescript)
+npm run build       # production build
 ```
 
-There is no test framework set up yet, so `npm run lint` and `npm run build` are the checks to run before committing.
+There's no test framework. Before committing, run typecheck, lint and build, and check the page in a browser at mobile (390px) and desktop widths.
 
 ## Architecture
 
-- Everything lives under `app/` (App Router). `app/layout.tsx` is the root layout: it loads Geist, Geist Mono and Fraunces via `next/font/google` as CSS variables, sets `metadata` and a `viewport` theme color for light and dark, and imports `app/globals.css`.
-- Components are Server Components by default. Interactive UI goes in a separate file marked `"use client"` that a server page imports. For example, `app/page.tsx` (server, page header) renders `app/peak-checklist.tsx` (client, holds the ticked peaks in `useState`).
-- There's no backend, database or persistence. The peak data (name, elevation, region) is a hardcoded array in `peak-checklist.tsx`, and ticked state is lost on reload.
-- Icons come from `lucide-react`.
-- Styling uses Tailwind v4, configured CSS-first, with no `tailwind.config` file. `globals.css` defines the palette as CSS variables on `:root` (`--background`, `--card`, `--muted`, `--border`, `--primary`, `--accent`, …) with a `prefers-color-scheme: dark` override. An `@theme inline` block exposes them as Tailwind colors (`bg-card`, `text-muted`, `border-border`, …) and fonts (`font-sans` = Geist, `font-mono` = Geist Mono, `font-serif` = Fraunces). Use these tokens rather than raw colors. `postcss.config.mjs` only enables `@tailwindcss/postcss`.
-- The `@/*` import alias maps to the repo root (`tsconfig.json`).
-- `LayoutProps<"/">` in `layout.tsx` is a globally generated Next.js route type helper, not an import.
+- **Data:** `data/landmarks.ts` holds the `Landmark` type and every entry. UI code never imports it directly. It goes through `lib/landmarks.ts` (`getLandmarks()`, async), which is the point where Supabase gets swapped in.
+- **Visited state:** `lib/visited-store.ts` (`getVisited` / `setVisited` / `subscribe`) wraps `localStorage` key `landmarks.visited.v1`. Every storage access is in try/catch, and the store syncs across tabs. `hooks/use-visited.ts` reads it with `useSyncExternalStore`. The server snapshot is `null`, so `ready` is false during SSR and hydration and components show skeletons, not a mismatched state. Keep that shape when swapping the backend.
+- **Page composition:** `app/page.tsx` (server) loads landmarks and renders the hero plus `app/tracker.tsx` (client). `Tracker` owns the single `useVisited()` instance and passes it to both `ProgressBar` and `LandmarkGrid`. That's why toggling in the dialog updates the bar immediately. The progress bar always shows overall progress and ignores filters.
+- **Components:** `LandmarkGrid` owns the search query, the category filter and the selected landmark. Search ignores case and diacritics, so "yllas" finds "Ylläs". `LandmarkDialog` is a native `<dialog>` opened with `showModal()`, which provides the focus trap, Esc to close and focus return. A backdrop click is detected as `event.target === dialog`.
+- **Images:** `LandmarkImage` renders `next/image` when `landmark.image` is set. With no photo, or if the photo fails to load, it shows a gradient placeholder themed by category. Photos should be licensed (e.g. Wikimedia Commons), self-hosted under `public/landmarks/`, and credited in `imageCredit`.
+
+## Conventions
+
+- **Facts:** landmark facts follow Metsähallitus (luontoon.fi, formerly nationalparks.fi) first, then Wikipedia/Wikidata. Don't guess numbers. Descriptions are original text of 2–4 sentences.
+- **Styling:** Tailwind v4 is configured CSS-first in `app/globals.css`, with no tailwind config file. Colors are CSS variables exposed through `@theme inline` (`bg-background`, `bg-card`, `text-muted`, `bg-subtle`, `border-border`, `bg-primary`, `bg-primary-soft`, …), plus `shadow-soft` and `shadow-lift`. Use these tokens rather than raw colors. The design is light only: off-white `#FAFAF7`, a single spruce-green accent `#1F6F54`, 16–24px corners. Text colors are checked against WCAG AA.
+- **Interaction:** every interactive element gets a visible `focus-visible:outline-primary` ring. Motion uses `motion-safe:`, and `globals.css` disables transitions under `prefers-reduced-motion`.
+- **Next 16 APIs:** use `preload` on `next/image`, not the deprecated `priority`. `LayoutProps<"/">` is a globally generated route type, not an import.
+- **Imports:** `@/*` maps to the repo root.
