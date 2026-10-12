@@ -25,6 +25,8 @@
   --color-primary-soft: var(--primary-soft);
   --color-primary-foreground: var(--primary-foreground);
   --font-sans: var(--font-geist-sans);
+  --font-heading: var(--font-manrope);
+  --font-body: var(--font-poppins);
   --shadow-soft: 0 1px 2px rgb(26 31 28 / 0.04), 0 4px 16px rgb(26 31 28 / 0.05);
   --shadow-lift: 0 2px 4px rgb(26 31 28 / 0.05), 0 12px 32px rgb(26 31 28 / 0.09);
 }

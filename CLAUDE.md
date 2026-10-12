@@ -34,6 +34,7 @@ There's no test framework. Before committing, run typecheck, lint and build, and
 
 - **Facts:** landmark facts follow Metsähallitus (luontoon.fi, formerly nationalparks.fi) first, then Wikipedia/Wikidata. Don't guess numbers. Descriptions are original text of 2–4 sentences.
 - **Styling:** Tailwind v4 is configured CSS-first in `app/globals.css`, with no tailwind config file. Colors are CSS variables exposed through `@theme inline` (`bg-background`, `bg-card`, `text-muted`, `bg-subtle`, `border-border`, `bg-primary`, `bg-primary-soft`, …), plus `shadow-soft` and `shadow-lift`. Use these tokens rather than raw colors. The design is light only: off-white `#FAFAF7`, a single spruce-green accent `#1F6F54`, 16–24px corners. Text colors are checked against WCAG AA.
+- **Fonts:** new text uses Manrope for headings (`font-heading`) and Poppins for body copy (`font-body`), both loaded in `app/layout.tsx`. Older text still uses Geist (`font-sans`) until it's restyled.
 - **Interaction:** every interactive element gets a visible `focus-visible:outline-primary` ring. Motion uses `motion-safe:`, and `globals.css` disables transitions under `prefers-reduced-motion`.
 - **Next 16 APIs:** use `preload` on `next/image`, not the deprecated `priority`. `LayoutProps<"/">` is a globally generated route type, not an import.
 - **Imports:** `@/*` maps to the repo root.
