@@ -32,7 +32,7 @@ export function Tracker({ landmarks }: { landmarks: Landmark[] }) {
             id="landmarks-heading"
             className="mb-6 text-2xl font-semibold tracking-tight"
           >
-            Landmarks
+            National Parks
           </h2>
           <LandmarkGrid
             landmarks={others}
