@@ -42,6 +42,7 @@ export function LandmarkGrid({
   }, [landmarks, query, category]);
 
   const selected = landmarks.find((l) => l.id === selectedId) ?? null;
+  const categories = [...new Set(landmarks.map((l) => l.category))];
 
   return (
     <>
@@ -50,6 +51,7 @@ export function LandmarkGrid({
         onQueryChange={setQuery}
         category={category}
         onCategoryChange={setCategory}
+        categories={categories}
       />
 
       <p className="sr-only" aria-live="polite">

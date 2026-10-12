@@ -18,8 +18,8 @@ export function ProgressBar({ landmarks, visited, ready }: Props) {
   const count = landmarks.filter((l) => visited.has(l.id)).length;
   const percent = total === 0 ? 0 : Math.round((count / total) * 100);
 
-  const categories = (Object.keys(CATEGORY_SHORT) as LandmarkCategory[]).map(
-    (category) => {
+  const categories = (Object.keys(CATEGORY_SHORT) as LandmarkCategory[])
+    .map((category) => {
       const inCategory = landmarks.filter((l) => l.category === category);
       return {
         category,
@@ -27,8 +27,8 @@ export function ProgressBar({ landmarks, visited, ready }: Props) {
         done: inCategory.filter((l) => visited.has(l.id)).length,
         total: inCategory.length,
       };
-    },
-  );
+    })
+    .filter((c) => c.total > 0);
 
   return (
     <div className="rounded-3xl border border-border bg-card p-6 shadow-soft sm:p-8">

@@ -15,6 +15,7 @@ type Props = {
   onQueryChange: (query: string) => void;
   category: CategoryFilter;
   onCategoryChange: (category: CategoryFilter) => void;
+  categories: LandmarkCategory[]; // categories present in the list
 };
 
 export function FilterBar({
@@ -22,7 +23,14 @@ export function FilterBar({
   onQueryChange,
   category,
   onCategoryChange,
+  categories,
 }: Props) {
+  // Chips only make sense when there is more than one category to pick from.
+  const filters =
+    categories.length > 1
+      ? FILTERS.filter((f) => f.value === "all" || categories.includes(f.value))
+      : [];
+
   return (
     <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
       <div className="relative md:w-80">
@@ -44,30 +52,32 @@ export function FilterBar({
         />
       </div>
 
-      <div
-        role="group"
-        aria-label="Filter by category"
-        className="flex flex-wrap gap-2"
-      >
-        {FILTERS.map((filter) => {
-          const active = filter.value === category;
-          return (
-            <button
-              key={filter.value}
-              type="button"
-              aria-pressed={active}
-              onClick={() => onCategoryChange(filter.value)}
-              className={`rounded-full px-4 py-2 text-sm font-medium transition duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${
-                active
-                  ? "bg-primary text-primary-foreground shadow-soft"
-                  : "border border-border bg-card text-foreground hover:border-primary/50 hover:text-primary"
-              }`}
-            >
-              {filter.label}
-            </button>
-          );
-        })}
-      </div>
+      {filters.length > 0 && (
+        <div
+          role="group"
+          aria-label="Filter by category"
+          className="flex flex-wrap gap-2"
+        >
+          {filters.map((filter) => {
+            const active = filter.value === category;
+            return (
+              <button
+                key={filter.value}
+                type="button"
+                aria-pressed={active}
+                onClick={() => onCategoryChange(filter.value)}
+                className={`rounded-full px-4 py-2 text-sm font-medium transition duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary ${
+                  active
+                    ? "bg-primary text-primary-foreground shadow-soft"
+                    : "border border-border bg-card text-foreground hover:border-primary/50 hover:text-primary"
+                }`}
+              >
+                {filter.label}
+              </button>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

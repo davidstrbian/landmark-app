@@ -11,7 +11,7 @@ export default async function Home() {
     <>
       <Header />
       <Hero />
-      <main id="top" className="mx-auto w-full max-w-6xl flex-1 px-5 pt-6 sm:px-8 sm:pt-10">
+      <main id="top" className="flex-1">
         <Tracker landmarks={landmarks} />
       </main>
       <Footer />
