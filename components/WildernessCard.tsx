@@ -51,7 +51,7 @@ export function WildernessCard({ area, visited, ready, onOpen }: Props) {
             <span className="truncate">{area.region}</span>
           </p>
           {area.areaKm2 !== undefined && (
-            <span className="shrink-0 font-heading text-lg leading-5 font-medium tabular-nums text-dusk">
+            <span className="shrink-0 font-heading text-lg leading-5 font-medium tabular-nums text-dusk lg:text-base xl:text-lg">
               {formatArea(area.areaKm2)}
             </span>
           )}

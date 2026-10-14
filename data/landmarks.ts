@@ -293,7 +293,7 @@ export const landmarks: Landmark[] = [
     id: "muotkatunturi",
     name: "Muotkatunturi",
     category: "wilderness-area",
-    region: "Inari and Utsjoki",
+    region: "Inari",
     description:
       "Muotkatunturi stretches from a rolling, treeless fell plateau cut by river valleys in the north to mountain birch woods, bogs and old pine forests in the south. Lake Peltojärvi is its largest lake, fed by countless rivers and brooks. There are no marked trails, so visitors plan their own routes.",
     areaKm2: 1570,
@@ -306,7 +306,7 @@ export const landmarks: Landmark[] = [
     id: "kaldoaivi",
     name: "Kaldoaivi",
     category: "wilderness-area",
-    region: "Utsjoki and Inari",
+    region: "Utsjoki",
     description:
       "Kaldoaivi is Finland's largest wilderness area, a roadless expanse of fells that continues across the border into Norway. Its landscape ranges from deep, steep-sided river valleys to gentle fell slopes, and it is one of Finland's most important breeding grounds for arctic waders. The only marked route, the Sevettijärvi–Pulmanki trail, crosses it from south to north.",
     areaKm2: 2924,
@@ -332,7 +332,7 @@ export const landmarks: Landmark[] = [
     id: "hammastunturi",
     name: "Hammastunturi",
     category: "wilderness-area",
-    region: "Inari, Kittilä and Sodankylä",
+    region: "Inari",
     description:
       "Hammastunturi lies between Urho Kekkonen and Lemmenjoki national parks. Pine forests and low fells grow on nutrient-poor granulite bedrock, and the Ivalojoki river winds through the area. Its gold-rush past lives on at Kultala, where hundreds of prospectors once lived.",
     areaKm2: 1825,
@@ -397,7 +397,7 @@ export const landmarks: Landmark[] = [
     id: "pulju",
     name: "Pulju",
     category: "wilderness-area",
-    region: "Enontekiö and Kittilä",
+    region: "Enontekiö",
     description:
       "Pulju is a land of large mires and rounded hills and fells, with spruce on the southern hills giving way to pine and fell birch in the north. Road 956 runs through its centre, making it one of the easiest wilderness areas to reach. In late summer its mires draw cloudberry pickers.",
     areaKm2: 614,
@@ -423,7 +423,7 @@ export const landmarks: Landmark[] = [
     id: "tuntsa",
     name: "Tuntsa",
     category: "wilderness-area",
-    region: "Salla and Savukoski",
+    region: "Savukoski",
     description:
       "Tuntsa lies where the northern limit of spruce forest crosses eastern Lapland. In 1960 it was hit by Finland's largest recorded forest fire, and much of the burnt land is still open today, visible from the UKK hiking trail. Its bogs yield rich cloudberry crops and its slopes are covered in blueberry and lingonberry.",
     areaKm2: 212,
