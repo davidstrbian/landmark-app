@@ -20,6 +20,10 @@ export function FellsSection({
 }: Props) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selected = fells.find((f) => f.id === selectedId) ?? null;
+  // Lowest to tallest.
+  const sorted = [...fells].sort(
+    (a, b) => (a.elevationM ?? 0) - (b.elevationM ?? 0),
+  );
 
   return (
     <section
@@ -37,7 +41,7 @@ export function FellsSection({
         </h2>
 
         <ul className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {fells.map((fell) => (
+          {sorted.map((fell) => (
             <li key={fell.id} className="min-w-0">
               <FellCard
                 fell={fell}

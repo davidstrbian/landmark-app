@@ -6,6 +6,7 @@ import { COMPLETION, type FellField, type Landmark } from "@/data/landmarks";
 import { formatElevation } from "@/lib/format";
 import { LandmarkImage } from "./LandmarkImage";
 import { Modal } from "./Modal";
+import { StarRating } from "./StarRating";
 
 type Props = {
   fell: Landmark | null;
@@ -168,7 +169,11 @@ export function FellDialog({ fell, visited, onToggleVisited, onClose }: Props) {
                 )}
               </Fact>
               <Fact label="Difficulty" note={note("difficulty")}>
-                {fell.difficulty}
+                {fell.difficulty !== undefined && (
+                  <span className="mt-0.5 block">
+                    <StarRating value={fell.difficulty} label="Difficulty" />
+                  </span>
+                )}
               </Fact>
               <Fact label="Typical hike" note={note("hike")} wide>
                 {fell.hike && (
@@ -178,12 +183,31 @@ export function FellDialog({ fell, visited, onToggleVisited, onClose }: Props) {
                         {fell.hike.name}
                       </span>
                     )}
-                    <span className="block tabular-nums">
-                      {[fell.hike.distance, fell.hike.duration]
-                        .filter(Boolean)
-                        .join(" · ")}
-                    </span>
-                    <span className="block text-sm text-night-muted">
+                    <dl className="mt-3 grid grid-cols-3 gap-3">
+                      {[
+                        { label: "Distance", value: fell.hike.distance },
+                        { label: "Duration", value: fell.hike.duration },
+                        {
+                          label: "Elevation change",
+                          value:
+                            fell.hike.elevationGainM !== undefined
+                              ? `+${formatElevation(fell.hike.elevationGainM)}`
+                              : undefined,
+                        },
+                      ]
+                        .filter((stat) => stat.value)
+                        .map((stat) => (
+                          <div key={stat.label} className="min-w-0">
+                            <dt className="text-xs text-night-muted">
+                              {stat.label}
+                            </dt>
+                            <dd className="mt-0.5 font-medium tabular-nums">
+                              {stat.value}
+                            </dd>
+                          </div>
+                        ))}
+                    </dl>
+                    <span className="mt-3 block text-sm text-night-muted">
                       From {fell.hike.trailhead}
                     </span>
                   </>

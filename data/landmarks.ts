@@ -3,8 +3,9 @@ export type LandmarkCategory = "peak" | "national-park" | "wilderness-area";
 export type Hike = {
   name?: string; // the trail's own name, if it has one
   trailhead: string;
-  distance: string; // e.g. "8.2 km loop", "55 km one way"
+  distance: string; // e.g. "8.2 km", "71 km + 12 km"
   duration?: string;
+  elevationGainM?: number; // total ascent
 };
 
 // Fields shown in the fell detail view that can carry a note for review.
@@ -35,7 +36,7 @@ export type Landmark = {
   // then shows it as missing so it can be filled in later.
   // relief and protectedArea are kept in the data but not shown for now.
   relief?: { label: string; metres: number }; // prominence or height gain
-  difficulty?: string;
+  difficulty?: number; // 1–5 in half steps, shown as stars
   hike?: Hike;
   protectedArea?: string; // national park or wilderness area
   notes?: Partial<Record<FellField, string>>; // shown under the field
@@ -74,20 +75,15 @@ export const landmarks: Landmark[] = [
     image: "",
     lat: 69.3081,
     lng: 21.2633,
-    difficulty: "Demanding",
+    difficulty: 5,
     hike: {
-      name: "Kilpisjärvi–Halti route",
+      name: "Haltin vaellusreitti",
       trailhead: "Kilpisjärvi",
-      distance: "55 km one way",
-      duration: "7–10 days",
+      distance: "104 km",
+      duration: "7 days",
+      elevationGainM: 580,
     },
     protectedArea: "Käsivarsi Wilderness Area",
-    notes: {
-      relief:
-        "The Finnish high point is a shoulder of the Norwegian summit, so it has no prominence of its own (listed as 0 m). No height-gain figure found.",
-      difficulty:
-        "Metsähallitus calls it one of the most demanding hiking routes in Finland.",
-    },
   },
   {
     id: "saana",
@@ -101,18 +97,15 @@ export const landmarks: Landmark[] = [
     lat: 69.0436,
     lng: 20.8561,
     relief: { label: "Height above Lake Kilpisjärvi", metres: 556 },
+    difficulty: 3.5,
     hike: {
-      name: "Saana summit trail",
+      name: "Saanan huiputus",
       trailhead: "Malla and Saana parking area, Kilpisjärvi",
-      distance: "4.3 km one way",
-      duration: "4–6 h there and back",
+      distance: "8.6 km",
+      duration: "4 h",
+      elevationGainM: 550,
     },
     protectedArea: "Saana Nature Reserve",
-    notes: {
-      difficulty:
-        "No official rating found. Third-party guides range from easy to hard.",
-      hike: "One hut guide reports the summit trail closed since summer 2025 to protect sensitive habitat. Not confirmed by Metsähallitus; please check luontoon.fi.",
-    },
   },
   {
     id: "ukko-koli",
@@ -126,12 +119,12 @@ export const landmarks: Landmark[] = [
     lat: 63.0944,
     lng: 29.8086,
     relief: { label: "Prominence", metres: 253 },
-    difficulty: "Medium",
+    difficulty: 1,
     hike: {
-      name: "Huippujen kierros (Trail of the Tops)",
+      name: "Huippujen kierros",
       trailhead: "Koli Nature Centre Ukko",
-      distance: "1.4 km loop",
-      duration: "30 min–1 h",
+      distance: "1.4 km",
+      duration: "30 min",
     },
     protectedArea: "Koli National Park",
   },
@@ -147,12 +140,13 @@ export const landmarks: Landmark[] = [
     lat: 68.074833,
     lng: 24.053361,
     relief: { label: "Prominence", metres: 509 },
-    difficulty: "Medium",
+    difficulty: 3,
     hike: {
       name: "Taivaskeron kierros",
       trailhead: "Pallastunturi Visitor Centre",
-      distance: "8.2 km loop",
-      duration: "about 3.5 h",
+      distance: "8.2 km",
+      duration: "3.5 h",
+      elevationGainM: 350,
     },
     protectedArea: "Pallas-Yllästunturi National Park",
   },
@@ -167,18 +161,15 @@ export const landmarks: Landmark[] = [
     image: "",
     lat: 68.219,
     lng: 28.1376,
+    difficulty: 4.5,
     hike: {
-      name: "Luirojärvi loop with a side trip to the summit",
+      name: "Luirojärven kierros + Sokostin huiputus",
       trailhead: "Kiilopää",
-      distance: "about 71 km loop",
-      duration: "about 7 days",
+      distance: "71 km + 12 km",
+      duration: "5 days",
+      elevationGainM: 430,
     },
     protectedArea: "Urho Kekkonen National Park",
-    notes: {
-      relief: "No prominence or height-gain figure found.",
-      difficulty: "No official difficulty rating found.",
-      hike: "The summit is about 6 km one way from the Luirojärvi lakeshore; guides suggest setting aside a full day for it.",
-    },
   },
   {
     id: "kiilopaa",
@@ -191,17 +182,15 @@ export const landmarks: Landmark[] = [
     image: "",
     lat: 68.341703,
     lng: 27.503431,
-    difficulty: "Medium",
+    difficulty: 2.5,
     hike: {
       name: "Kiirunapolku",
       trailhead: "Kiilopää fell centre",
-      distance: "5.7 km loop",
-      duration: "2–3 h",
+      distance: "5.7 km",
+      duration: "2.5 h",
+      elevationGainM: 210,
     },
     protectedArea: "Urho Kekkonen National Park",
-    notes: {
-      relief: "No prominence or height-gain figure found.",
-    },
   },
   {
     id: "riisitunturi",
@@ -214,17 +203,15 @@ export const landmarks: Landmark[] = [
     image: "",
     lat: 66.223,
     lng: 28.5591,
-    difficulty: "Medium",
+    difficulty: 1.5,
     hike: {
       name: "Riisin rääpäsy",
       trailhead: "Riisitunturi car park",
-      distance: "4.5 km loop",
-      duration: "2–3 h",
+      distance: "4.5 km",
+      duration: "2 h",
+      elevationGainM: 120,
     },
     protectedArea: "Riisitunturi National Park",
-    notes: {
-      relief: "No prominence or height-gain figure found.",
-    },
   },
   {
     id: "noitatunturi",
@@ -238,17 +225,15 @@ export const landmarks: Landmark[] = [
     lat: 67.0138,
     lng: 27.1483,
     relief: { label: "Prominence", metres: 339 },
-    difficulty: "Hard",
+    difficulty: 3.5,
     hike: {
-      name: "Trail to Noitatunturi Fell",
+      name: "Noitatunturin valloitus",
       trailhead: "Pyhä Nature Centre Naava",
-      distance: "12.5 km partial loop",
-      duration: "4–6 h",
+      distance: "12.5 km",
+      duration: "5 h",
+      elevationGainM: 340,
     },
     protectedArea: "Pyhä-Luosto National Park",
-    notes: {
-      hike: "The trailhead is from an older Metsähallitus listing, which gave the length as 14.5 km.",
-    },
   },
 
   {
@@ -262,15 +247,13 @@ export const landmarks: Landmark[] = [
     image: "",
     lat: 67.867643,
     lng: 23.94985,
-    difficulty: "Easy",
+    difficulty: 2.5,
     hike: {
       name: "Särkitunturin saavutus",
       trailhead: "Särkitunturi parking area, road 79",
-      distance: "3.2 km",
-      duration: "about 2.5 h",
-    },
-    notes: {
-      hike: "An outdoor blog says the 3.2 km is one way; the official listing doesn't say.",
+      distance: "6.4 km",
+      duration: "3 h",
+      elevationGainM: 190,
     },
     // Elevation: 492 m in most sources, but one Komoot listing gives 510 m.
     // Protected area: none found; the fell is just outside the national park.
@@ -286,16 +269,15 @@ export const landmarks: Landmark[] = [
     image: "",
     lat: 67.722,
     lng: 25.5612,
+    difficulty: 3,
     hike: {
-      name: "Kumputunturi Fell Trail",
+      name: "Kumputunturin reitti",
       trailhead: "Kittilä–Sodankylä road (road 80), then a gravel road",
-      distance: "7.5 km",
+      distance: "8.4 km",
+      duration: "3.5 h",
+      elevationGainM: 320,
     },
     protectedArea: "Natura 2000 site",
-    notes: {
-      difficulty: "No difficulty rating found.",
-      hike: "No duration found, and sources don't say whether the 7.5 km is one way or a loop. Metsähallitus warns not to use the old western trail, which crosses private land.",
-    },
   },
 
   // National parks
