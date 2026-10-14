@@ -92,6 +92,16 @@ body {
   );
 }
 
+/* Progress band under the hero: night tones that fade into the Finnish
+   Fells mist at the bottom edge. */
+.bg-night-fade {
+  background: linear-gradient(
+    to bottom,
+    var(--night) calc(100% - 8rem),
+    var(--mist)
+  );
+}
+
 /* Lock page scroll while a modal dialog is open. */
 html:has(dialog[open]) {
   overflow: hidden;

@@ -7,8 +7,8 @@ import { LandmarkGrid } from "@/components/LandmarkGrid";
 import { ProgressBar } from "@/components/ProgressBar";
 import { WildernessSection } from "@/components/WildernessSection";
 
-// One useVisited instance shared by the fells, the progress bar and the grid,
-// so toggling a landmark in either dialog updates the bar immediately.
+// One useVisited instance shared by the progress bars and every section, so
+// toggling a landmark in any dialog updates the bars immediately.
 export function Tracker({ landmarks }: { landmarks: Landmark[] }) {
   const { visited, ready, toggle } = useVisited();
   const fells = landmarks.filter((l) => l.category === "peak");
@@ -17,6 +17,17 @@ export function Tracker({ landmarks }: { landmarks: Landmark[] }) {
 
   return (
     <>
+      {/* Overall progress, straight under the hero in its night tones. It
+          fades into the Finnish Fells grey at its bottom edge. */}
+      <section
+        aria-labelledby="progress-heading"
+        className="bg-night-fade pb-32 pt-10 sm:pb-36 sm:pt-14"
+      >
+        <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
+          <ProgressBar landmarks={landmarks} visited={visited} ready={ready} />
+        </div>
+      </section>
+
       <FellsSection
         fells={fells}
         visited={visited}
@@ -31,8 +42,7 @@ export function Tracker({ landmarks }: { landmarks: Landmark[] }) {
         onToggleVisited={toggle}
       />
 
-      {/* National Parks, then overall progress at the very bottom, on the
-          page's off-white background. */}
+      {/* National Parks on the page's off-white background. */}
       <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
         <section id="landmarks" aria-labelledby="landmarks-heading">
           <h2
@@ -58,10 +68,6 @@ export function Tracker({ landmarks }: { landmarks: Landmark[] }) {
             ready={ready}
             onToggleVisited={toggle}
           />
-        </section>
-
-        <section aria-label="Your progress" className="mt-24">
-          <ProgressBar landmarks={landmarks} visited={visited} ready={ready} />
         </section>
       </div>
     </>
