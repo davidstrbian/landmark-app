@@ -83,7 +83,6 @@ export const landmarks: Landmark[] = [
     },
     protectedArea: "Käsivarsi Wilderness Area",
     notes: {
-      coordinates: "From Mapcarta; please check against an official map.",
       relief:
         "The Finnish high point is a shoulder of the Norwegian summit, so it has no prominence of its own (listed as 0 m). No height-gain figure found.",
       difficulty:
@@ -145,6 +144,8 @@ export const landmarks: Landmark[] = [
       "Taivaskero is the highest summit of the Pallastunturi fells and of the whole Pallas-Yllästunturi National Park. A popular loop trail starts at the Pallastunturi visitor centre and crosses bare, rocky fell tops. In 1952 a flame for the Helsinki Olympic torch relay was lit on its summit by the midnight sun.",
     elevationM: 809,
     image: "",
+    lat: 68.074833,
+    lng: 24.053361,
     relief: { label: "Prominence", metres: 509 },
     difficulty: "Medium",
     hike: {
@@ -154,9 +155,6 @@ export const landmarks: Landmark[] = [
       duration: "about 3.5 h",
     },
     protectedArea: "Pallas-Yllästunturi National Park",
-    notes: {
-      coordinates: "No reliable summit coordinates found.",
-    },
   },
   {
     id: "sokosti",
@@ -191,6 +189,8 @@ export const landmarks: Landmark[] = [
       "Kiilopää is one of the best-known fells of the Saariselkä area, a rounded, bare-topped summit right next to the Kiilopää fell centre. A well-marked trail climbs to the top in about two kilometres, with long sections of steps. From the summit the wilderness of Urho Kekkonen National Park stretches as far as the eye can see.",
     elevationM: 546,
     image: "",
+    lat: 68.341703,
+    lng: 27.503431,
     difficulty: "Medium",
     hike: {
       name: "Kiirunapolku",
@@ -200,7 +200,6 @@ export const landmarks: Landmark[] = [
     },
     protectedArea: "Urho Kekkonen National Park",
     notes: {
-      coordinates: "No reliable summit coordinates found.",
       relief: "No prominence or height-gain figure found.",
     },
   },
@@ -224,8 +223,6 @@ export const landmarks: Landmark[] = [
     },
     protectedArea: "Riisitunturi National Park",
     notes: {
-      coordinates:
-        "From the National Land Survey benchmark named Riisitunturi (465.7 m), which may not be the exact summit.",
       relief: "No prominence or height-gain figure found.",
     },
   },
@@ -263,6 +260,8 @@ export const landmarks: Landmark[] = [
       "Särkitunturi is a compact fell in Muonio, just outside Pallas-Yllästunturi National Park, with its trailhead right by road 79 between Muonio and Levi. A short, signposted trail leads past a campfire shelter to the summit. It is one of the quickest ways to reach open fell-top views in western Lapland.",
     elevationM: 492,
     image: "",
+    lat: 67.867643,
+    lng: 23.94985,
     difficulty: "Easy",
     hike: {
       name: "Särkitunturin saavutus",
@@ -271,7 +270,6 @@ export const landmarks: Landmark[] = [
       duration: "about 2.5 h",
     },
     notes: {
-      coordinates: "No reliable summit coordinates found.",
       hike: "An outdoor blog says the 3.2 km is one way; the official listing doesn't say.",
     },
     // Elevation: 492 m in most sources, but one Komoot listing gives 510 m.
