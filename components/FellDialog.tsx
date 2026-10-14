@@ -80,18 +80,20 @@ function Fact({
   label,
   note,
   wide,
+  className,
   children,
 }: {
   label: string;
   note?: string;
   wide?: boolean;
+  className?: string;
   children?: ReactNode;
 }) {
   // Callers pass `cond && <el />`, so a missing value arrives as false.
   const missing = children == null || children === false;
   return (
     <div
-      className={`rounded-2xl bg-night-raised p-4 ${wide ? "sm:col-span-2" : ""}`}
+      className={`rounded-2xl bg-night-raised p-4 ${wide ? "sm:col-span-2" : ""} ${className ?? ""}`}
     >
       <dt className="font-body text-xs font-medium uppercase tracking-wide text-night-muted">
         {label}
@@ -168,7 +170,12 @@ export function FellDialog({ fell, visited, onToggleVisited, onClose }: Props) {
                   />
                 )}
               </Fact>
-              <Fact label="Difficulty" note={note("difficulty")}>
+              {/* On phones (single column) difficulty comes first. */}
+              <Fact
+                label="Difficulty"
+                note={note("difficulty")}
+                className="order-first sm:order-none"
+              >
                 {fell.difficulty !== undefined && (
                   <span className="mt-0.5 block">
                     <StarRating value={fell.difficulty} label="Difficulty" />
