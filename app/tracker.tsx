@@ -5,13 +5,14 @@ import { useVisited } from "@/hooks/use-visited";
 import { FellsSection } from "@/components/FellsSection";
 import { LandmarkGrid } from "@/components/LandmarkGrid";
 import { ProgressBar } from "@/components/ProgressBar";
+import { WildernessSection } from "@/components/WildernessSection";
 
 // One useVisited instance shared by the fells, the progress bar and the grid,
 // so toggling a landmark in either dialog updates the bar immediately.
 export function Tracker({ landmarks }: { landmarks: Landmark[] }) {
   const { visited, ready, toggle } = useVisited();
   const fells = landmarks.filter((l) => l.category === "peak");
-  const others = landmarks.filter((l) => l.category !== "peak");
+  const parks = landmarks.filter((l) => l.category === "national-park");
 
   return (
     <>
@@ -22,8 +23,11 @@ export function Tracker({ landmarks }: { landmarks: Landmark[] }) {
         onToggleVisited={toggle}
       />
 
-      <div className="mx-auto w-full max-w-6xl px-5 pt-6 sm:px-8 sm:pt-10">
-        <section aria-label="Your progress" className="mt-10">
+      <WildernessSection />
+
+      {/* National Parks, on the page's off-white background. */}
+      <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
+        <section aria-label="Your progress">
           <ProgressBar landmarks={landmarks} visited={visited} ready={ready} />
         </section>
 
@@ -35,7 +39,7 @@ export function Tracker({ landmarks }: { landmarks: Landmark[] }) {
             National Parks
           </h2>
           <LandmarkGrid
-            landmarks={others}
+            landmarks={parks}
             visited={visited}
             ready={ready}
             onToggleVisited={toggle}
