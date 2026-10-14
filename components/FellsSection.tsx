@@ -20,9 +20,9 @@ export function FellsSection({
 }: Props) {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const selected = fells.find((f) => f.id === selectedId) ?? null;
-  // Lowest to tallest.
+  // Tallest to lowest.
   const sorted = [...fells].sort(
-    (a, b) => (a.elevationM ?? 0) - (b.elevationM ?? 0),
+    (a, b) => (b.elevationM ?? 0) - (a.elevationM ?? 0),
   );
 
   return (
@@ -40,8 +40,8 @@ export function FellsSection({
           Finnish Fells
         </h2>
         <p className="mt-3 font-heading text-lg font-medium sm:text-xl">
-          Ten fells, from the lakeside hills of Koli to Finland&apos;s highest
-          point.
+          Ten fells, from Finland&apos;s highest point to the lakeside hills of
+          Koli.
         </p>
         <p className="mt-3 max-w-3xl font-body leading-relaxed text-mist-ink/75">
           A fell, or tunturi, is a rounded hill or mountain whose bare summit
