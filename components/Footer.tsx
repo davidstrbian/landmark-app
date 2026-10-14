@@ -7,15 +7,8 @@ export function Footer() {
           <p className="mt-3 max-w-prose leading-relaxed text-muted">
             Landmark Tracker is a simple checklist of Finland&apos;s fells,
             national parks and natural sights. Open a landmark to learn about
-            it, then mark it visited. Your progress is saved in this browser
-            only, so there&apos;s no account needed.
-          </p>
-          <p className="mt-3 max-w-prose leading-relaxed text-muted">
-            Under &ldquo;Other&rdquo; we&apos;ve picked two of Finland&apos;s
-            most striking canyons: Kevo, the long river canyon of the far north,
-            and Julma-Ölkky, the country&apos;s largest canyon lake. They show a
-            side of Finnish nature that neither the fells nor the parks list
-            fully covers.
+            it, then mark it conquered or visited. Your progress is saved in
+            this browser only, so there&apos;s no account needed.
           </p>
         </div>
         <div className="text-sm text-muted">

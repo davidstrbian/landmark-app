@@ -1,4 +1,20 @@
-export type LandmarkCategory = "peak" | "national-park" | "other";
+export type LandmarkCategory = "peak" | "national-park" | "wilderness-area";
+
+export type Hike = {
+  name?: string; // the trail's own name, if it has one
+  trailhead: string;
+  distance: string; // e.g. "8.2 km", "71 km + 12 km"
+  duration?: string;
+  elevationGainM?: number; // total ascent
+};
+
+// Fields shown in the fell detail view that can carry a note for review.
+export type FellField =
+  | "coordinates"
+  | "relief"
+  | "difficulty"
+  | "hike"
+  | "protectedArea";
 
 export type Landmark = {
   id: string; // slug
@@ -12,20 +28,42 @@ export type Landmark = {
   nearestTown?: string;
   image: string; // path under /public, or "" until a licensed photo is added
   imageCredit?: string;
-  lat: number; // not displayed in V0.1; needed for a later map
-  lng: number;
+  // Omitted when no reliable source was found; not displayed for parks yet.
+  lat?: number;
+  lng?: number;
+
+  // Fell details. Leave a field out when it can't be sourced; the detail view
+  // then shows it as missing so it can be filled in later.
+  // relief and protectedArea are kept in the data but not shown for now.
+  relief?: { label: string; metres: number }; // prominence or height gain
+  difficulty?: number; // 1–5 in half steps, shown as stars
+  hike?: Hike;
+  protectedArea?: string; // national park or wilderness area
+  notes?: Partial<Record<FellField, string>>; // shown under the field
 };
 
 export const CATEGORY_LABELS: Record<LandmarkCategory, string> = {
   peak: "Peak",
   "national-park": "National park",
-  other: "Other",
+  "wilderness-area": "Wilderness area",
+};
+
+// What completing a landmark is called: peaks are conquered, parks and
+// wilderness areas are visited.
+export const COMPLETION: Record<
+  LandmarkCategory,
+  { done: string; action: string }
+> = {
+  peak: { done: "Conquered", action: "Mark as conquered" },
+  "national-park": { done: "Visited", action: "Mark as visited" },
+  "wilderness-area": { done: "Visited", action: "Mark as visited" },
 };
 
 // Figures follow Metsähallitus (nationalparks.fi / luontoon.fi) where available,
-// otherwise Wikipedia/Wikidata. Park coordinates are a representative centre point.
+// otherwise Wikipedia/Wikidata/PeakVisor. Park coordinates are a representative
+// centre point.
 export const landmarks: Landmark[] = [
-  // Peaks and fells
+  // Finnish fells, in display order
   {
     id: "halti",
     name: "Halti",
@@ -34,11 +72,18 @@ export const landmarks: Landmark[] = [
     description:
       "Finland's highest point sits on a shoulder of Halti fell, right on the Norwegian border in the far northwest. Reaching it is a multi-day trek across open, treeless Käsivarsi wilderness, usually from Kilpisjärvi along the Nordkalott Trail. The summit cairn rewards the effort with views over Norway's higher peaks.",
     elevationM: 1324,
-    bestSeason: "Late June to mid-September",
-    nearestTown: "Kilpisjärvi",
     image: "",
     lat: 69.3081,
     lng: 21.2633,
+    difficulty: 5,
+    hike: {
+      name: "Haltin vaellusreitti",
+      trailhead: "Kilpisjärvi",
+      distance: "104 km",
+      duration: "7 days",
+      elevationGainM: 580,
+    },
+    protectedArea: "Käsivarsi Wilderness Area",
   },
   {
     id: "saana",
@@ -46,83 +91,21 @@ export const landmarks: Landmark[] = [
     category: "peak",
     region: "Enontekiö, Lapland",
     description:
-      "Saana's flat-topped, steep-sided silhouette towers over Kilpisjärvi village and lake, making it one of Finland's most recognisable fells. A marked trail with long wooden staircases climbs to the summit plateau. On a clear day you can see into Sweden and Norway.",
+      "Saana's flat-topped, steep-sided silhouette towers over Kilpisjärvi village and lake, making it one of Finland's most recognisable fells. The fell is protected as part of the Saana Nature Reserve. On a clear day the views from the top reach into Sweden and Norway.",
     elevationM: 1029,
-    bestSeason: "Late June to September",
-    nearestTown: "Kilpisjärvi",
     image: "",
     lat: 69.0436,
     lng: 20.8561,
-  },
-  {
-    id: "yllastunturi",
-    name: "Yllästunturi",
-    category: "peak",
-    region: "Kolari, Lapland",
-    description:
-      "Ylläs is the southern anchor of the Pallas-Yllästunturi fell chain and one of Lapland's best-known ski fells. In summer its slopes open up to hikers and mountain bikers heading into the national park. The villages of Äkäslompolo and Ylläsjärvi sit at its feet.",
-    elevationM: 718,
-    bestSeason: "February to April for skiing; July to September for hiking",
-    nearestTown: "Äkäslompolo",
-    image: "",
-    lat: 67.5644,
-    lng: 24.2244,
-  },
-  {
-    id: "taivaskero",
-    name: "Taivaskero",
-    category: "peak",
-    region: "Muonio, Lapland",
-    description:
-      "Taivaskero is the highest summit of the Pallastunturi fells and of the whole Pallas-Yllästunturi National Park. A popular loop trail starts at the Pallastunturi visitor centre and crosses bare, rocky fell tops. In 1952 a flame for the Helsinki Olympic torch relay was lit on its summit by the midnight sun.",
-    elevationM: 809,
-    bestSeason: "July to September",
-    nearestTown: "Muonio",
-    image: "",
-    lat: 68.0535,
-    lng: 24.0961,
-  },
-  {
-    id: "pyhatunturi",
-    name: "Pyhätunturi",
-    category: "peak",
-    region: "Pelkosenniemi, Lapland",
-    description:
-      "Pyhätunturi is the southern end of Pyhä-Luosto National Park, a chain of old, worn-down fells rising out of the forests and mires. Its highest top, Noitatunturi, looks down into the Isokuru gorge. The area is a favourite for autumn-colour hikes and winter skiing.",
-    elevationM: 540,
-    bestSeason: "September for autumn colours; March to April for skiing",
-    nearestTown: "Pyhätunturi village",
-    image: "",
-    lat: 67.0138,
-    lng: 27.1483,
-  },
-  {
-    id: "rukatunturi",
-    name: "Rukatunturi",
-    category: "peak",
-    region: "Kuusamo, North Ostrobothnia",
-    description:
-      "Ruka is the largest fell in the Kuusamo uplands and home to one of Finland's busiest ski resorts. Its season starts early, and the resort hosts World Cup ski jumping and cross-country races. In summer, trails link it to the wilderness of nearby Oulanka.",
-    elevationM: 492,
-    bestSeason: "November to May for snow; summer for hiking",
-    nearestTown: "Kuusamo",
-    image: "",
-    lat: 66.1633,
-    lng: 29.1233,
-  },
-  {
-    id: "levitunturi",
-    name: "Levitunturi",
-    category: "peak",
-    region: "Kittilä, Lapland",
-    description:
-      "Levi is a rounded fell above the village of Sirkka and the heart of one of Finland's largest ski resorts. Gondolas run to the top all year, so the summit views over western Lapland are easy to reach. In autumn the surrounding birch forests turn deep orange.",
-    elevationM: 531,
-    bestSeason: "December to April for skiing; September for autumn colours",
-    nearestTown: "Kittilä",
-    image: "",
-    lat: 67.805,
-    lng: 24.8019,
+    relief: { label: "Height above Lake Kilpisjärvi", metres: 556 },
+    difficulty: 3.5,
+    hike: {
+      name: "Saanan huiputus",
+      trailhead: "Malla and Saana parking area, Kilpisjärvi",
+      distance: "8.6 km",
+      duration: "4 h",
+      elevationGainM: 550,
+    },
+    protectedArea: "Saana Nature Reserve",
   },
   {
     id: "ukko-koli",
@@ -132,25 +115,169 @@ export const landmarks: Landmark[] = [
     description:
       "Ukko-Koli is the highest of the Koli hills, rising about 250 metres above Lake Pielinen. Its view of islands scattered across the lake inspired Finnish painters and composers in the 1890s and became a symbol of Finnish national landscape. A short path leads from the Koli visitor centre to the summit rocks.",
     elevationM: 347,
-    bestSeason: "Year-round; September for autumn colours",
-    nearestTown: "Koli",
     image: "",
     lat: 63.0944,
     lng: 29.8086,
+    relief: { label: "Prominence", metres: 253 },
+    difficulty: 1,
+    hike: {
+      name: "Huippujen kierros",
+      trailhead: "Koli Nature Centre Ukko",
+      distance: "1.4 km",
+      duration: "30 min",
+    },
+    protectedArea: "Koli National Park",
+  },
+  {
+    id: "taivaskero",
+    name: "Taivaskero",
+    category: "peak",
+    region: "Muonio, Lapland",
+    description:
+      "Taivaskero is the highest summit of the Pallastunturi fells and of the whole Pallas-Yllästunturi National Park. A popular loop trail starts at the Pallastunturi visitor centre and crosses bare, rocky fell tops. In 1952 a flame for the Helsinki Olympic torch relay was lit on its summit by the midnight sun.",
+    elevationM: 809,
+    image: "",
+    lat: 68.074833,
+    lng: 24.053361,
+    relief: { label: "Prominence", metres: 509 },
+    difficulty: 3,
+    hike: {
+      name: "Taivaskeron kierros",
+      trailhead: "Pallastunturi Visitor Centre",
+      distance: "8.2 km",
+      duration: "3.5 h",
+      elevationGainM: 350,
+    },
+    protectedArea: "Pallas-Yllästunturi National Park",
   },
   {
     id: "sokosti",
     name: "Sokosti",
     category: "peak",
-    region: "Urho Kekkonen National Park, Lapland",
+    region: "Sodankylä, Lapland",
     description:
       "Sokosti is the highest fell in Urho Kekkonen National Park and in eastern Lapland. It rises from the remote heart of the park, a few kilometres east of Lake Luirojärvi, and is usually climbed as part of a multi-day wilderness trek. From the bouldery summit the Saariselkä fells roll away in every direction.",
     elevationM: 718,
-    bestSeason: "Late June to mid-September",
-    nearestTown: "Saariselkä",
     image: "",
     lat: 68.219,
     lng: 28.1376,
+    difficulty: 4.5,
+    hike: {
+      name: "Luirojärven kierros + Sokostin huiputus",
+      trailhead: "Kiilopää",
+      distance: "71 km + 12 km",
+      duration: "5 days",
+      elevationGainM: 430,
+    },
+    protectedArea: "Urho Kekkonen National Park",
+  },
+  {
+    id: "kiilopaa",
+    name: "Kiilopää",
+    category: "peak",
+    region: "Inari and Sodankylä, Lapland",
+    description:
+      "Kiilopää is one of the best-known fells of the Saariselkä area, a rounded, bare-topped summit right next to the Kiilopää fell centre. A well-marked trail climbs to the top in about two kilometres, with long sections of steps. From the summit the wilderness of Urho Kekkonen National Park stretches as far as the eye can see.",
+    elevationM: 546,
+    image: "",
+    lat: 68.341703,
+    lng: 27.503431,
+    difficulty: 2.5,
+    hike: {
+      name: "Kiirunapolku",
+      trailhead: "Kiilopää fell centre",
+      distance: "5.7 km",
+      duration: "2.5 h",
+      elevationGainM: 210,
+    },
+    protectedArea: "Urho Kekkonen National Park",
+  },
+  {
+    id: "riisitunturi",
+    name: "Riisitunturi",
+    category: "peak",
+    region: "Posio, Lapland",
+    description:
+      "Riisitunturi is a twin-topped fell and the highest point of Riisitunturi National Park in Posio. In winter its spruces disappear under thick crown snow, turning the slopes into a landscape of frozen white figures. A short loop trail from the car park climbs to the open summit.",
+    elevationM: 465,
+    image: "",
+    lat: 66.223,
+    lng: 28.5591,
+    difficulty: 1.5,
+    hike: {
+      name: "Riisin rääpäsy",
+      trailhead: "Riisitunturi car park",
+      distance: "4.5 km",
+      duration: "2 h",
+      elevationGainM: 120,
+    },
+    protectedArea: "Riisitunturi National Park",
+  },
+  {
+    id: "noitatunturi",
+    name: "Noitatunturi",
+    category: "peak",
+    region: "Pelkosenniemi, Lapland",
+    description:
+      "Noitatunturi, the 'witch fell', is the highest top of the Pyhätunturi fell chain and of Pyhä-Luosto National Park. The final climb is steep and rocky. From the summit the view opens over the forests and wide aapa mires of southern Lapland.",
+    elevationM: 540,
+    image: "",
+    lat: 67.0138,
+    lng: 27.1483,
+    relief: { label: "Prominence", metres: 339 },
+    difficulty: 3.5,
+    hike: {
+      name: "Noitatunturin valloitus",
+      trailhead: "Pyhä Nature Centre Naava",
+      distance: "12.5 km",
+      duration: "5 h",
+      elevationGainM: 340,
+    },
+    protectedArea: "Pyhä-Luosto National Park",
+  },
+
+  {
+    id: "sarkitunturi",
+    name: "Särkitunturi",
+    category: "peak",
+    region: "Muonio, Lapland",
+    description:
+      "Särkitunturi is a compact fell in Muonio, just outside Pallas-Yllästunturi National Park, with its trailhead right by road 79 between Muonio and Levi. A short, signposted trail leads past a campfire shelter to the summit. It is one of the quickest ways to reach open fell-top views in western Lapland.",
+    elevationM: 492,
+    image: "",
+    lat: 67.867643,
+    lng: 23.94985,
+    difficulty: 2.5,
+    hike: {
+      name: "Särkitunturin saavutus",
+      trailhead: "Särkitunturi parking area, road 79",
+      distance: "6.4 km",
+      duration: "3 h",
+      elevationGainM: 190,
+    },
+    // Elevation: 492 m in most sources, but one Komoot listing gives 510 m.
+    // Protected area: none found; the fell is just outside the national park.
+  },
+  {
+    id: "kumputunturi",
+    name: "Kumputunturi",
+    category: "peak",
+    region: "Kittilä, Lapland",
+    description:
+      "Kumputunturi is a solitary fell in Kittilä with a steep northern face and a gentler southern slope. The fell and its surroundings are a Natura 2000 site, and Metsähallitus lists it as a historical site. There are no facilities on the open summit, and fog or storms can roll in within hours.",
+    elevationM: 581,
+    image: "",
+    lat: 67.722,
+    lng: 25.5612,
+    difficulty: 3,
+    hike: {
+      name: "Kumputunturin reitti",
+      trailhead: "Kittilä–Sodankylä road (road 80), then a gravel road",
+      distance: "8.4 km",
+      duration: "3.5 h",
+      elevationGainM: 320,
+    },
+    protectedArea: "Natura 2000 site",
   },
 
   // National parks
@@ -321,33 +448,5 @@ export const landmarks: Landmark[] = [
     image: "",
     lat: 60.6806,
     lng: 23.8583,
-  },
-
-  // Other notable landmarks
-  {
-    id: "kevo-canyon",
-    name: "Kevo Canyon",
-    category: "other",
-    region: "Utsjoki, Lapland",
-    description:
-      "The Kevojoki river has carved a canyon about 40 kilometres long through the fells of the far north, in places some 80 metres deep. It lies inside Kevo Strict Nature Reserve, where visitors must stay on the marked route along the valley. Waterfalls, steep scree slopes and lush valley floors make it one of Lapland's most dramatic hikes.",
-    bestSeason: "Late June to mid-September",
-    nearestTown: "Utsjoki",
-    image: "",
-    lat: 69.5808,
-    lng: 26.7156,
-  },
-  {
-    id: "julma-olkky",
-    name: "Julma-Ölkky",
-    category: "other",
-    region: "Kuusamo, North Ostrobothnia",
-    description:
-      "Julma-Ölkky is the largest of Finland's canyon lakes: a narrow lake roughly three kilometres long, enclosed by cliffs that rise almost 50 metres from the water. It lies at the edge of Hossa National Park. In summer you can explore it by boat or canoe, or hike the rim on the Ölökyn ähkäsy trail.",
-    bestSeason: "June to September",
-    nearestTown: "Kuusamo",
-    image: "",
-    lat: 65.55,
-    lng: 29.3283,
   },
 ];

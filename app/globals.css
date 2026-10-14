@@ -1,5 +1,8 @@
 @import "tailwindcss";
 
+/* Windows with a 3:2 or wider aspect ratio, e.g. a full-screen laptop browser. */
+@custom-variant wide (@media (min-aspect-ratio: 3/2));
+
 :root {
   --background: #fafaf7;
   --foreground: #1a1f1c;
@@ -11,6 +14,18 @@
   --primary-hover: #185a44;
   --primary-soft: #e6f1ec;
   --primary-foreground: #ffffff;
+
+  /* Finnish Fells section: cool mist grey with dark "night" cards and a warm
+     dusk accent, taken from the hero photo. */
+  --mist: #c2c8cc;
+  --mist-ink: #1c2126;
+  --night: #1d2226;
+  --night-raised: #2a3035;
+  --night-muted: #a3acb2;
+  --dusk: #e2a47f;
+
+  /* Wilderness Areas section: halfway between --mist and --background. */
+  --haze: #dee1e2;
 }
 
 @theme inline {
@@ -24,7 +39,16 @@
   --color-primary-hover: var(--primary-hover);
   --color-primary-soft: var(--primary-soft);
   --color-primary-foreground: var(--primary-foreground);
+  --color-mist: var(--mist);
+  --color-mist-ink: var(--mist-ink);
+  --color-night: var(--night);
+  --color-night-raised: var(--night-raised);
+  --color-night-muted: var(--night-muted);
+  --color-dusk: var(--dusk);
+  --color-haze: var(--haze);
   --font-sans: var(--font-geist-sans);
+  --font-heading: var(--font-manrope);
+  --font-body: var(--font-poppins);
   --shadow-soft: 0 1px 2px rgb(26 31 28 / 0.04), 0 4px 16px rgb(26 31 28 / 0.05);
   --shadow-lift: 0 2px 4px rgb(26 31 28 / 0.05), 0 12px 32px rgb(26 31 28 / 0.09);
 }
@@ -38,6 +62,19 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+/* Section backgrounds that fade into their neighbours: Finnish Fells (mist)
+   above, National Parks (page background) below. The fades sit inside the
+   section's vertical padding. */
+.bg-haze-fade {
+  background: linear-gradient(
+    to bottom,
+    var(--mist),
+    var(--haze) 6rem,
+    var(--haze) calc(100% - 6rem),
+    var(--background)
+  );
 }
 
 /* Lock page scroll while a modal dialog is open. */

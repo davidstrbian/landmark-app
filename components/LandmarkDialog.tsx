@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { Check, X } from "lucide-react";
-import { CATEGORY_LABELS, type Landmark } from "@/data/landmarks";
+import { Check } from "lucide-react";
+import { CATEGORY_LABELS, COMPLETION, type Landmark } from "@/data/landmarks";
 import { formatArea, formatElevation } from "@/lib/format";
 import { LandmarkImage } from "./LandmarkImage";
+import { Modal } from "./Modal";
 
 type Props = {
   landmark: Landmark | null;
@@ -13,23 +13,12 @@ type Props = {
   onClose: () => void;
 };
 
-// Native <dialog> opened with showModal(): the browser handles the focus trap,
-// Esc to close, and returning focus to the card that opened it.
 export function LandmarkDialog({
   landmark,
   visited,
   onToggleVisited,
   onClose,
 }: Props) {
-  const ref = useRef<HTMLDialogElement>(null);
-
-  useEffect(() => {
-    const dialog = ref.current;
-    if (!dialog) return;
-    if (landmark && !dialog.open) dialog.showModal();
-    if (!landmark && dialog.open) dialog.close();
-  }, [landmark]);
-
   const facts = landmark
     ? [
         landmark.elevationM !== undefined && {
@@ -52,34 +41,21 @@ export function LandmarkDialog({
     : [];
 
   return (
-    <dialog
-      ref={ref}
-      aria-labelledby="landmark-dialog-title"
+    <Modal
+      open={landmark !== null}
       onClose={onClose}
-      // A click whose target is the <dialog> itself landed on the backdrop.
-      onClick={(event) => {
-        if (event.target === event.currentTarget) event.currentTarget.close();
-      }}
-      className="m-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-xl overflow-hidden rounded-3xl bg-card p-0 text-foreground shadow-lift"
+      labelledBy="landmark-dialog-title"
+      className="bg-card text-foreground"
+      closeButtonClassName="bg-card/90 text-foreground hover:bg-card focus-visible:outline-primary"
     >
       {landmark && (
-        <div className="flex max-h-[calc(100dvh-2rem)] flex-col overflow-y-auto">
-          <div className="relative shrink-0">
-            <LandmarkImage
-              key={landmark.id}
-              landmark={landmark}
-              sizes="(min-width: 640px) 576px, 100vw"
-              className="aspect-[16/9] w-full"
-            />
-            <button
-              type="button"
-              onClick={() => ref.current?.close()}
-              aria-label="Close"
-              className="absolute right-3 top-3 flex size-10 items-center justify-center rounded-full bg-card/90 text-foreground shadow-soft backdrop-blur transition hover:bg-card focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
-            >
-              <X className="size-5" aria-hidden="true" />
-            </button>
-          </div>
+        <>
+          <LandmarkImage
+            key={landmark.id}
+            landmark={landmark}
+            sizes="(min-width: 640px) 576px, 100vw"
+            className="aspect-[16/9] w-full shrink-0"
+          />
 
           <div className="p-6 sm:p-8">
             <p className="text-sm font-medium text-primary">
@@ -122,10 +98,10 @@ export function LandmarkDialog({
               {visited ? (
                 <>
                   <Check className="size-5" strokeWidth={2.5} aria-hidden="true" />
-                  Visited
+                  {COMPLETION[landmark.category].done}
                 </>
               ) : (
-                "Mark as visited"
+                COMPLETION[landmark.category].action
               )}
             </button>
             {visited && (
@@ -140,8 +116,8 @@ export function LandmarkDialog({
               </p>
             )}
           </div>
-        </div>
+        </>
       )}
-    </dialog>
+    </Modal>
   );
 }

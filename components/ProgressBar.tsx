@@ -3,7 +3,7 @@ import type { Landmark, LandmarkCategory } from "@/data/landmarks";
 const CATEGORY_SHORT: Record<LandmarkCategory, string> = {
   peak: "Peaks",
   "national-park": "Parks",
-  other: "Other",
+  "wilderness-area": "Wilderness",
 };
 
 type Props = {
@@ -18,8 +18,8 @@ export function ProgressBar({ landmarks, visited, ready }: Props) {
   const count = landmarks.filter((l) => visited.has(l.id)).length;
   const percent = total === 0 ? 0 : Math.round((count / total) * 100);
 
-  const categories = (Object.keys(CATEGORY_SHORT) as LandmarkCategory[]).map(
-    (category) => {
+  const categories = (Object.keys(CATEGORY_SHORT) as LandmarkCategory[])
+    .map((category) => {
       const inCategory = landmarks.filter((l) => l.category === category);
       return {
         category,
@@ -27,8 +27,8 @@ export function ProgressBar({ landmarks, visited, ready }: Props) {
         done: inCategory.filter((l) => visited.has(l.id)).length,
         total: inCategory.length,
       };
-    },
-  );
+    })
+    .filter((c) => c.total > 0);
 
   return (
     <div className="rounded-3xl border border-border bg-card p-6 shadow-soft sm:p-8">
@@ -38,7 +38,7 @@ export function ProgressBar({ landmarks, visited, ready }: Props) {
             <span className="text-4xl font-semibold tracking-tight tabular-nums">
               {count}
             </span>
-            <span className="text-muted"> of {total} landmarks visited</span>
+            <span className="text-muted"> of {total} landmarks completed</span>
           </p>
         ) : (
           <div
@@ -60,7 +60,7 @@ export function ProgressBar({ landmarks, visited, ready }: Props) {
 
       <div
         role="progressbar"
-        aria-label="Landmarks visited"
+        aria-label="Landmarks completed"
         aria-valuemin={0}
         aria-valuemax={total}
         aria-valuenow={ready ? count : undefined}

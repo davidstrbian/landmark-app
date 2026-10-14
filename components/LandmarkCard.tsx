@@ -1,5 +1,5 @@
 import { Check, MapPin } from "lucide-react";
-import { CATEGORY_LABELS, type Landmark } from "@/data/landmarks";
+import { CATEGORY_LABELS, COMPLETION, type Landmark } from "@/data/landmarks";
 import { keyFact } from "@/lib/format";
 import { LandmarkImage } from "./LandmarkImage";
 
@@ -25,7 +25,7 @@ export function LandmarkCard({
       type="button"
       onClick={() => onOpen(landmark)}
       aria-haspopup="dialog"
-      aria-label={`${landmark.name}${visited ? ", visited" : ""}. Open details`}
+      aria-label={`${landmark.name}${visited ? `, ${COMPLETION[landmark.category].done.toLowerCase()}` : ""}. Open details`}
       className={`group flex h-full w-full flex-col overflow-hidden rounded-2xl border bg-card text-left shadow-soft transition duration-300 ease-out hover:shadow-lift focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary motion-safe:hover:-translate-y-1 ${
         visited ? "border-primary/40" : "border-border"
       }`}
@@ -40,7 +40,7 @@ export function LandmarkCard({
         {ready && visited && (
           <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-primary py-1 pl-1.5 pr-2.5 text-xs font-medium text-primary-foreground shadow-soft">
             <Check className="size-3.5" strokeWidth={3} aria-hidden="true" />
-            Visited
+            {COMPLETION[landmark.category].done}
           </span>
         )}
       </div>
