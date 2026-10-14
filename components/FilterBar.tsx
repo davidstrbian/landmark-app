@@ -7,7 +7,7 @@ const FILTERS: { value: CategoryFilter; label: string }[] = [
   { value: "all", label: "All" },
   { value: "peak", label: "Peaks" },
   { value: "national-park", label: "National parks" },
-  { value: "other", label: "Other" },
+  { value: "wilderness-area", label: "Wilderness areas" },
 ];
 
 type Props = {

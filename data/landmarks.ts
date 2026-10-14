@@ -1,4 +1,4 @@
-export type LandmarkCategory = "peak" | "national-park" | "other";
+export type LandmarkCategory = "peak" | "national-park" | "wilderness-area";
 
 export type Hike = {
   name?: string; // the trail's own name, if it has one
@@ -33,6 +33,7 @@ export type Landmark = {
 
   // Fell details. Leave a field out when it can't be sourced; the detail view
   // then shows it as missing so it can be filled in later.
+  // relief and protectedArea are kept in the data but not shown for now.
   relief?: { label: string; metres: number }; // prominence or height gain
   difficulty?: string;
   hike?: Hike;
@@ -43,7 +44,18 @@ export type Landmark = {
 export const CATEGORY_LABELS: Record<LandmarkCategory, string> = {
   peak: "Peak",
   "national-park": "National park",
-  other: "Other",
+  "wilderness-area": "Wilderness area",
+};
+
+// What completing a landmark is called: peaks are conquered, parks and
+// wilderness areas are visited.
+export const COMPLETION: Record<
+  LandmarkCategory,
+  { done: string; action: string }
+> = {
+  peak: { done: "Conquered", action: "Mark as conquered" },
+  "national-park": { done: "Visited", action: "Mark as visited" },
+  "wilderness-area": { done: "Visited", action: "Mark as visited" },
 };
 
 // Figures follow Metsähallitus (nationalparks.fi / luontoon.fi) where available,
@@ -239,6 +251,52 @@ export const landmarks: Landmark[] = [
     protectedArea: "Pyhä-Luosto National Park",
     notes: {
       hike: "The trailhead is from an older Metsähallitus listing, which gave the length as 14.5 km.",
+    },
+  },
+
+  {
+    id: "sarkitunturi",
+    name: "Särkitunturi",
+    category: "peak",
+    region: "Muonio, Lapland",
+    description:
+      "Särkitunturi is a compact fell in Muonio, just outside Pallas-Yllästunturi National Park, with its trailhead right by road 79 between Muonio and Levi. A short, signposted trail leads past a campfire shelter to the summit. It is one of the quickest ways to reach open fell-top views in western Lapland.",
+    elevationM: 492,
+    image: "",
+    difficulty: "Easy",
+    hike: {
+      name: "Särkitunturin saavutus",
+      trailhead: "Särkitunturi parking area, road 79",
+      distance: "3.2 km",
+      duration: "about 2.5 h",
+    },
+    notes: {
+      coordinates: "No reliable summit coordinates found.",
+      hike: "An outdoor blog says the 3.2 km is one way; the official listing doesn't say.",
+    },
+    // Elevation: 492 m in most sources, but one Komoot listing gives 510 m.
+    // Protected area: none found; the fell is just outside the national park.
+  },
+  {
+    id: "kumputunturi",
+    name: "Kumputunturi",
+    category: "peak",
+    region: "Kittilä, Lapland",
+    description:
+      "Kumputunturi is a solitary fell in Kittilä with a steep northern face and a gentler southern slope. The fell and its surroundings are a Natura 2000 site, and Metsähallitus lists it as a historical site. There are no facilities on the open summit, and fog or storms can roll in within hours.",
+    elevationM: 581,
+    image: "",
+    lat: 67.722,
+    lng: 25.5612,
+    hike: {
+      name: "Kumputunturi Fell Trail",
+      trailhead: "Kittilä–Sodankylä road (road 80), then a gravel road",
+      distance: "7.5 km",
+    },
+    protectedArea: "Natura 2000 site",
+    notes: {
+      difficulty: "No difficulty rating found.",
+      hike: "No duration found, and sources don't say whether the 7.5 km is one way or a loop. Metsähallitus warns not to use the old western trail, which crosses private land.",
     },
   },
 

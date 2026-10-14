@@ -1,5 +1,5 @@
 import { Check, MapPin } from "lucide-react";
-import type { Landmark } from "@/data/landmarks";
+import { COMPLETION, type Landmark } from "@/data/landmarks";
 import { formatElevation } from "@/lib/format";
 import { LandmarkImage } from "./LandmarkImage";
 
@@ -16,7 +16,7 @@ export function FellCard({ fell, visited, ready, onOpen }: Props) {
       type="button"
       onClick={() => onOpen(fell)}
       aria-haspopup="dialog"
-      aria-label={`${fell.name}${visited ? ", visited" : ""}. Open details`}
+      aria-label={`${fell.name}${visited ? `, ${COMPLETION.peak.done.toLowerCase()}` : ""}. Open details`}
       className="group flex h-full w-full flex-col overflow-hidden rounded-2xl bg-night text-left text-white shadow-[0_10px_30px_rgb(20_24_28/0.18)] transition duration-300 ease-out hover:shadow-[0_18px_40px_rgb(20_24_28/0.3)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-mist-ink motion-safe:hover:-translate-y-1"
     >
       <div className="relative">
@@ -29,7 +29,7 @@ export function FellCard({ fell, visited, ready, onOpen }: Props) {
         {ready && visited && (
           <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-dusk py-1 pl-1.5 pr-2.5 font-body text-xs font-medium text-night">
             <Check className="size-3.5" strokeWidth={3} aria-hidden="true" />
-            Visited
+            {COMPLETION.peak.done}
           </span>
         )}
       </div>

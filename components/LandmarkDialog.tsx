@@ -1,7 +1,7 @@
 "use client";
 
 import { Check } from "lucide-react";
-import { CATEGORY_LABELS, type Landmark } from "@/data/landmarks";
+import { CATEGORY_LABELS, COMPLETION, type Landmark } from "@/data/landmarks";
 import { formatArea, formatElevation } from "@/lib/format";
 import { LandmarkImage } from "./LandmarkImage";
 import { Modal } from "./Modal";
@@ -98,10 +98,10 @@ export function LandmarkDialog({
               {visited ? (
                 <>
                   <Check className="size-5" strokeWidth={2.5} aria-hidden="true" />
-                  Visited
+                  {COMPLETION[landmark.category].done}
                 </>
               ) : (
-                "Mark as visited"
+                COMPLETION[landmark.category].action
               )}
             </button>
             {visited && (

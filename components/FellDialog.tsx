@@ -2,7 +2,7 @@
 
 import type { ReactNode } from "react";
 import { Check } from "lucide-react";
-import type { FellField, Landmark } from "@/data/landmarks";
+import { COMPLETION, type FellField, type Landmark } from "@/data/landmarks";
 import { formatElevation } from "@/lib/format";
 import { LandmarkImage } from "./LandmarkImage";
 import { Modal } from "./Modal";
@@ -79,18 +79,27 @@ export function FellDialog({ fell, visited, onToggleVisited, onClose }: Props) {
           />
 
           <div className="p-6 sm:p-8">
-            <p className="font-body text-sm text-dusk">{fell.region}</p>
-            <h2
-              id="fell-dialog-title"
-              className="mt-1 font-heading text-3xl font-semibold tracking-tight"
-            >
-              {fell.name}
-            </h2>
-            {fell.elevationM !== undefined && (
-              <p className="mt-1 font-heading text-lg tabular-nums text-night-muted">
-                {formatElevation(fell.elevationM)} above sea level
-              </p>
-            )}
+            <div className="flex items-start justify-between gap-4">
+              <div className="min-w-0">
+                <p className="font-body text-sm text-dusk">{fell.region}</p>
+                <h2
+                  id="fell-dialog-title"
+                  className="mt-1 font-heading text-3xl font-semibold tracking-tight"
+                >
+                  {fell.name}
+                </h2>
+              </div>
+              {fell.elevationM !== undefined && (
+                <div className="shrink-0 rounded-2xl bg-dusk px-4 py-2.5 text-right text-night">
+                  <p className="font-heading text-2xl font-semibold leading-none tabular-nums">
+                    {formatElevation(fell.elevationM)}
+                  </p>
+                  <p className="mt-1.5 font-body text-[0.6875rem] font-medium uppercase tracking-wide">
+                    Above sea level
+                  </p>
+                </div>
+              )}
+            </div>
             <p className="mt-4 font-body leading-relaxed text-night-muted">
               {fell.description}
             </p>
@@ -103,24 +112,8 @@ export function FellDialog({ fell, visited, onToggleVisited, onClose }: Props) {
                   </span>
                 )}
               </Fact>
-              <Fact
-                label={fell.relief?.label ?? "Prominence / height gain"}
-                note={note("relief")}
-              >
-                {fell.relief && (
-                  <span className="tabular-nums">
-                    {formatElevation(fell.relief.metres)}
-                  </span>
-                )}
-              </Fact>
               <Fact label="Difficulty" note={note("difficulty")}>
                 {fell.difficulty}
-              </Fact>
-              <Fact
-                label="National park / wilderness area"
-                note={note("protectedArea")}
-              >
-                {fell.protectedArea}
               </Fact>
               <Fact label="Typical hike" note={note("hike")} wide>
                 {fell.hike && (
@@ -159,10 +152,10 @@ export function FellDialog({ fell, visited, onToggleVisited, onClose }: Props) {
                     strokeWidth={2.5}
                     aria-hidden="true"
                   />
-                  Visited
+                  {COMPLETION.peak.done}
                 </>
               ) : (
-                "Mark as visited"
+                COMPLETION.peak.action
               )}
             </button>
             {visited && (

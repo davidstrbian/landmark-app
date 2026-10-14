@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { Mountain, Trees, Waves } from "lucide-react";
+import { Mountain, Tent, Trees } from "lucide-react";
 import type { Landmark, LandmarkCategory } from "@/data/landmarks";
 
 const PLACEHOLDERS: Record<
@@ -17,9 +17,9 @@ const PLACEHOLDERS: Record<
     gradient: "from-[#e4ece2] via-[#c9dcc6] to-[#a3c39f]",
     Icon: Trees,
   },
-  other: {
+  "wilderness-area": {
     gradient: "from-[#e1e9ec] via-[#c6d8de] to-[#a1bfc9]",
-    Icon: Waves,
+    Icon: Tent,
   },
 };
 
