@@ -3,8 +3,8 @@
 import { useMemo, useState } from "react";
 import type { Landmark } from "@/data/landmarks";
 import { FilterBar, type CategoryFilter } from "./FilterBar";
-import { LandmarkCard } from "./LandmarkCard";
-import { LandmarkDialog } from "./LandmarkDialog";
+import { ParkCard } from "./ParkCard";
+import { ParkDialog } from "./ParkDialog";
 
 type Props = {
   landmarks: Landmark[];
@@ -55,19 +55,18 @@ export function LandmarkGrid({
       />
 
       <p className="sr-only" aria-live="polite">
-        {filtered.length} {filtered.length === 1 ? "landmark" : "landmarks"}{" "}
+        {filtered.length} {filtered.length === 1 ? "park" : "parks"}{" "}
         shown
       </p>
 
       {filtered.length > 0 ? (
-        <ul className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((landmark, index) => (
+        <ul className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {filtered.map((landmark) => (
             <li key={landmark.id} className="min-w-0">
-              <LandmarkCard
-                landmark={landmark}
+              <ParkCard
+                park={landmark}
                 visited={visited.has(landmark.id)}
                 ready={ready}
-                preload={index < 3}
                 onOpen={(l) => setSelectedId(l.id)}
               />
             </li>
@@ -75,7 +74,7 @@ export function LandmarkGrid({
         </ul>
       ) : (
         <div className="mt-8 rounded-3xl border border-dashed border-border px-6 py-16 text-center">
-          <p className="font-medium">No landmarks match your search.</p>
+          <p className="font-medium">No national parks match your search.</p>
           <button
             type="button"
             onClick={() => {
@@ -89,8 +88,8 @@ export function LandmarkGrid({
         </div>
       )}
 
-      <LandmarkDialog
-        landmark={selected}
+      <ParkDialog
+        park={selected}
         visited={selected ? visited.has(selected.id) : false}
         onToggleVisited={onToggleVisited}
         onClose={() => setSelectedId(null)}

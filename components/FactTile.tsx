@@ -1,10 +1,11 @@
 import type { ReactNode } from "react";
 
-// Tile colours for the dark detail views: "night" (fells) and "tundra"
-// (wilderness areas).
+// Tile colours for the dark detail views: "night" (fells), "tundra"
+// (wilderness areas) and "forest" (national parks).
 const TONES = {
   night: { bg: "bg-night-raised", muted: "text-night-muted" },
   tundra: { bg: "bg-tundra-raised", muted: "text-tundra-muted" },
+  forest: { bg: "bg-forest-raised", muted: "text-forest-muted" },
 } as const;
 
 // A fact tile. A missing value is shown as such, so gaps in the data are

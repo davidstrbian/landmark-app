@@ -1,0 +1,58 @@
+import { Check, MapPin } from "lucide-react";
+import { COMPLETION, type Landmark } from "@/data/landmarks";
+import { formatArea } from "@/lib/format";
+import { LandmarkImage } from "./LandmarkImage";
+
+type Props = {
+  park: Landmark;
+  visited: boolean;
+  ready: boolean;
+  onOpen: (park: Landmark) => void;
+};
+
+// Same shape as WildernessCard, in the forest palette.
+export function ParkCard({ park, visited, ready, onOpen }: Props) {
+  const done = COMPLETION["national-park"].done;
+  return (
+    <button
+      type="button"
+      onClick={() => onOpen(park)}
+      aria-haspopup="dialog"
+      aria-label={`${park.name}${visited ? `, ${done.toLowerCase()}` : ""}. Open details`}
+      className="group flex h-full w-full flex-col overflow-hidden rounded-2xl bg-forest text-left text-white shadow-[0_10px_30px_rgb(20_32_26/0.14)] transition duration-300 ease-out hover:shadow-[0_18px_40px_rgb(20_32_26/0.24)] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary motion-safe:hover:-translate-y-1"
+    >
+      <div className="relative">
+        {/* Space for the park's photo; a spruce placeholder until one is added. */}
+        <LandmarkImage
+          landmark={park}
+          sizes="(min-width: 1024px) 270px, (min-width: 640px) 50vw, 100vw"
+          className="aspect-[4/3] w-full"
+        />
+        {ready && visited && (
+          <span className="absolute right-3 top-3 inline-flex items-center gap-1 rounded-full bg-dusk py-1 pl-1.5 pr-2.5 font-body text-xs font-medium text-forest">
+            <Check className="size-3.5" strokeWidth={3} aria-hidden="true" />
+            {done}
+          </span>
+        )}
+        {/* Region names are long, so the size sits on the cover rather than
+            beside the region as in WildernessCard. */}
+        {park.areaKm2 !== undefined && (
+          <span className="absolute bottom-3 left-3 rounded-full bg-dusk px-2.5 py-1 font-heading text-sm font-semibold tabular-nums text-forest">
+            {formatArea(park.areaKm2)}
+          </span>
+        )}
+      </div>
+
+      {/* Name on the first row, region on the second, as in WildernessCard. */}
+      <div className="flex flex-1 flex-col gap-1.5 p-5">
+        <h3 className="min-w-0 truncate font-heading text-xl font-semibold tracking-tight lg:text-lg">
+          {park.name}
+        </h3>
+        <p className="flex min-w-0 items-center gap-1.5 font-body text-sm text-forest-muted">
+          <MapPin className="size-4 shrink-0" aria-hidden="true" />
+          <span className="truncate">{park.region}</span>
+        </p>
+      </div>
+    </button>
+  );
+}
