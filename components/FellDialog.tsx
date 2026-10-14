@@ -1,7 +1,7 @@
 "use client";
 
-import type { ReactNode } from "react";
-import { Check } from "lucide-react";
+import { useEffect, useState, type ReactNode } from "react";
+import { Check, Copy } from "lucide-react";
 import { COMPLETION, type FellField, type Landmark } from "@/data/landmarks";
 import { formatElevation } from "@/lib/format";
 import { LandmarkImage } from "./LandmarkImage";
@@ -18,6 +18,59 @@ function formatCoordinates(lat: number, lng: number) {
   const ns = lat >= 0 ? "N" : "S";
   const ew = lng >= 0 ? "E" : "W";
   return `${Math.abs(lat).toFixed(4)}° ${ns}, ${Math.abs(lng).toFixed(4)}° ${ew}`;
+}
+
+// Shows the coordinates; clicking copies them in plain decimal form
+// ("69.3081, 21.2633"), which map apps and GPS devices accept.
+function CopyCoordinates({ lat, lng }: { lat: number; lng: number }) {
+  const [status, setStatus] = useState<"idle" | "copied" | "failed">("idle");
+
+  useEffect(() => {
+    if (status === "idle") return;
+    const timer = setTimeout(() => setStatus("idle"), 2000);
+    return () => clearTimeout(timer);
+  }, [status]);
+
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(`${lat}, ${lng}`);
+      setStatus("copied");
+    } catch {
+      setStatus("failed");
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      onClick={copy}
+      title="Copy coordinates"
+      className="group/copy relative -mx-1 inline-flex items-center gap-2 rounded-lg px-1 text-left transition hover:text-dusk focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dusk"
+    >
+      <span className="whitespace-nowrap tabular-nums">
+        {formatCoordinates(lat, lng)}
+      </span>
+      {status === "copied" ? (
+        <Check className="size-4 shrink-0 text-dusk" aria-hidden="true" />
+      ) : (
+        <Copy
+          className="size-4 shrink-0 text-night-muted transition group-hover/copy:text-dusk"
+          aria-hidden="true"
+        />
+      )}
+      <span className="sr-only">Copy coordinates</span>
+      <span
+        aria-live="polite"
+        // Kept in the DOM so screen readers announce the change.
+        className={`pointer-events-none absolute -top-7 right-0 rounded-md bg-dusk px-2 py-0.5 font-body text-xs font-medium whitespace-nowrap text-night transition-opacity ${
+          status === "idle" ? "opacity-0" : "opacity-100"
+        }`}
+      >
+        {status === "copied" && "Copied"}
+        {status === "failed" && "Couldn't copy"}
+      </span>
+    </button>
+  );
 }
 
 // A fact tile. A missing value is shown as such, so gaps in the data are
@@ -107,9 +160,11 @@ export function FellDialog({ fell, visited, onToggleVisited, onClose }: Props) {
             <dl className="mt-6 grid gap-3 sm:grid-cols-2">
               <Fact label="Coordinates" note={note("coordinates")}>
                 {fell.lat !== undefined && fell.lng !== undefined && (
-                  <span className="tabular-nums">
-                    {formatCoordinates(fell.lat, fell.lng)}
-                  </span>
+                  <CopyCoordinates
+                    key={fell.id}
+                    lat={fell.lat}
+                    lng={fell.lng}
+                  />
                 )}
               </Fact>
               <Fact label="Difficulty" note={note("difficulty")}>
