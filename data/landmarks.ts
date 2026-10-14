@@ -8,13 +8,15 @@ export type Hike = {
   elevationGainM?: number; // total ascent
 };
 
-// Fields shown in the fell detail view that can carry a note for review.
+// Fields shown in the fell and wilderness detail views that can carry a note
+// for review.
 export type FellField =
   | "coordinates"
   | "relief"
   | "difficulty"
   | "hike"
-  | "protectedArea";
+  | "protectedArea"
+  | "wildlife";
 
 export type Landmark = {
   id: string; // slug
@@ -40,6 +42,11 @@ export type Landmark = {
   hike?: Hike;
   protectedArea?: string; // national park or wilderness area
   notes?: Partial<Record<FellField, string>>; // shown under the field
+
+  // Wilderness area details. Size uses areaKm2.
+  rank?: number; // 1 = wildest
+  wildernessScore?: number; // 1–5, shown as stars
+  wildlife?: string[]; // animals visitors may encounter
 };
 
 export const CATEGORY_LABELS: Record<LandmarkCategory, string> = {
@@ -278,6 +285,169 @@ export const landmarks: Landmark[] = [
       elevationGainM: 320,
     },
     protectedArea: "Natura 2000 site",
+  },
+
+  // Wilderness areas, ranked from wildest (scores and sizes from the site owner).
+  // All are in Lapland, so regions list only the municipalities.
+  {
+    id: "muotkatunturi",
+    name: "Muotkatunturi",
+    category: "wilderness-area",
+    region: "Inari and Utsjoki",
+    description:
+      "Muotkatunturi stretches from a rolling, treeless fell plateau cut by river valleys in the north to mountain birch woods, bogs and old pine forests in the south. Lake Peltojärvi is its largest lake, fed by countless rivers and brooks. There are no marked trails, so visitors plan their own routes.",
+    areaKm2: 1570,
+    image: "",
+    rank: 1,
+    wildernessScore: 5,
+    wildlife: ["Reindeer", "Golden eagle", "Willow grouse", "Mountain hare"],
+  },
+  {
+    id: "kaldoaivi",
+    name: "Kaldoaivi",
+    category: "wilderness-area",
+    region: "Utsjoki and Inari",
+    description:
+      "Kaldoaivi is Finland's largest wilderness area, a roadless expanse of fells that continues across the border into Norway. Its landscape ranges from deep, steep-sided river valleys to gentle fell slopes, and it is one of Finland's most important breeding grounds for arctic waders. The only marked route, the Sevettijärvi–Pulmanki trail, crosses it from south to north.",
+    areaKm2: 2924,
+    image: "",
+    rank: 2,
+    wildernessScore: 5,
+    wildlife: ["Golden plover", "Gyrfalcon", "Snowy owl", "Bar-tailed godwit", "Otter", "Reindeer"],
+  },
+  {
+    id: "paistunturi",
+    name: "Paistunturi",
+    category: "wilderness-area",
+    region: "Utsjoki",
+    description:
+      "Paistunturi is a land of fell heaths, mountain birch forest and aapa and palsa mires, split in two by the Kevo Strict Nature Reserve. Rolling highlands and deep river valleys fill its middle and north, where Gáimmoivi, its highest fell, looks out toward Norway's snowy peaks. Old nesting mounds recall the Arctic fox, which last bred here in 1996.",
+    areaKm2: 1570,
+    image: "",
+    rank: 3,
+    wildernessScore: 4,
+    wildlife: ["Reindeer", "Lemmings", "Voles"],
+  },
+  {
+    id: "hammastunturi",
+    name: "Hammastunturi",
+    category: "wilderness-area",
+    region: "Inari, Kittilä and Sodankylä",
+    description:
+      "Hammastunturi lies between Urho Kekkonen and Lemmenjoki national parks. Pine forests and low fells grow on nutrient-poor granulite bedrock, and the Ivalojoki river winds through the area. Its gold-rush past lives on at Kultala, where hundreds of prospectors once lived.",
+    areaKm2: 1825,
+    image: "",
+    rank: 4,
+    wildernessScore: 4,
+    wildlife: ["Golden eagle", "Siberian jay", "Siberian tit", "Northern hawk owl", "Willow grouse", "Otter"],
+  },
+  {
+    id: "vatsari",
+    name: "Vätsäri",
+    category: "wilderness-area",
+    region: "Inari",
+    description:
+      "Vätsäri runs from the north-eastern shore of Lake Inari to the Norwegian border, a maze of thousands of small lakes, rocky ground and Scots pine taiga. The rocky bays of Lake Inari reach deep into its backwoods. The difficult terrain makes it one of Lapland's most demanding hiking destinations.",
+    areaKm2: 1550,
+    image: "",
+    rank: 5,
+    wildernessScore: 4,
+    wildlife: ["Brown bear", "Pine marten", "Red fox", "Stoat", "Spotted redshank"],
+  },
+  {
+    id: "poyrisjarvi",
+    name: "Pöyrisjärvi",
+    category: "wilderness-area",
+    region: "Enontekiö",
+    description:
+      "Pöyrisjärvi is known for its sand dunes and long sandy ridges, most of them on the north side of Lake Pöyrisjärvi. Small lakes with sandy shores dot the area, dry pine forest gives way to birch further north, and the Pöyrisvuoma mire is one of Finland's most valuable palsa bogs. Late summer and early autumn are the most popular times to visit.",
+    areaKm2: 1280,
+    image: "",
+    rank: 6,
+    wildernessScore: 4,
+    wildlife: ["Brown bear", "Wolverine", "Lynx", "Wading birds", "Waterfowl"],
+  },
+  {
+    id: "kasivarsi",
+    name: "Käsivarsi",
+    category: "wilderness-area",
+    region: "Enontekiö",
+    description:
+      "Käsivarsi, in Finland's north-western 'arm', lies mostly above the treeline and holds all but one of the country's fells over 1,000 metres. The average yearly temperature stays below freezing and the growing season lasts only about a hundred days. Its rocky plateau is home to rare plants and animals found nowhere else in Finland.",
+    areaKm2: 2206,
+    image: "",
+    rank: 7,
+    wildernessScore: 3,
+    wildlife: ["Arctic fox", "Wolverine", "Lynx", "Snowy owl", "Peregrine falcon", "Reindeer"],
+  },
+  {
+    id: "tarvantovaara",
+    name: "Tarvantovaara",
+    category: "wilderness-area",
+    region: "Enontekiö",
+    description:
+      "Tarvantovaara is a landscape of free-flowing rivers, wetlands and low fells, bordered to the north-west by the Lätäseno-Hietajoki mire reserve. The Tarvantojoki river through its centre is gentle enough for beginner canoeists. Nature writer Yrjö Kokko found his first whooper swan nests here, work that helped save the species in Finland.",
+    areaKm2: 670,
+    image: "",
+    rank: 8,
+    wildernessScore: 3,
+    wildlife: ["Whooper swan", "Willow grouse", "Mountain hare", "Waterfowl"],
+  },
+  {
+    id: "pulju",
+    name: "Pulju",
+    category: "wilderness-area",
+    region: "Enontekiö and Kittilä",
+    description:
+      "Pulju is a land of large mires and rounded hills and fells, with spruce on the southern hills giving way to pine and fell birch in the north. Road 956 runs through its centre, making it one of the easiest wilderness areas to reach. In late summer its mires draw cloudberry pickers.",
+    areaKm2: 614,
+    image: "",
+    rank: 9,
+    wildernessScore: 3,
+    wildlife: ["Willow grouse", "Mountain hare", "Capercaillie", "Black grouse", "Stoat"],
+  },
+  {
+    id: "kemihaara",
+    name: "Kemihaara",
+    category: "wilderness-area",
+    region: "Savukoski",
+    description:
+      "Kemihaara borders Urho Kekkonen National Park to the north and the Kemijoki river to the east. Pine backwoods, spruce-filled ravines and rocky fells over 420 metres high meet wide aapa mires that feed the headwaters of the Kemijoki and Pihtijoki rivers. Its mires are an important breeding ground for wading birds.",
+    areaKm2: 302,
+    image: "",
+    rank: 10,
+    wildernessScore: 2,
+    wildlife: ["Wading birds", "Willow grouse", "Reindeer"],
+  },
+  {
+    id: "tuntsa",
+    name: "Tuntsa",
+    category: "wilderness-area",
+    region: "Salla and Savukoski",
+    description:
+      "Tuntsa lies where the northern limit of spruce forest crosses eastern Lapland. In 1960 it was hit by Finland's largest recorded forest fire, and much of the burnt land is still open today, visible from the UKK hiking trail. Its bogs yield rich cloudberry crops and its slopes are covered in blueberry and lingonberry.",
+    areaKm2: 212,
+    image: "",
+    rank: 11,
+    wildernessScore: 2,
+    wildlife: ["Boreal forest birds"],
+    notes: {
+      wildlife:
+        "BirdLife says 13 of Europe's 15 boreal-forest bird species breed in the wider Värriö–Tuntsa area, but names no animals for Tuntsa itself.",
+    },
+  },
+  {
+    id: "tsarmitunturi",
+    name: "Tsarmitunturi",
+    category: "wilderness-area",
+    region: "Inari",
+    description:
+      "Tsarmitunturi lies in south-eastern Inari on the Russian border, between the roads to Nellim and Raja-Jooseppi. Spruce and pine forests cover the Tsarmitunturi highland and Akalauttapää, separated by the deep Pahakuru gorge. It protects Finland's northernmost continuous spruce forest untouched by people.",
+    areaKm2: 150,
+    image: "",
+    rank: 12,
+    wildernessScore: 2,
+    wildlife: ["Brown bear", "Moose", "Reindeer", "Red fox", "Capercaillie", "Willow grouse"],
   },
 
   // National parks

@@ -26,6 +26,10 @@
 
   /* Wilderness Areas section: halfway between --mist and --background. */
   --haze: #dee1e2;
+  /* Wilderness cards: deep blue-grey "tundra" tones that sit on --haze. */
+  --tundra: #2b3940;
+  --tundra-raised: #36464e;
+  --tundra-muted: #b3c0c5;
 }
 
 @theme inline {
@@ -46,6 +50,9 @@
   --color-night-muted: var(--night-muted);
   --color-dusk: var(--dusk);
   --color-haze: var(--haze);
+  --color-tundra: var(--tundra);
+  --color-tundra-raised: var(--tundra-raised);
+  --color-tundra-muted: var(--tundra-muted);
   --font-sans: var(--font-geist-sans);
   --font-heading: var(--font-manrope);
   --font-body: var(--font-poppins);

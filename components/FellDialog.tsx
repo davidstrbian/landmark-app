@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState } from "react";
 import { Check, Copy } from "lucide-react";
 import { COMPLETION, type FellField, type Landmark } from "@/data/landmarks";
 import { formatElevation } from "@/lib/format";
+import { FactTile } from "./FactTile";
 import { LandmarkImage } from "./LandmarkImage";
 import { Modal } from "./Modal";
 import { StarRating } from "./StarRating";
@@ -74,44 +75,6 @@ function CopyCoordinates({ lat, lng }: { lat: number; lng: number }) {
   );
 }
 
-// A fact tile. A missing value is shown as such, so gaps in the data are
-// visible and can be filled in later.
-function Fact({
-  label,
-  note,
-  wide,
-  children,
-}: {
-  label: string;
-  note?: string;
-  wide?: boolean;
-  children?: ReactNode;
-}) {
-  // Callers pass `cond && <el />`, so a missing value arrives as false.
-  const missing = children == null || children === false;
-  return (
-    <div
-      className={`rounded-2xl bg-night-raised p-4 ${wide ? "sm:col-span-2" : ""}`}
-    >
-      <dt className="font-body text-xs font-medium uppercase tracking-wide text-night-muted">
-        {label}
-      </dt>
-      <dd className="mt-1 font-body text-white">
-        {missing ? (
-          <span className="text-night-muted">Not found</span>
-        ) : (
-          children
-        )}
-      </dd>
-      {(missing || note) && (
-        <p className="mt-2 font-body text-xs leading-relaxed text-dusk">
-          {note ?? "No reliable source found yet. Needs to be added."}
-        </p>
-      )}
-    </div>
-  );
-}
-
 export function FellDialog({ fell, visited, onToggleVisited, onClose }: Props) {
   const note = (field: FellField) => fell?.notes?.[field];
 
@@ -159,7 +122,7 @@ export function FellDialog({ fell, visited, onToggleVisited, onClose }: Props) {
             </p>
 
             <dl className="mt-6 grid gap-3 sm:grid-cols-2">
-              <Fact label="Coordinates" note={note("coordinates")}>
+              <FactTile label="Coordinates" note={note("coordinates")}>
                 {fell.lat !== undefined && fell.lng !== undefined && (
                   <CopyCoordinates
                     key={fell.id}
@@ -167,15 +130,15 @@ export function FellDialog({ fell, visited, onToggleVisited, onClose }: Props) {
                     lng={fell.lng}
                   />
                 )}
-              </Fact>
-              <Fact label="Difficulty" note={note("difficulty")}>
+              </FactTile>
+              <FactTile label="Difficulty" note={note("difficulty")}>
                 {fell.difficulty !== undefined && (
                   <span className="mt-0.5 block">
                     <StarRating value={fell.difficulty} label="Difficulty" />
                   </span>
                 )}
-              </Fact>
-              <Fact label="Typical hike" note={note("hike")} wide>
+              </FactTile>
+              <FactTile label="Typical hike" note={note("hike")} wide>
                 {fell.hike && (
                   <>
                     {fell.hike.name && (
@@ -212,7 +175,7 @@ export function FellDialog({ fell, visited, onToggleVisited, onClose }: Props) {
                     </span>
                   </>
                 )}
-              </Fact>
+              </FactTile>
             </dl>
 
             <button

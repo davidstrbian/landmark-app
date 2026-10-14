@@ -12,6 +12,7 @@ import { WildernessSection } from "@/components/WildernessSection";
 export function Tracker({ landmarks }: { landmarks: Landmark[] }) {
   const { visited, ready, toggle } = useVisited();
   const fells = landmarks.filter((l) => l.category === "peak");
+  const wilderness = landmarks.filter((l) => l.category === "wilderness-area");
   const parks = landmarks.filter((l) => l.category === "national-park");
 
   return (
@@ -23,7 +24,12 @@ export function Tracker({ landmarks }: { landmarks: Landmark[] }) {
         onToggleVisited={toggle}
       />
 
-      <WildernessSection />
+      <WildernessSection
+        areas={wilderness}
+        visited={visited}
+        ready={ready}
+        onToggleVisited={toggle}
+      />
 
       {/* National Parks, on the page's off-white background. */}
       <div className="mx-auto w-full max-w-6xl px-5 sm:px-8">
@@ -31,7 +37,11 @@ export function Tracker({ landmarks }: { landmarks: Landmark[] }) {
           <ProgressBar landmarks={landmarks} visited={visited} ready={ready} />
         </section>
 
-        <section id="landmarks" aria-labelledby="landmarks-heading" className="mt-16">
+        <section
+          id="landmarks"
+          aria-labelledby="landmarks-heading"
+          className="mt-16"
+        >
           <h2
             id="landmarks-heading"
             className="mb-6 text-2xl font-semibold tracking-tight"

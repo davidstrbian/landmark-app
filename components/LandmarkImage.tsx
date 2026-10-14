@@ -62,6 +62,43 @@ export function LandmarkImage({ landmark, sizes, preload, className }: Props) {
     );
   }
 
+  if ((!landmark.image || failed) && landmark.category === "wilderness-area") {
+    // Pale northern sky over low tundra, with soaring birds for the freedom
+    // of the wilderness. The sky starts close to the section's haze colour.
+    return (
+      <div
+        role="img"
+        aria-label={`${landmark.name} (no photo yet)`}
+        className={`relative overflow-hidden bg-gradient-to-b from-[#cfd7da] via-[#b4c1c6] to-[#93a5ac] ${className ?? ""}`}
+      >
+        <svg
+          viewBox="0 0 400 300"
+          preserveAspectRatio="xMidYMid slice"
+          aria-hidden="true"
+          className="absolute inset-0 size-full"
+        >
+          {/* Large bird, then a smaller one further away. */}
+          <path
+            d="M200 109c-16-16-40-28-80-24 32 4 52 16 68 32l12 8 12-8c16-16 36-28 68-32-40-4-64 8-80 24z"
+            className="fill-tundra"
+          />
+          <path
+            d="M286 74c-6-6-15-10-30-9 12 2 19 6 25 12l5 3 4-3c6-6 13-10 25-12-15-1-24 3-29 9z"
+            className="fill-tundra/70"
+          />
+          <path
+            d="M0 300V214c40-10 80-14 130-8s90 4 140-6 90-10 130 0v100z"
+            className="fill-[#6f8289]"
+          />
+          <path
+            d="M0 300v-52c50-8 110-10 170-4s120 4 230-8v64z"
+            className="fill-tundra"
+          />
+        </svg>
+      </div>
+    );
+  }
+
   if (!landmark.image || failed) {
     const { gradient, Icon } = PLACEHOLDERS[landmark.category];
     return (
