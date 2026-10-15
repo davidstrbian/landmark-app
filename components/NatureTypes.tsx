@@ -1,15 +1,15 @@
 import type { ComponentType, SVGProps } from "react";
 import { Mountain, Trees, Waves } from "lucide-react";
 import type { NatureType } from "@/data/landmarks";
-import { IslandsIcon, MireIcon, RapidsIcon } from "./NatureIcons";
+import { IslandsIcon, CottonGrassIcon, CanyonIcon } from "./NatureIcons";
 
 const ICONS: Record<NatureType, ComponentType<SVGProps<SVGSVGElement>>> = {
   Forest: Trees,
   Fell: Mountain,
-  Mire: MireIcon,
+  Mire: CottonGrassIcon,
   Archipelago: IslandsIcon,
   "Lake Scenery": Waves,
-  "Rivers and Rapids": RapidsIcon,
+  "Rivers and Rapids": CanyonIcon,
 };
 
 // A park known for one type shows just that; several types read as "Mixed",

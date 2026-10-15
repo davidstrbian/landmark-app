@@ -31,28 +31,35 @@ export function IslandsIcon(props: SVGProps<SVGSVGElement>) {
   );
 }
 
-// Like the lake waves, but smaller and packed closer together, as marsh is
-// drawn on an orienteering map.
-export function MireIcon(props: SVGProps<SVGSVGElement>) {
+// Cotton grass: three stems with fluffy white heads.
+export function CottonGrassIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <Icon {...props}>
-      <path d="M1.5 5q1.5 1.4 3 0t3 0 3 0 3 0 3 0 3 0 3 0" />
-      <path d="M1.5 9.67q1.5 1.4 3 0t3 0 3 0 3 0 3 0 3 0 3 0" />
-      <path d="M1.5 14.33q1.5 1.4 3 0t3 0 3 0 3 0 3 0 3 0 3 0" />
-      <path d="M1.5 19q1.5 1.4 3 0t3 0 3 0 3 0 3 0 3 0 3 0" />
+      <path d="M12 22c-1.2-4-4-7.5-6-11.5" />
+      <path d="M12 22c.2-5 .4-10 .5-14.8" />
+      <path d="M12 22c1.6-4 4.3-7.2 6.2-10.5" />
+      <circle cx="4.5" cy="8.6" r="1.5" className="fill-white" stroke="none" />
+      <circle cx="6.7" cy="8.6" r="1.5" className="fill-white" stroke="none" />
+      <circle cx="5.6" cy="7.4" r="1.6" className="fill-white" stroke="none" />
+      <circle cx="11.4" cy="5.2" r="1.5" className="fill-white" stroke="none" />
+      <circle cx="13.6" cy="5.2" r="1.5" className="fill-white" stroke="none" />
+      <circle cx="12.5" cy="4" r="1.6" className="fill-white" stroke="none" />
+      <circle cx="17.3" cy="9.6" r="1.5" className="fill-white" stroke="none" />
+      <circle cx="19.5" cy="9.6" r="1.5" className="fill-white" stroke="none" />
+      <circle cx="18.4" cy="8.4" r="1.6" className="fill-white" stroke="none" />
     </Icon>
   );
 }
 
-// A winding river between two banks, with ripples for the rapids.
-export function RapidsIcon(props: SVGProps<SVGSVGElement>) {
+// A canyon seen from the river: cliff walls closing in towards the
+// distance, with the river widening towards the viewer.
+export function CanyonIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <Icon {...props}>
-      <path d="M2 2c0 5 5 5.5 5 10s-3 5.5-3 10" />
-      <path d="M12.5 2c0 5 5 5.5 5 10s-3 5.5-3 10" />
-      <path d="M7 7q.9 .9 1.8 0t1.8 0" />
-      <path d="M10.4 12q.9 .9 1.8 0t1.8 0" />
-      <path d="M7.9 17q.9 .9 1.8 0t1.8 0" />
+      <path d="M2 4h4l1 2.5L6 9l2.5 4L5 22" />
+      <path d="M22 4h-4.5L16 7.5l1 2-2.5 3.5L19 22" />
+      <path d="M9.5 17.5q1.25 1 2.5 0t2.5 0" />
+      <path d="M8 21.5q2 1.2 4 0t4 0" />
     </Icon>
   );
 }
