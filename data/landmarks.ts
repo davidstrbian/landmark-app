@@ -51,7 +51,7 @@ export type Landmark = {
   wildernessScore?: number; // 1–5, shown as stars
   wildlife?: string[]; // kept in the data but not shown for now
   reindeer?: ReindeerLikelihood; // chance of seeing reindeer
-  reindeerBasis?: string; // one line on what the rating rests on
+  reindeerBasis?: string; // what the rating rests on; not shown for now
 
   // National park details. Size uses areaKm2.
   established?: number; // year

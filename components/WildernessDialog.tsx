@@ -6,7 +6,6 @@ import { formatArea } from "@/lib/format";
 import { FactTile } from "./FactTile";
 import { LandmarkImage } from "./LandmarkImage";
 import { Modal } from "./Modal";
-import { ReindeerMeter } from "./ReindeerMeter";
 import { StarRating } from "./StarRating";
 
 type Props = {
@@ -79,16 +78,7 @@ export function WildernessDialog({
                 tone="tundra"
                 wide
               >
-                {area.reindeer && (
-                  <>
-                    <ReindeerMeter level={area.reindeer} />
-                    {area.reindeerBasis && (
-                      <span className="mt-3 block text-sm leading-relaxed text-tundra-muted">
-                        {area.reindeerBasis}
-                      </span>
-                    )}
-                  </>
-                )}
+                {area.reindeer}
               </FactTile>
             </dl>
 
