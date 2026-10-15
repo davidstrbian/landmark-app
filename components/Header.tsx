@@ -10,6 +10,14 @@ export function Header() {
         >
           Sokosti
         </Link>
+        <nav aria-label="Main" className="ml-auto">
+          <Link
+            href="/map"
+            className="rounded-lg font-body text-base font-medium text-white/90 transition hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+          >
+            Map
+          </Link>
+        </nav>
       </div>
     </header>
   );
