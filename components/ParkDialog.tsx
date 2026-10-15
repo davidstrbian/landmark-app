@@ -6,6 +6,7 @@ import { formatArea } from "@/lib/format";
 import { FactTile } from "./FactTile";
 import { LandmarkImage } from "./LandmarkImage";
 import { Modal } from "./Modal";
+import { NatureTypes } from "./NatureTypes";
 
 type Props = {
   park: Landmark | null;
@@ -14,9 +15,9 @@ type Props = {
   onClose: () => void;
 };
 
-// Mirrors WildernessDialog: landscape in the orange box, size where the size
-// is, the year established where the wilderness score is, and the signature
-// trail where the wildlife is.
+// Mirrors WildernessDialog: size where the size is, the year established
+// where the wilderness score is, and the park's nature types where the
+// reindeer likelihood is.
 export function ParkDialog({ park, visited, onToggleVisited, onClose }: Props) {
   const completion = COMPLETION["national-park"];
 
@@ -38,27 +39,13 @@ export function ParkDialog({ park, visited, onToggleVisited, onClose }: Props) {
           />
 
           <div className="p-6 sm:p-8">
-            <div className="flex items-start justify-between gap-4">
-              <div className="min-w-0">
-                <p className="font-body text-sm text-dusk">{park.region}</p>
-                <h2
-                  id="park-dialog-title"
-                  className="mt-1 font-heading text-3xl font-semibold tracking-tight"
-                >
-                  {park.name}
-                </h2>
-              </div>
-              {park.landscape && (
-                <div className="shrink-0 rounded-2xl bg-dusk px-4 py-2.5 text-right text-forest">
-                  <p className="font-heading text-xl font-semibold leading-none sm:text-2xl">
-                    {park.landscape}
-                  </p>
-                  <p className="mt-1.5 font-body text-[0.6875rem] font-medium uppercase tracking-wide">
-                    Landscape
-                  </p>
-                </div>
-              )}
-            </div>
+            <p className="font-body text-sm text-dusk">{park.region}</p>
+            <h2
+              id="park-dialog-title"
+              className="mt-1 font-heading text-3xl font-semibold tracking-tight"
+            >
+              {park.name}
+            </h2>
             <p className="mt-4 font-body leading-relaxed text-forest-muted">
               {park.description}
             </p>
@@ -76,35 +63,9 @@ export function ParkDialog({ park, visited, onToggleVisited, onClose }: Props) {
                   <span className="tabular-nums">{park.established}</span>
                 )}
               </FactTile>
-              <FactTile
-                label="Signature trail"
-                note={park.notes?.trail}
-                tone="forest"
-                wide
-              >
-                {park.trail && (
-                  <>
-                    <span className="block font-medium">{park.trail.name}</span>
-                    <dl className="mt-3 grid grid-cols-2 gap-3">
-                      {[
-                        { label: "Length", value: park.trail.distance },
-                        { label: "Duration", value: park.trail.duration },
-                      ].map((stat) => (
-                        <div key={stat.label} className="min-w-0">
-                          <dt className="text-xs text-forest-muted">
-                            {stat.label}
-                          </dt>
-                          <dd className="mt-0.5 font-medium tabular-nums">
-                            {stat.value ?? (
-                              <span className="font-normal text-forest-muted">
-                                Not found
-                              </span>
-                            )}
-                          </dd>
-                        </div>
-                      ))}
-                    </dl>
-                  </>
+              <FactTile label="Nature" tone="forest" wide>
+                {park.nature && park.nature.length > 0 && (
+                  <NatureTypes types={park.nature} />
                 )}
               </FactTile>
             </dl>

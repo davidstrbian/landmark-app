@@ -55,9 +55,17 @@ export type Landmark = {
 
   // National park details. Size uses areaKm2.
   established?: number; // year
-  landscape?: "Fell" | "Forest" | "Mire" | "Lakes" | "Archipelago" | "Mixed";
-  trail?: { name: string; distance: string; duration?: string };
+  // One type when the park is known for it; several mean "Mixed".
+  nature?: NatureType[];
+  trail?: { name: string; distance: string; duration?: string }; // not shown for now
 };
+
+export type NatureType =
+  | "Forest"
+  | "Fell"
+  | "Mire"
+  | "Archipelago"
+  | "Lake Scenery";
 
 // How likely a visitor is to see reindeer, from most to least likely.
 export const REINDEER_LEVELS = [
@@ -500,7 +508,7 @@ export const landmarks: Landmark[] = [
   },
 
   // National parks, in the site owner's order (region, year and size from
-  // the site owner; landscape, descriptions and trails from Metsähallitus and
+  // the site owner; nature types, descriptions and trails from Metsähallitus and
   // other sources).
   {
     id: "etela-konnevesi",
@@ -512,7 +520,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 15.44,
     image: "",
     established: 2014,
-    landscape: "Lakes",
+    nature: ["Lake Scenery"],
     trail: { name: "Kolmen vuoren vaellus (Three Hills hike)", distance: "14 km", duration: "6–12 h" },
   },
   {
@@ -525,7 +533,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 49.8,
     image: "",
     established: 1982,
-    landscape: "Forest",
+    nature: ["Forest", "Lake Scenery"],
     trail: { name: "Helvetistä itään nature trail", distance: "4 km" },
     notes: {
       trail: "No official duration found. The Haukanhieta–Helvetinkolu section has been reported closed due to flooding.",
@@ -541,7 +549,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 45,
     image: "",
     established: 1982,
-    landscape: "Forest",
+    nature: ["Forest"],
     trail: { name: "Hiidenkierros", distance: "3–5 km", duration: "2–4 h" },
   },
   {
@@ -554,7 +562,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 11,
     image: "",
     established: 2017,
-    landscape: "Lakes",
+    nature: ["Lake Scenery"],
     trail: { name: "Värikallion kaarros", distance: "8 km", duration: "3–4 h" },
   },
   {
@@ -567,7 +575,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 19,
     image: "",
     established: 1982,
-    landscape: "Forest",
+    nature: ["Forest"],
     trail: { name: "Savottapolku (Logging Trail)", distance: "10 km", duration: "3–5 h" },
   },
   {
@@ -580,7 +588,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 6.7,
     image: "",
     established: 1982,
-    landscape: "Archipelago",
+    nature: ["Archipelago"],
     trail: { name: "Ulko-Tammio nature trail", distance: "2.8 km", duration: "1–2 h" },
   },
   {
@@ -593,7 +601,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 57,
     image: "",
     established: 1982,
-    landscape: "Mire",
+    nature: ["Mire"],
     trail: { name: "Kauhalammin kierros", distance: "2.7 km", duration: "2 h" },
   },
   {
@@ -606,7 +614,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 30,
     image: "",
     established: 1991,
-    landscape: "Mixed",
+    nature: ["Forest", "Lake Scenery"],
     trail: { name: "Herajärven kierros", distance: "about 61 km", duration: "3–4 days" },
   },
   {
@@ -619,7 +627,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 23,
     image: "",
     established: 1990,
-    landscape: "Lakes",
+    nature: ["Lake Scenery"],
     trail: { name: "Mäntysalo trail", distance: "3.8 km", duration: "about 2 h" },
     notes: {
       trail: "The trail can only be reached by water.",
@@ -635,7 +643,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 29,
     image: "",
     established: 1998,
-    landscape: "Mire",
+    nature: ["Mire"],
     trail: { name: "Savojärvi trail", distance: "6 km", duration: "2.5 h" },
   },
   {
@@ -648,7 +656,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 53,
     image: "",
     established: 1982,
-    landscape: "Mixed",
+    nature: ["Forest", "Mire"],
     trail: { name: "Pirunkierros", distance: "4.5 km", duration: "2 h" },
   },
   {
@@ -661,7 +669,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 29,
     image: "",
     established: 2003,
-    landscape: "Mixed",
+    nature: ["Forest", "Mire", "Lake Scenery"],
     trail: { name: "Luupään lenkki", distance: "2.1 km", duration: "1 h" },
   },
   {
@@ -674,7 +682,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 2850,
     image: "",
     established: 1956,
-    landscape: "Fell",
+    nature: ["Fell", "Forest"],
     trail: { name: "Lemmenjoki Gold Trail", distance: "25.5 km", duration: "2–3 days" },
   },
   {
@@ -687,7 +695,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 22,
     image: "",
     established: 1956,
-    landscape: "Forest",
+    nature: ["Forest", "Lake Scenery"],
     trail: { name: "Pohjantikan kierros", distance: "5 km" },
     notes: {
       trail: "No official duration found.",
@@ -703,7 +711,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 38,
     image: "",
     established: 1956,
-    landscape: "Lakes",
+    nature: ["Lake Scenery"],
     trail: { name: "Linnavuori trail", distance: "6.5 km", duration: "3–4 h" },
   },
   {
@@ -716,7 +724,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 45,
     image: "",
     established: 1994,
-    landscape: "Forest",
+    nature: ["Forest"],
     trail: { name: "Haukankierros", distance: "3.9 km", duration: "1.5–2 h" },
   },
   {
@@ -729,7 +737,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 270,
     image: "",
     established: 1956,
-    landscape: "Mixed",
+    nature: ["Forest", "Mire"],
     trail: { name: "Karhunkierros", distance: "about 80 km", duration: "4–6 days" },
   },
   {
@@ -742,7 +750,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 1020,
     image: "",
     established: 2005,
-    landscape: "Fell",
+    nature: ["Fell"],
     trail: { name: "Hetta–Pallas hiking trail", distance: "47.7 km", duration: "3 days" },
   },
   {
@@ -755,7 +763,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 105,
     image: "",
     established: 1982,
-    landscape: "Mire",
+    nature: ["Mire"],
     trail: { name: "Suomunkierto", distance: "15.9 km", duration: "4–8 h" },
   },
   {
@@ -767,7 +775,7 @@ export const landmarks: Landmark[] = [
       "A sea park in the Kemi outer archipelago, almost entirely open water dotted with low islands. On Selkä-Sarvi, a short trail leads to an old fishing base.",
     image: "",
     established: 1991,
-    landscape: "Archipelago",
+    nature: ["Archipelago"],
     trail: { name: "Selkä-Sarvi nature trail", distance: "1 km", duration: "0.5–1 h" },
     notes: {
       size: "No size in the data provided. Wikipedia gives 157 km², of which only 2.5 km² is land.",
@@ -783,7 +791,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 6,
     image: "",
     established: 1956,
-    landscape: "Lakes",
+    nature: ["Forest", "Lake Scenery"],
     trail: { name: "Harjupolku (Esker Trail)", distance: "3.5 km", duration: "1–2 h" },
     notes: {
       trail: "Official figures. A newer local listing gives 2.5 km and about 45 minutes.",
@@ -799,7 +807,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 27,
     image: "",
     established: 1993,
-    landscape: "Mire",
+    nature: ["Mire", "Lake Scenery"],
     trail: { name: "Kärjenkallio bird lake trail", distance: "0.8 km there and back" },
     notes: {
       trail: "No duration listed; it is a short walk to the bird tower.",
@@ -815,7 +823,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 13,
     image: "",
     established: 1956,
-    landscape: "Forest",
+    nature: ["Forest"],
     trail: { name: "Kotajärven polku", distance: "6.8 km", duration: "2–3 h" },
   },
   {
@@ -828,7 +836,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 142,
     image: "",
     established: 2005,
-    landscape: "Fell",
+    nature: ["Fell"],
     trail: { name: "Pyhä–Luosto hiking trail", distance: "about 30 km", duration: "2–3 days" },
     notes: {
       trail: "Luontoon.fi lists 47.6 km, including the extension to Yli-Luosto.",
@@ -844,7 +852,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 15,
     image: "",
     established: 2003,
-    landscape: "Mixed",
+    nature: ["Forest", "Lake Scenery"],
     trail: { name: "Ketunlenkki", distance: "3.6 km", duration: "1–2 h" },
     notes: {
       trail: "The Lapinsalmi suspension bridge has been closed since January 2024.",
@@ -860,7 +868,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 77,
     image: "",
     established: 1982,
-    landscape: "Fell",
+    nature: ["Fell"],
     trail: { name: "Riisin rääpäsy", distance: "4.5 km", duration: "2–3 h" },
   },
   {
@@ -873,7 +881,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 4.3,
     image: "",
     established: 1956,
-    landscape: "Forest",
+    nature: ["Forest"],
     trail: { name: "Syvyydenkierros", distance: "6.3 km", duration: "2–3 h" },
   },
   {
@@ -885,7 +893,7 @@ export const landmarks: Landmark[] = [
       "More than 2,000 islands and skerries in the outer Archipelago Sea, most of the park open water. Traditional farming keeps meadows open on the larger islands, with a nature centre at Kasnäs.",
     image: "",
     established: 1982,
-    landscape: "Archipelago",
+    nature: ["Archipelago"],
     trail: { name: "Holma nature trail", distance: "about 2 km" },
     notes: {
       size: "No size in the data provided. Metsähallitus gives a total area of about 527 km², mostly sea.",
@@ -902,7 +910,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 62,
     image: "",
     established: 1982,
-    landscape: "Mire",
+    nature: ["Mire", "Forest"],
     trail: { name: "Vaatimen kierros", distance: "17.4 km", duration: "5–7 h" },
   },
   {
@@ -915,7 +923,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 99.83,
     image: "",
     established: 2022,
-    landscape: "Fell",
+    nature: ["Fell"],
     trail: { name: "Pahanojankuru trail", distance: "14.4 km", duration: "4–5 h" },
   },
   {
@@ -928,7 +936,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 45.5,
     image: "",
     established: 1982,
-    landscape: "Forest",
+    nature: ["Forest"],
     trail: { name: "Torpparintaival", distance: "6.2 km", duration: "about 2 h" },
   },
   {
@@ -940,7 +948,7 @@ export const landmarks: Landmark[] = [
       "A sea park off the Satakunta coast, almost all of it open water with only about 15 km² of land. Short island trails on Iso-Enskeri, Säppi and Kuuskajaskari offer a taste of the outer archipelago.",
     image: "",
     established: 2011,
-    landscape: "Archipelago",
+    nature: ["Archipelago"],
     trail: { name: "Iso-Enskeri nature trail", distance: "3 km" },
     notes: {
       size: "No size in the data provided. One source gives 912 km², of which 15 km² is land.",
@@ -957,7 +965,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 18.6,
     image: "",
     established: 2011,
-    landscape: "Forest",
+    nature: ["Forest"],
     trail: { name: "Kalkinpolttaja trail", distance: "4.9 km", duration: "2–3 h" },
   },
   {
@@ -970,7 +978,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 299,
     image: "",
     established: 2000,
-    landscape: "Forest",
+    nature: ["Forest", "Fell"],
     trail: { name: "Syötteen kierros", distance: "19.3 km", duration: "4–6 h" },
   },
   {
@@ -983,7 +991,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 52,
     image: "",
     established: 1989,
-    landscape: "Archipelago",
+    nature: ["Archipelago"],
     trail: { name: "Älgö nature trail", distance: "2 km" },
     notes: {
       trail: "No official duration found.",
@@ -999,7 +1007,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 33.85,
     image: "",
     established: 2015,
-    landscape: "Forest",
+    nature: ["Forest", "Lake Scenery", "Mire"],
     trail: { name: "Lake Matildanjärvi trail", distance: "6.1 km", duration: "2.5 h" },
   },
   {
@@ -1012,7 +1020,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 34,
     image: "",
     established: 1982,
-    landscape: "Mixed",
+    nature: ["Mire", "Lake Scenery"],
     trail: { name: "Uiton kierto", distance: "7.1 km", duration: "3 h" },
   },
   {
@@ -1025,7 +1033,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 25.5,
     image: "",
     established: 1990,
-    landscape: "Mire",
+    nature: ["Mire"],
     trail: { name: "Suotaival", distance: "8.6 km", duration: "2–3 h" },
   },
   {
@@ -1038,7 +1046,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 2550,
     image: "",
     established: 1983,
-    landscape: "Fell",
+    nature: ["Fell"],
     trail: { name: "Luirojärvi loop from Kiilopää", distance: "about 71 km", duration: "about 7 days" },
   },
   {
@@ -1051,7 +1059,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 17,
     image: "",
     established: 1996,
-    landscape: "Mire",
+    nature: ["Mire"],
     trail: { name: "Valkmusa circle trail", distance: "2.5 km" },
     notes: {
       trail: "No official duration found.",
@@ -1067,7 +1075,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 14,
     image: "",
     established: 1993,
-    landscape: "Lakes",
+    nature: ["Lake Scenery"],
     trail: { name: "Kelvenne trail", distance: "9.7 km", duration: "2–4 h" },
   },
 ];
