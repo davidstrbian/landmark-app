@@ -3,6 +3,7 @@
 import { useMemo, useRef, useState } from "react";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import type { Landmark } from "@/data/landmarks";
+import { normalize } from "@/lib/search";
 import { FilterBar, type CategoryFilter } from "./FilterBar";
 import { ParkCard } from "./ParkCard";
 import { ParkDialog } from "./ParkDialog";
@@ -17,15 +18,6 @@ type Props = {
 // Cards shown before "Show more" is pressed. A search always shows every
 // match.
 const INITIAL_COUNT = 12;
-
-// Matches regardless of case and diacritics, so "yllas" finds "Ylläs".
-function normalize(text: string) {
-  return text
-    .normalize("NFD")
-    .replace(/\p{Diacritic}/gu, "")
-    .toLowerCase()
-    .trim();
-}
 
 export function LandmarkGrid({
   landmarks,

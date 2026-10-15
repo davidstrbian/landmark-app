@@ -7,7 +7,7 @@ import {
   type Landmark,
   type LandmarkCategory,
 } from "@/data/landmarks";
-import { BIRD_LARGE, BIRD_SMALL, spruce } from "@/lib/shapes";
+import { CATEGORY_ICONS } from "@/lib/marker-icons";
 
 // OpenFreeMap's light "Positron" style: free, no API key, OpenStreetMap data
 // (attribution comes with the style).
@@ -19,36 +19,6 @@ const FINLAND_BOUNDS: [[number, number], [number, number]] = [
   [19.0, 59.6],
   [31.6, 70.1],
 ];
-
-// `filled` symbols get a thin outline in the same colour (in viewBox units)
-// so fine shapes like the birds stay legible at marker size.
-const svg = (viewBox: string, size: string, body: string, filled = 0) =>
-  `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}" class="${size}" aria-hidden="true" ${
-    filled
-      ? `fill="currentColor" stroke="currentColor" stroke-width="${filled}" stroke-linejoin="round"`
-      : 'fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"'
-  }>${body}</svg>`;
-
-// One symbol per category, each taken from the home page: lucide's Mountain
-// (the Fell nature type), the two birds of the wilderness cover and a spruce
-// like those on the national park cover.
-const ICONS: Record<LandmarkCategory, string> = {
-  peak: svg("0 0 24 24", "size-[1.125rem]", '<path d="m8 3 4 8 5-5 5 15H2L8 3z"/>'),
-  // At marker size the small bird would touch the large one's wing tip, so
-  // it is moved further up and out than on the cover.
-  "wilderness-area": svg(
-    "112 40 236 94",
-    "w-[1.75rem]",
-    `<path d="${BIRD_LARGE}"/><path d="${BIRD_SMALL}" transform="translate(22 -16)"/>`,
-    9,
-  ),
-  "national-park": svg(
-    "0 0 24 24",
-    "size-5",
-    `<path d="${spruce(12, 22.5, 21)}"/>`,
-    0.5,
-  ),
-};
 
 // Every marker is white with a grey symbol until completed. Completed markers
 // take their section's colours: night and dusk for fells, the wilderness
@@ -72,9 +42,15 @@ export type MarkerHover = {
   bottom: number;
 };
 
+// Ask the map to zoom to these landmarks. A new object (even with the same
+// ids) triggers a new zoom.
+export type FitRequest = { ids: string[] };
+
 type Props = {
   landmarks: Landmark[];
+  visible: Set<string>; // ids whose markers are shown (search and filter)
   visited: Set<string>;
+  fitRequest: FitRequest | null;
   onSelect: (id: string) => void;
   onHover: (hover: MarkerHover | null) => void;
 };
@@ -85,20 +61,25 @@ type Props = {
 // the top of the file.
 export function LandmarkMap({
   landmarks,
+  visible,
   visited,
+  fitRequest,
   onSelect,
   onHover,
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<import("maplibre-gl").Map | null>(null);
   const markersRef = useRef(new Map<string, HTMLButtonElement>());
   // Latest values for the map's event handlers, which are set up once.
   const onSelectRef = useRef(onSelect);
   const onHoverRef = useRef(onHover);
   const visitedRef = useRef(visited);
+  const visibleRef = useRef(visible);
   useEffect(() => {
     onSelectRef.current = onSelect;
     onHoverRef.current = onHover;
     visitedRef.current = visited;
+    visibleRef.current = visible;
   });
 
   useEffect(() => {
@@ -122,6 +103,7 @@ export function LandmarkMap({
         zoom: 4,
       });
       map.fitBounds(FINLAND_BOUNDS, { padding: 24, animate: false });
+      mapRef.current = map;
       map.addControl(new NavigationControl(), "top-right");
       map.addControl(new ScaleControl({ unit: "metric" }), "bottom-left");
       // A preview would drift away from its marker while the map moves.
@@ -131,7 +113,7 @@ export function LandmarkMap({
         if (landmark.lat === undefined || landmark.lng === undefined) continue;
         const el = document.createElement("button");
         el.type = "button";
-        el.innerHTML = ICONS[landmark.category];
+        el.innerHTML = CATEGORY_ICONS[landmark.category];
         el.setAttribute("aria-haspopup", "dialog");
         styleMarker(el, landmark, visitedRef.current.has(landmark.id));
         el.addEventListener("click", () => {
@@ -159,6 +141,7 @@ export function LandmarkMap({
         // button is wrapped and only the button's classes change.
         const wrapper = document.createElement("div");
         wrapper.append(el);
+        setMarkerHidden(el, !visibleRef.current.has(landmark.id));
         new Marker({ element: wrapper })
           .setLngLat([landmark.lng, landmark.lat])
           .addTo(map);
@@ -168,9 +151,45 @@ export function LandmarkMap({
     return () => {
       cancelled = true;
       markers.clear();
+      mapRef.current = null;
       map?.remove();
     };
   }, [landmarks]);
+
+  // Show only the markers that match the search and category filter.
+  useEffect(() => {
+    for (const [id, el] of markersRef.current) {
+      setMarkerHidden(el, !visible.has(id));
+    }
+  }, [visible]);
+
+  // Zoom to the requested landmarks: close in on a single one, or fit them
+  // all in view.
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map || !fitRequest) return;
+    const points = landmarks
+      .filter((l) => fitRequest.ids.includes(l.id))
+      .flatMap((l) =>
+        l.lat !== undefined && l.lng !== undefined
+          ? [[l.lng, l.lat] as [number, number]]
+          : [],
+      );
+    if (points.length === 0) return;
+    if (points.length === 1) {
+      map.flyTo({ center: points[0], zoom: Math.max(map.getZoom(), 8) });
+      return;
+    }
+    const lngs = points.map((p) => p[0]);
+    const lats = points.map((p) => p[1]);
+    map.fitBounds(
+      [
+        [Math.min(...lngs), Math.min(...lats)],
+        [Math.max(...lngs), Math.max(...lats)],
+      ],
+      { padding: 80, maxZoom: 9 },
+    );
+  }, [fitRequest, landmarks]);
 
   // Recolour markers when a landmark is marked conquered or unmarked.
   useEffect(() => {
@@ -196,4 +215,9 @@ function styleMarker(el: HTMLElement, landmark: Landmark, done: boolean) {
     "aria-label",
     `${landmark.name}${done ? `, ${COMPLETION[landmark.category].done.toLowerCase()}` : ""}. Open details`,
   );
+}
+
+// Hides the marker's wrapper (the element MapLibre positions).
+function setMarkerHidden(el: HTMLElement, hidden: boolean) {
+  el.parentElement?.toggleAttribute("hidden", hidden);
 }

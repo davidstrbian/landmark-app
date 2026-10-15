@@ -1,13 +1,19 @@
 "use client";
 
-import { useLayoutEffect, useRef, useState } from "react";
-import type { Landmark } from "@/data/landmarks";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
+import type { Landmark, LandmarkCategory } from "@/data/landmarks";
 import { useVisited } from "@/hooks/use-visited";
 import { FellDialog } from "./FellDialog";
 import { LandmarkPreview, PREVIEW_TONES } from "./LandmarkPreview";
 import { ParkDialog } from "./ParkDialog";
 import { WildernessDialog } from "./WildernessDialog";
-import { LandmarkMap, type MarkerHover } from "./LandmarkMap";
+import {
+  LandmarkMap,
+  type FitRequest,
+  type MarkerHover,
+} from "./LandmarkMap";
+import { MapSearch } from "./MapSearch";
+import { normalize } from "@/lib/search";
 
 const GAP = 10; // between the marker and its preview card (the arrow spans it)
 const ARROW = 8; // arrow height; its half-width is the same
@@ -22,6 +28,21 @@ export function MapView({ landmarks }: { landmarks: Landmark[] }) {
   const { visited, ready, toggle } = useVisited();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [hover, setHover] = useState<MarkerHover | null>(null);
+  const [query, setQuery] = useState("");
+  const [category, setCategory] = useState<LandmarkCategory | null>(null);
+  const [fitRequest, setFitRequest] = useState<FitRequest | null>(null);
+  const visible = useMemo(() => {
+    const q = normalize(query);
+    return new Set(
+      landmarks
+        .filter(
+          (l) =>
+            (category === null || l.category === category) &&
+            (q === "" || normalize(l.name).includes(q)),
+        )
+        .map((l) => l.id),
+    );
+  }, [landmarks, query, category]);
   const selected = landmarks.find((l) => l.id === selectedId) ?? null;
   const hovered = hover ? landmarks.find((l) => l.id === hover.id) : undefined;
   // Each category has its own dialog; only the selected one is open.
@@ -37,11 +58,21 @@ export function MapView({ landmarks }: { landmarks: Landmark[] }) {
     <div className="relative size-full">
       <LandmarkMap
         landmarks={landmarks}
+        visible={visible}
         visited={visited}
+        fitRequest={fitRequest}
         onSelect={setSelectedId}
         onHover={setHover}
       />
-      {hover && hovered && (
+      <MapSearch
+        query={query}
+        onQueryChange={setQuery}
+        onSubmit={() => setFitRequest({ ids: [...visible] })}
+        category={category}
+        onCategoryChange={setCategory}
+        matches={visible.size}
+      />
+      {hover && hovered && visible.has(hovered.id) && (
         <Preview hover={hover} arrowFill={PREVIEW_TONES[hovered.category].fill}>
           <LandmarkPreview
             landmark={hovered}
