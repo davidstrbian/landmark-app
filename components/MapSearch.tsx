@@ -10,6 +10,7 @@ import {
   removeRecentSearch,
 } from "@/lib/recent-searches";
 import { normalize } from "@/lib/search";
+import { CategoryProgress } from "./CategoryProgress";
 
 const CATEGORIES: { category: LandmarkCategory; label: string }[] = [
   { category: "peak", label: "Fells" },
@@ -40,7 +41,7 @@ function suggest(landmarks: Landmark[], query: string): Landmark[] {
 }
 
 type Props = {
-  landmarks: Landmark[]; // already narrowed to the active category
+  landmarks: Landmark[]; // already narrowed to the active category (all of it)
   query: string;
   onQueryChange: (query: string) => void;
   onSubmit: (query: string) => number; // zoom to everything matching; returns the count
@@ -48,6 +49,8 @@ type Props = {
   category: LandmarkCategory | null;
   onCategoryChange: (category: LandmarkCategory | null) => void;
   matches: number;
+  visited: Set<string>;
+  ready: boolean;
 };
 
 type Option =
@@ -67,6 +70,8 @@ export function MapSearch({
   category,
   onCategoryChange,
   matches,
+  visited,
+  ready,
 }: Props) {
   const id = useId();
   const listId = `${id}-list`;
@@ -192,7 +197,7 @@ export function MapSearch({
             }}
             placeholder="Search by name"
             autoComplete="off"
-            className="h-9 w-full rounded-full bg-white pl-10 pr-9 text-sm [&::-webkit-search-cancel-button]:appearance-none text-mist-ink shadow-[0_4px_12px_rgb(20_24_28/0.3)] ring-1 ring-night/10 placeholder:text-[#5b646b] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-night"
+            className={`h-9 w-full rounded-full bg-white pl-10 text-sm [&::-webkit-search-cancel-button]:appearance-none ${query ? "pr-9" : "pr-3"} text-mist-ink shadow-[0_4px_12px_rgb(20_24_28/0.3)] ring-1 ring-night/10 placeholder:text-[#5b646b] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-night`}
           />
           {/* Replaces the browser's own clear button, which doesn't match. */}
           {query && (
@@ -319,6 +324,16 @@ export function MapSearch({
           })}
         </div>
       </div>
+      {category && !showList && (
+        <CategoryProgress
+          // Remounts per category, so the percentage counts up again.
+          key={category}
+          category={category}
+          landmarks={landmarks}
+          visited={visited}
+          ready={ready}
+        />
+      )}
       <p aria-live="polite" className="sr-only">
         {matches} {matches === 1 ? "place" : "places"} shown
       </p>

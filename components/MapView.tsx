@@ -84,6 +84,8 @@ export function MapView({ landmarks }: { landmarks: Landmark[] }) {
         category={category}
         onCategoryChange={setCategory}
         matches={visible.size}
+        visited={visited}
+        ready={ready}
       />
       {hover && hovered && visible.has(hovered.id) && (
         <Preview hover={hover} arrowFill={PREVIEW_TONES[hovered.category].fill}>
