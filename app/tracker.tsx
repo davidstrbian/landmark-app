@@ -58,9 +58,8 @@ export function Tracker({ landmarks }: { landmarks: Landmark[] }) {
           <p className="mb-10 mt-3 max-w-3xl font-body leading-relaxed text-muted">
             Together they protect more than 10,000 km² of forests, lakes, mires
             and islands. National parks exist to preserve Finnish nature and to
-            let everyone experience it: entry is free, and marked trails,
-            campfire sites and huts make them easy places to start. Here are all
-            41.
+            let everyone experience it. Marked trails, campfire sites and huts
+            make them easy places to start. Entry is free.
           </p>
           <LandmarkGrid
             landmarks={parks}
