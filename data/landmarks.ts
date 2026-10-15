@@ -51,6 +51,7 @@ export type Landmark = {
   wildernessScore?: number; // 1–5, shown as stars
   wildlife?: string[]; // kept in the data but not shown for now
   reindeer?: ReindeerLikelihood; // chance of seeing reindeer
+  reindeerBasis?: string; // one line on what the rating rests on
 
   // National park details. Size uses areaKm2.
   established?: number; // year
@@ -313,6 +314,9 @@ export const landmarks: Landmark[] = [
     rank: 1,
     wildernessScore: 5,
     wildlife: ["Reindeer", "Golden eagle", "Willow grouse", "Mountain hare"],
+    reindeer: "Likely",
+    reindeerBasis:
+      "Part of the Muotkatunturi and Paistunturi herding districts, with about 2 to 2.6 reindeer per km².",
   },
   {
     id: "kaldoaivi",
@@ -326,6 +330,9 @@ export const landmarks: Landmark[] = [
     rank: 2,
     wildernessScore: 5,
     wildlife: ["Golden plover", "Gyrfalcon", "Snowy owl", "Bar-tailed godwit", "Otter", "Reindeer"],
+    reindeer: "Very likely",
+    reindeerBasis:
+      "About 10,000 reindeer graze here, and herding is a main livelihood.",
   },
   {
     id: "paistunturi",
@@ -339,6 +346,9 @@ export const landmarks: Landmark[] = [
     rank: 3,
     wildernessScore: 4,
     wildlife: ["Reindeer", "Lemmings", "Voles"],
+    reindeer: "Very likely",
+    reindeerBasis:
+      "Almost half of the Paistunturi herding district's land lies inside the area.",
   },
   {
     id: "hammastunturi",
@@ -352,6 +362,9 @@ export const landmarks: Landmark[] = [
     rank: 4,
     wildernessScore: 4,
     wildlife: ["Golden eagle", "Siberian jay", "Siberian tit", "Northern hawk owl", "Willow grouse", "Otter"],
+    reindeer: "Very likely",
+    reindeerBasis:
+      "Reindeer use it all year round, with summer, winter, calving and rutting pastures.",
   },
   {
     id: "vatsari",
@@ -365,6 +378,9 @@ export const landmarks: Landmark[] = [
     rank: 5,
     wildernessScore: 4,
     wildlife: ["Brown bear", "Pine marten", "Red fox", "Stoat", "Spotted redshank"],
+    reindeer: "Likely",
+    reindeerBasis:
+      "Shared by four herding districts, with about 2 reindeer per km².",
   },
   {
     id: "poyrisjarvi",
@@ -378,6 +394,9 @@ export const landmarks: Landmark[] = [
     rank: 6,
     wildernessScore: 4,
     wildlife: ["Brown bear", "Wolverine", "Lynx", "Wading birds", "Waterfowl"],
+    reindeer: "Very likely",
+    reindeerBasis:
+      "The Näkkälä herding district's summer pasture.",
   },
   {
     id: "kasivarsi",
@@ -391,6 +410,9 @@ export const landmarks: Landmark[] = [
     rank: 7,
     wildernessScore: 3,
     wildlife: ["Arctic fox", "Wolverine", "Lynx", "Snowy owl", "Peregrine falcon", "Reindeer"],
+    reindeer: "Likely",
+    reindeerBasis:
+      "Lies entirely within the Käsivarsi herding district, with about 2 reindeer per km².",
   },
   {
     id: "tarvantovaara",
@@ -404,6 +426,9 @@ export const landmarks: Landmark[] = [
     rank: 8,
     wildernessScore: 3,
     wildlife: ["Whooper swan", "Willow grouse", "Mountain hare", "Waterfowl"],
+    reindeer: "Very likely",
+    reindeerBasis:
+      "5,000 to 7,000 reindeer graze here: about 40% of the Käsivarsi district's pasture.",
   },
   {
     id: "pulju",
@@ -417,6 +442,9 @@ export const landmarks: Landmark[] = [
     rank: 9,
     wildernessScore: 3,
     wildlife: ["Willow grouse", "Mountain hare", "Capercaillie", "Black grouse", "Stoat"],
+    reindeer: "Likely",
+    reindeerBasis:
+      "Shared by three herding districts, with about 1.7 to 2.3 reindeer per km².",
   },
   {
     id: "kemihaara",
@@ -430,6 +458,9 @@ export const landmarks: Landmark[] = [
     rank: 10,
     wildernessScore: 2,
     wildlife: ["Wading birds", "Willow grouse", "Reindeer"],
+    reindeer: "Very likely",
+    reindeerBasis:
+      "An important summer pasture on the reindeer's route to their calving grounds.",
   },
   {
     id: "tuntsa",
@@ -443,6 +474,9 @@ export const landmarks: Landmark[] = [
     rank: 11,
     wildernessScore: 2,
     wildlife: ["Boreal forest birds"],
+    reindeer: "Likely",
+    reindeerBasis:
+      "Part of the Pohjois-Salla herding district, with about 2 reindeer per km², though a 1960 forest fire destroyed much of its pasture.",
     notes: {
       wildlife:
         "BirdLife says 13 of Europe's 15 boreal-forest bird species breed in the wider Värriö–Tuntsa area, but names no animals for Tuntsa itself.",
@@ -460,6 +494,9 @@ export const landmarks: Landmark[] = [
     rank: 12,
     wildernessScore: 2,
     wildlife: ["Brown bear", "Moose", "Reindeer", "Red fox", "Capercaillie", "Willow grouse"],
+    reindeer: "Likely",
+    reindeerBasis:
+      "Part of the Ivalo herding district, with about 2 reindeer per km².",
   },
 
   // National parks, in the site owner's order (region, year and size from

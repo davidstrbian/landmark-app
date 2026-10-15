@@ -79,7 +79,16 @@ export function WildernessDialog({
                 tone="tundra"
                 wide
               >
-                {area.reindeer && <ReindeerMeter level={area.reindeer} />}
+                {area.reindeer && (
+                  <>
+                    <ReindeerMeter level={area.reindeer} />
+                    {area.reindeerBasis && (
+                      <span className="mt-3 block text-sm leading-relaxed text-tundra-muted">
+                        {area.reindeerBasis}
+                      </span>
+                    )}
+                  </>
+                )}
               </FactTile>
             </dl>
 
