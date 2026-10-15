@@ -3,7 +3,7 @@
 import { useLayoutEffect, useRef, useState } from "react";
 import type { Landmark } from "@/data/landmarks";
 import { useVisited } from "@/hooks/use-visited";
-import { FellCard } from "./FellCard";
+import { FellPreview } from "./FellPreview";
 import { FellDialog } from "./FellDialog";
 import { LandmarkMap, type MarkerHover } from "./LandmarkMap";
 
@@ -12,8 +12,8 @@ const EDGE = 12; // keeps the preview off the map's edges
 
 // The map page's client side: shares the visited store with the home page,
 // so marking a fell conquered here (or there) recolours its marker.
-// Hovering a marker previews the fell's card from the home page; clicking it
-// opens the full dialog.
+// Hovering a marker previews the fell's name, height and region (the bottom
+// of its home-page card); clicking it opens the full dialog.
 export function FellMap({ fells }: { fells: Landmark[] }) {
   const { visited, ready, toggle } = useVisited();
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -31,11 +31,9 @@ export function FellMap({ fells }: { fells: Landmark[] }) {
       />
       {hover && hovered && (
         <Preview hover={hover}>
-          <FellCard
+          <FellPreview
             fell={hovered}
-            visited={visited.has(hovered.id)}
-            ready={ready}
-            onOpen={() => {}}
+            visited={ready && visited.has(hovered.id)}
           />
         </Preview>
       )}
