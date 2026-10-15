@@ -52,15 +52,15 @@ const ICONS: Record<LandmarkCategory, string> = {
 
 // Every marker is white with a grey symbol until completed. Completed markers
 // take their section's colours: night and dusk for fells, the wilderness
-// cover's pale sky and tundra birds, and the park cover's pale green and
-// spruce green.
+// cover's pale sky and tundra birds, and for parks a pale green spruce on
+// forest green.
 const MARKER_BASE =
   "flex size-9 cursor-pointer items-center justify-center rounded-full shadow-[0_4px_12px_rgb(20_24_28/0.3)] transition-colors duration-200 hover:scale-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-night";
 const MARKER_TODO = "bg-white text-[#5b646b] ring-1 ring-night/10";
 const MARKER_DONE: Record<LandmarkCategory, string> = {
   peak: "bg-night text-dusk",
   "wilderness-area": "bg-[#b4c1c6] text-tundra ring-1 ring-tundra/15",
-  "national-park": "bg-[#adc3b0] text-forest ring-1 ring-forest/15",
+  "national-park": "bg-forest text-[#adc3b0]",
 };
 
 // A hovered (or keyboard-focused) marker and its edges, in pixels relative to
