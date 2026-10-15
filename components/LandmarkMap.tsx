@@ -26,23 +26,35 @@ const MARKER_BASE =
 const MARKER_TODO = "bg-white text-[#5b646b] ring-1 ring-night/10";
 const MARKER_DONE = "bg-night text-dusk";
 
+// A hovered (or keyboard-focused) marker and its edges, in pixels relative to
+// the map container.
+export type MarkerHover = {
+  id: string;
+  x: number; // horizontal centre
+  top: number;
+  bottom: number;
+};
+
 type Props = {
   fells: Landmark[];
   visited: Set<string>;
   onSelect: (id: string) => void;
+  onHover: (hover: MarkerHover | null) => void;
 };
 
 // A full-size MapLibre map with a marker for each fell. maplibre-gl needs the
 // browser (WebGL, window), so it is imported inside the effect rather than at
 // the top of the file.
-export function LandmarkMap({ fells, visited, onSelect }: Props) {
+export function LandmarkMap({ fells, visited, onSelect, onHover }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const markersRef = useRef(new Map<string, HTMLButtonElement>());
   // Latest values for the map's event handlers, which are set up once.
   const onSelectRef = useRef(onSelect);
+  const onHoverRef = useRef(onHover);
   const visitedRef = useRef(visited);
   useEffect(() => {
     onSelectRef.current = onSelect;
+    onHoverRef.current = onHover;
     visitedRef.current = visited;
   });
 
@@ -69,6 +81,8 @@ export function LandmarkMap({ fells, visited, onSelect }: Props) {
       map.fitBounds(FINLAND_BOUNDS, { padding: 24, animate: false });
       map.addControl(new NavigationControl(), "top-right");
       map.addControl(new ScaleControl({ unit: "metric" }), "bottom-left");
+      // A preview would drift away from its marker while the map moves.
+      map.on("movestart", () => onHoverRef.current(null));
 
       for (const fell of fells) {
         if (fell.lat === undefined || fell.lng === undefined) continue;
@@ -77,7 +91,26 @@ export function LandmarkMap({ fells, visited, onSelect }: Props) {
         el.innerHTML = FELL_ICON;
         el.setAttribute("aria-haspopup", "dialog");
         styleMarker(el, fell, visitedRef.current.has(fell.id));
-        el.addEventListener("click", () => onSelectRef.current(fell.id));
+        el.addEventListener("click", () => {
+          onHoverRef.current(null);
+          onSelectRef.current(fell.id);
+        });
+        const show = () => {
+          const box = containerRef.current?.getBoundingClientRect();
+          if (!box) return;
+          const r = el.getBoundingClientRect();
+          onHoverRef.current({
+            id: fell.id,
+            x: r.left + r.width / 2 - box.left,
+            top: r.top - box.top,
+            bottom: r.bottom - box.top,
+          });
+        };
+        const hide = () => onHoverRef.current(null);
+        el.addEventListener("mouseenter", show);
+        el.addEventListener("focus", show);
+        el.addEventListener("mouseleave", hide);
+        el.addEventListener("blur", hide);
         markers.set(fell.id, el);
         // MapLibre adds its positioning classes to the marker element, so the
         // button is wrapped and only the button's classes change.
