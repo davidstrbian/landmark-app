@@ -34,10 +34,12 @@ const svg = (viewBox: string, size: string, body: string, filled = 0) =>
 // like those on the national park cover.
 const ICONS: Record<LandmarkCategory, string> = {
   peak: svg("0 0 24 24", "size-[1.125rem]", '<path d="m8 3 4 8 5-5 5 15H2L8 3z"/>'),
+  // At marker size the small bird would touch the large one's wing tip, so
+  // it is moved further up and out than on the cover.
   "wilderness-area": svg(
-    "112 56 210 78",
-    "w-[1.625rem]",
-    `<path d="${BIRD_LARGE}"/><path d="${BIRD_SMALL}"/>`,
+    "112 40 236 94",
+    "w-[1.75rem]",
+    `<path d="${BIRD_LARGE}"/><path d="${BIRD_SMALL}" transform="translate(22 -16)"/>`,
     9,
   ),
   "national-park": svg(
