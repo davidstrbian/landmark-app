@@ -121,7 +121,7 @@ export function FellDialog({ fell, visited, onToggleVisited, onClose }: Props) {
               {fell.description}
             </p>
 
-            <dl className="mt-4 grid gap-2.5 sm:grid-cols-2">
+            <dl className="mt-3 grid gap-2 sm:mt-4 sm:grid-cols-2 sm:gap-2.5">
               <FactTile label="Coordinates" note={note("coordinates")}>
                 {fell.lat !== undefined && fell.lng !== undefined && (
                   <CopyCoordinates
@@ -181,7 +181,7 @@ export function FellDialog({ fell, visited, onToggleVisited, onClose }: Props) {
             <button
               type="button"
               onClick={() => onToggleVisited(fell.id)}
-              className={`mt-4 flex w-full items-center justify-center gap-2 rounded-2xl px-5 py-3 font-body font-medium transition duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dusk ${
+              className={`mt-3 flex w-full items-center justify-center gap-2 rounded-2xl px-5 py-3 sm:mt-4 font-body font-medium transition duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dusk ${
                 visited
                   ? "border border-dusk/40 bg-dusk/10 text-dusk hover:bg-dusk/20"
                   : "bg-dusk text-night hover:bg-dusk/90"
