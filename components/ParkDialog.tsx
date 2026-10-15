@@ -51,12 +51,13 @@ export function ParkDialog({ park, visited, onToggleVisited, onClose }: Props) {
             </p>
 
             <dl className="mt-6 grid gap-3 sm:grid-cols-2">
-              <FactTile label="Size" note={park.notes?.size} tone="forest">
-                {park.areaKm2 !== undefined && (
-                  <span className="tabular-nums">
-                    {formatArea(park.areaKm2)}
-                  </span>
-                )}
+              {/* Whole km². The sea parks have no size and show a dash. */}
+              <FactTile label="Size" tone="forest">
+                <span className="tabular-nums">
+                  {park.areaKm2 !== undefined
+                    ? formatArea(Math.round(park.areaKm2))
+                    : "–"}
+                </span>
               </FactTile>
               <FactTile label="Established" tone="forest">
                 {park.established !== undefined && (

@@ -17,7 +17,6 @@ export type FellField =
   | "hike"
   | "protectedArea"
   | "wildlife"
-  | "size"
   | "trail"
   | "reindeer";
 
@@ -778,9 +777,6 @@ export const landmarks: Landmark[] = [
     established: 1991,
     nature: ["Archipelago"],
     trail: { name: "Selkä-Sarvi nature trail", distance: "1 km", duration: "0.5–1 h" },
-    notes: {
-      size: "No size in the data provided. Wikipedia gives 157 km², of which only 2.5 km² is land.",
-    },
   },
   {
     id: "petkeljarvi",
@@ -897,7 +893,6 @@ export const landmarks: Landmark[] = [
     nature: ["Archipelago"],
     trail: { name: "Holma nature trail", distance: "about 2 km" },
     notes: {
-      size: "No size in the data provided. Metsähallitus gives a total area of about 527 km², mostly sea.",
       trail: "No official duration found.",
     },
   },
@@ -952,7 +947,6 @@ export const landmarks: Landmark[] = [
     nature: ["Archipelago"],
     trail: { name: "Iso-Enskeri nature trail", distance: "3 km" },
     notes: {
-      size: "No size in the data provided. One source gives 912 km², of which 15 km² is land.",
       trail: "No official duration found.",
     },
   },
