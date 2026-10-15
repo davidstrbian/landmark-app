@@ -65,7 +65,8 @@ export type NatureType =
   | "Fell"
   | "Mire"
   | "Archipelago"
-  | "Lake Scenery";
+  | "Lake Scenery"
+  | "Rivers and Rapids"; // Oulanka only
 
 // How likely a visitor is to see reindeer, from most to least likely.
 export const REINDEER_LEVELS = [
@@ -737,7 +738,7 @@ export const landmarks: Landmark[] = [
     areaKm2: 270,
     image: "",
     established: 1956,
-    nature: ["Forest", "Mire"],
+    nature: ["Rivers and Rapids"],
     trail: { name: "Karhunkierros", distance: "about 80 km", duration: "4–6 days" },
   },
   {
