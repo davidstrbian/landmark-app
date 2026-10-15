@@ -7,7 +7,9 @@ import { FellPreview } from "./FellPreview";
 import { FellDialog } from "./FellDialog";
 import { LandmarkMap, type MarkerHover } from "./LandmarkMap";
 
-const GAP = 10; // between the marker and its preview card
+const GAP = 10; // between the marker and its preview card (the arrow spans it)
+const ARROW = 8; // arrow height; its half-width is the same
+const ARROW_INSET = 20; // keeps the arrow off the card's rounded corners
 const EDGE = 12; // keeps the preview off the map's edges
 
 // The map page's client side: shares the visited store with the home page,
@@ -48,7 +50,7 @@ export function FellMap({ fells }: { fells: Landmark[] }) {
 }
 
 // Places the card above the marker, or below it when there is no room, and
-// keeps it inside the map. It ignores the pointer so it never steals the
+// keeps it inside the map. A small triangle on its edge points at the marker. It ignores the pointer so it never steals the
 // hover from the marker, and is inert (out of the tab order and hidden from
 // assistive tech, which gets the marker's own label).
 function Preview({
@@ -59,7 +61,12 @@ function Preview({
   children: React.ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState<{ left: number; top: number } | null>(null);
+  const [pos, setPos] = useState<{
+    left: number;
+    top: number;
+    arrowX: number; // arrow centre, relative to the card's left edge
+    below: boolean; // card under the marker, arrow on its top edge
+  } | null>(null);
 
   useLayoutEffect(() => {
     const el = ref.current;
@@ -67,12 +74,19 @@ function Preview({
     if (!el || !parent) return;
     const { width, height } = el.getBoundingClientRect();
     const above = hover.top - GAP - height;
-    const top = above >= EDGE ? above : hover.bottom + GAP;
+    const below = above < EDGE;
+    const top = below ? hover.bottom + GAP : above;
     const left = Math.min(
       Math.max(hover.x - width / 2, EDGE),
       parent.clientWidth - width - EDGE,
     );
-    setPos({ left, top });
+    // The card may be pushed sideways near the edges; the arrow still points
+    // at the marker.
+    const arrowX = Math.min(
+      Math.max(hover.x - left, ARROW_INSET),
+      width - ARROW_INSET,
+    );
+    setPos({ left, top, arrowX, below });
   }, [hover]);
 
   return (
@@ -85,6 +99,20 @@ function Preview({
       }
     >
       {children}
+      {pos && (
+        <svg
+          viewBox={`0 0 ${ARROW * 2} ${ARROW}`}
+          width={ARROW * 2}
+          height={ARROW}
+          className={`absolute fill-night ${pos.below ? "rotate-180" : ""}`}
+          style={{
+            left: pos.arrowX - ARROW,
+            ...(pos.below ? { top: 1 - ARROW } : { bottom: 1 - ARROW }),
+          }}
+        >
+          <path d={`M0 0H${ARROW * 2}L${ARROW} ${ARROW}Z`} />
+        </svg>
+      )}
     </div>
   );
 }
