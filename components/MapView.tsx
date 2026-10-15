@@ -31,18 +31,25 @@ export function MapView({ landmarks }: { landmarks: Landmark[] }) {
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<LandmarkCategory | null>(null);
   const [fitRequest, setFitRequest] = useState<FitRequest | null>(null);
+  const inCategory = useMemo(
+    () => landmarks.filter((l) => category === null || l.category === category),
+    [landmarks, category],
+  );
+  // Ids in the active category whose name contains the search text.
+  const matching = (text: string) => {
+    const q = normalize(text);
+    return inCategory
+      .filter((l) => q === "" || normalize(l.name).includes(q))
+      .map((l) => l.id);
+  };
   const visible = useMemo(() => {
     const q = normalize(query);
     return new Set(
-      landmarks
-        .filter(
-          (l) =>
-            (category === null || l.category === category) &&
-            (q === "" || normalize(l.name).includes(q)),
-        )
+      inCategory
+        .filter((l) => q === "" || normalize(l.name).includes(q))
         .map((l) => l.id),
     );
-  }, [landmarks, query, category]);
+  }, [inCategory, query]);
   const selected = landmarks.find((l) => l.id === selectedId) ?? null;
   const hovered = hover ? landmarks.find((l) => l.id === hover.id) : undefined;
   // Each category has its own dialog; only the selected one is open.
@@ -65,9 +72,15 @@ export function MapView({ landmarks }: { landmarks: Landmark[] }) {
         onHover={setHover}
       />
       <MapSearch
+        landmarks={inCategory}
         query={query}
         onQueryChange={setQuery}
-        onSubmit={() => setFitRequest({ ids: [...visible] })}
+        onSubmit={(text) => {
+          const ids = matching(text);
+          setFitRequest({ ids });
+          return ids.length;
+        }}
+        onPick={(landmark) => setFitRequest({ ids: [landmark.id] })}
         category={category}
         onCategoryChange={setCategory}
         matches={visible.size}
