@@ -27,7 +27,7 @@ export function FactTile({
   // Callers pass `cond && <el />`, so a missing value arrives as false.
   const missing = children == null || children === false;
   return (
-    <div className={`rounded-2xl p-4 ${bg} ${wide ? "sm:col-span-2" : ""}`}>
+    <div className={`rounded-2xl px-4 py-3 ${bg} ${wide ? "sm:col-span-2" : ""}`}>
       <dt
         className={`font-body text-xs font-medium uppercase tracking-wide ${muted}`}
       >

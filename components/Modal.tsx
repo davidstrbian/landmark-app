@@ -40,7 +40,7 @@ export function Modal({
       onClick={(event) => {
         if (event.target === event.currentTarget) event.currentTarget.close();
       }}
-      className={`m-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-xl overflow-hidden rounded-3xl p-0 shadow-lift ${className ?? ""}`}
+      className={`m-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-2xl overflow-hidden rounded-3xl p-0 shadow-lift ${className ?? ""}`}
     >
       {open && (
         <div className="relative flex max-h-[calc(100dvh-2rem)] flex-col overflow-y-auto">
