@@ -18,7 +18,8 @@ export type FellField =
   | "protectedArea"
   | "wildlife"
   | "size"
-  | "trail";
+  | "trail"
+  | "reindeer";
 
 export type Landmark = {
   id: string; // slug
@@ -46,15 +47,25 @@ export type Landmark = {
   notes?: Partial<Record<FellField, string>>; // shown under the field
 
   // Wilderness area details. Size uses areaKm2.
-  rank?: number; // 1 = wildest
+  rank?: number; // 1 = wildest, used for sorting
   wildernessScore?: number; // 1–5, shown as stars
-  wildlife?: string[]; // animals visitors may encounter
+  wildlife?: string[]; // kept in the data but not shown for now
+  reindeer?: ReindeerLikelihood; // chance of seeing reindeer
 
   // National park details. Size uses areaKm2.
   established?: number; // year
   landscape?: "Fell" | "Forest" | "Mire" | "Lakes" | "Archipelago" | "Mixed";
   trail?: { name: string; distance: string; duration?: string };
 };
+
+// How likely a visitor is to see reindeer, from most to least likely.
+export const REINDEER_LEVELS = [
+  "Very likely",
+  "Likely",
+  "Possible",
+  "Rare",
+] as const;
+export type ReindeerLikelihood = (typeof REINDEER_LEVELS)[number];
 
 // What completing a landmark is called: peaks are conquered, parks and
 // wilderness areas are visited.

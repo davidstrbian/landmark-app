@@ -6,22 +6,20 @@ import { formatArea } from "@/lib/format";
 import { FactTile } from "./FactTile";
 import { LandmarkImage } from "./LandmarkImage";
 import { Modal } from "./Modal";
+import { ReindeerMeter } from "./ReindeerMeter";
 import { StarRating } from "./StarRating";
 
 type Props = {
   area: Landmark | null;
-  total: number; // number of wilderness areas, for "#1 of 12"
   visited: boolean;
   onToggleVisited: (id: string) => void;
   onClose: () => void;
 };
 
-// Mirrors FellDialog: rank box where the fell's elevation box is, size where
-// coordinates are, wilderness score where difficulty is, wildlife where the
-// typical hike is.
+// Mirrors FellDialog: size where coordinates are, wilderness score where
+// difficulty is, reindeer sighting likelihood where the typical hike is.
 export function WildernessDialog({
   area,
-  total,
   visited,
   onToggleVisited,
   onClose,
@@ -46,27 +44,13 @@ export function WildernessDialog({
           />
 
           <div className="p-6 sm:p-8">
-            <div className="flex items-start justify-between gap-4">
-              <div className="min-w-0">
-                <p className="font-body text-sm text-dusk">{area.region}</p>
-                <h2
-                  id="wilderness-dialog-title"
-                  className="mt-1 font-heading text-3xl font-semibold tracking-tight"
-                >
-                  {area.name}
-                </h2>
-              </div>
-              {area.rank !== undefined && (
-                <div className="shrink-0 rounded-2xl bg-dusk px-4 py-2.5 text-right text-tundra">
-                  <p className="font-heading text-2xl font-semibold leading-none tabular-nums">
-                    #{area.rank}
-                  </p>
-                  <p className="mt-1.5 font-body text-[0.6875rem] font-medium uppercase tracking-wide">
-                    Wildest of {total}
-                  </p>
-                </div>
-              )}
-            </div>
+            <p className="font-body text-sm text-dusk">{area.region}</p>
+            <h2
+              id="wilderness-dialog-title"
+              className="mt-1 font-heading text-3xl font-semibold tracking-tight"
+            >
+              {area.name}
+            </h2>
             <p className="mt-4 font-body leading-relaxed text-tundra-muted">
               {area.description}
             </p>
@@ -90,23 +74,12 @@ export function WildernessDialog({
                 )}
               </FactTile>
               <FactTile
-                label="Wildlife you may encounter"
-                note={area.notes?.wildlife}
+                label="Reindeer sighting likelihood"
+                note={area.notes?.reindeer}
                 tone="tundra"
                 wide
               >
-                {area.wildlife && area.wildlife.length > 0 && (
-                  <ul className="mt-2 flex flex-wrap gap-2">
-                    {area.wildlife.map((animal) => (
-                      <li
-                        key={animal}
-                        className="rounded-full bg-tundra px-3 py-1 text-sm"
-                      >
-                        {animal}
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                {area.reindeer && <ReindeerMeter level={area.reindeer} />}
               </FactTile>
             </dl>
 

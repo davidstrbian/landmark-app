@@ -66,7 +66,6 @@ export function WildernessSection({
 
       <WildernessDialog
         area={selected}
-        total={areas.length}
         visited={selected ? visited.has(selected.id) : false}
         onToggleVisited={onToggleVisited}
         onClose={() => setSelectedId(null)}
