@@ -1,6 +1,5 @@
 import { Check, MapPin } from "lucide-react";
 import { COMPLETION, type Landmark } from "@/data/landmarks";
-import { formatArea } from "@/lib/format";
 import { LandmarkImage } from "./LandmarkImage";
 
 type Props = {
@@ -36,26 +35,16 @@ export function WildernessCard({ area, visited, ready, onOpen }: Props) {
         )}
       </div>
 
-      {/* Two rows like FellCard. Area names are long, so the size sits on
-          the second row beside the region. */}
+      {/* Name on the first row, region on the second. Size is in the
+          dialog. */}
       <div className="flex flex-1 flex-col gap-1.5 p-5">
         <h3 className="min-w-0 truncate font-heading text-xl font-semibold tracking-tight">
           {area.name}
         </h3>
-        <div className="flex items-center justify-between gap-3">
-          <p className="flex min-w-0 items-center gap-1.5 font-body text-sm text-tundra-muted">
-            <MapPin
-              className="size-4 shrink-0 self-center"
-              aria-hidden="true"
-            />
-            <span className="truncate">{area.region}</span>
-          </p>
-          {area.areaKm2 !== undefined && (
-            <span className="shrink-0 font-heading text-lg leading-5 font-medium tabular-nums text-dusk lg:text-base xl:text-lg">
-              {formatArea(area.areaKm2)}
-            </span>
-          )}
-        </div>
+        <p className="flex min-w-0 items-center gap-1.5 font-body text-sm text-tundra-muted">
+          <MapPin className="size-4 shrink-0" aria-hidden="true" />
+          <span className="truncate">{area.region}</span>
+        </p>
       </div>
     </button>
   );

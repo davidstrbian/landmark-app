@@ -1,6 +1,5 @@
 import { Check, MapPin } from "lucide-react";
 import { COMPLETION, type Landmark } from "@/data/landmarks";
-import { formatArea } from "@/lib/format";
 import { LandmarkImage } from "./LandmarkImage";
 
 type Props = {
@@ -34,16 +33,10 @@ export function ParkCard({ park, visited, ready, onOpen }: Props) {
             {done}
           </span>
         )}
-        {/* Region names are long, so the size sits on the cover rather than
-            beside the region as in WildernessCard. */}
-        {park.areaKm2 !== undefined && (
-          <span className="absolute bottom-3 left-3 rounded-full bg-dusk px-2.5 py-1 font-heading text-sm font-semibold tabular-nums text-forest">
-            {formatArea(park.areaKm2)}
-          </span>
-        )}
       </div>
 
-      {/* Name on the first row, region on the second, as in WildernessCard. */}
+      {/* Name on the first row, region on the second, as in WildernessCard.
+          Size is in the dialog. */}
       <div className="flex flex-1 flex-col gap-1.5 p-5">
         <h3 className="min-w-0 truncate font-heading text-xl font-semibold tracking-tight lg:text-lg">
           {park.name}

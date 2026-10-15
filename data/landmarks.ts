@@ -195,7 +195,7 @@ export const landmarks: Landmark[] = [
     id: "kiilopaa",
     name: "Kiilopää",
     category: "peak",
-    region: "Inari and Sodankylä, Lapland",
+    region: "Sodankylä, Lapland",
     description:
       "Kiilopää is one of the best-known fells of the Saariselkä area, a rounded, bare-topped summit right next to the Kiilopää fell centre. A well-marked trail climbs to the top in about two kilometres, with long sections of steps. From the summit the wilderness of Urho Kekkonen National Park stretches as far as the eye can see.",
     elevationM: 546,
@@ -506,7 +506,7 @@ export const landmarks: Landmark[] = [
     id: "etela-konnevesi",
     name: "Etelä-Konnevesi",
     category: "national-park",
-    region: "Central Finland",
+    region: "Keski-Suomi",
     description:
       "Rocky, forested hills rise straight out of the clear waters of Lake Konnevesi. Its trails climb to sweeping lake views and pass through groves of giant aspens.",
     areaKm2: 15.44,
@@ -561,7 +561,7 @@ export const landmarks: Landmark[] = [
     id: "isojarvi",
     name: "Isojärvi",
     category: "national-park",
-    region: "Central Finland",
+    region: "Keski-Suomi",
     description:
       "Rugged forested hills and lakes whose woods still tell the story of a century of logging. The oldest trees grow in the Latokuusikko old-growth forest, and today the only loggers at work are beavers.",
     areaKm2: 19,
@@ -587,7 +587,7 @@ export const landmarks: Landmark[] = [
     id: "kauhaneva-pohjankangas",
     name: "Kauhaneva–Pohjankangas",
     category: "national-park",
-    region: "Southern Ostrobothnia",
+    region: "Etelä-Pohjanmaa",
     description:
       "Here the vast Kauhaneva raised bog meets the sandy ridge of the Pohjankangas esker. Duckboard trails lead out to bog pools and a viewing tower.",
     areaKm2: 57,
@@ -600,7 +600,7 @@ export const landmarks: Landmark[] = [
     id: "koli-national-park",
     name: "Koli",
     category: "national-park",
-    region: "North Karelia",
+    region: "Pohjois-Karjala",
     description:
       "Ancient quartzite hills rise above Lake Pielinen, mixing old forests, slash-and-burn meadows and lake shores. The island-dotted view from Ukko-Koli became a symbol of the Finnish national landscape.",
     areaKm2: 30,
@@ -613,7 +613,7 @@ export const landmarks: Landmark[] = [
     id: "kolovesi",
     name: "Kolovesi",
     category: "national-park",
-    region: "South Savo",
+    region: "Etelä-Savo",
     description:
       "Steep rocky shores, narrow straits and forested islands on Lake Saimaa, best explored by canoe. Rock paintings around 5,000 years old decorate the cliffs of Ukonvuori.",
     areaKm2: 23,
@@ -629,7 +629,7 @@ export const landmarks: Landmark[] = [
     id: "kurjenrahka",
     name: "Kurjenrahka",
     category: "national-park",
-    region: "Southwest Finland",
+    region: "Varsinais-Suomi",
     description:
       "Open bogs and forested islands of higher ground make up this mire park north of Turku. At its heart stands the Kuhankuono boundary mark, reached by a short boardwalk.",
     areaKm2: 29,
@@ -642,7 +642,7 @@ export const landmarks: Landmark[] = [
     id: "lauhanvuori",
     name: "Lauhanvuori",
     category: "national-park",
-    region: "Southern Ostrobothnia",
+    region: "Etelä-Pohjanmaa",
     description:
       "A broad forested hill rises about 100 metres above the surrounding plains, its top reaching around 231 metres above sea level. Its slopes are scattered with vast stone fields, the largest of them Kivijata.",
     areaKm2: 53,
@@ -655,7 +655,7 @@ export const landmarks: Landmark[] = [
     id: "leivonmaki",
     name: "Leivonmäki",
     category: "national-park",
-    region: "Central Finland",
+    region: "Keski-Suomi",
     description:
       "Eskers, mires and clear lakes shaped by the Ice Age meet in this compact park. Its geology trail passes kettle holes, erratic boulders and esker ridges.",
     areaKm2: 29,
@@ -697,7 +697,7 @@ export const landmarks: Landmark[] = [
     id: "linnansaari",
     name: "Linnansaari",
     category: "national-park",
-    region: "South Savo",
+    region: "Etelä-Savo",
     description:
       "Rocky islands and forested shores in Lake Haukivesi, part of the Saimaa lake system, reached by boat. It is home to the endangered Saimaa ringed seal, one of the world's rarest seals.",
     areaKm2: 38,
@@ -723,7 +723,7 @@ export const landmarks: Landmark[] = [
     id: "oulanka",
     name: "Oulanka",
     category: "national-park",
-    region: "Northern Ostrobothnia",
+    region: "Pohjois-Pohjanmaa",
     description:
       "Fast rivers, roaring rapids, sandy riverbanks and suspension bridges wind through old forest. It is famous for the Karhunkierros, one of Finland's most popular long-distance trails.",
     areaKm2: 270,
@@ -749,7 +749,7 @@ export const landmarks: Landmark[] = [
     id: "patvinsuo",
     name: "Patvinsuo",
     category: "national-park",
-    region: "North Karelia",
+    region: "Pohjois-Karjala",
     description:
       "Wide open bogs and old forests surround Lake Suomunjärvi. Sandy lake shores and long duckboard trails make it an easy wilderness escape.",
     areaKm2: 105,
@@ -777,7 +777,7 @@ export const landmarks: Landmark[] = [
     id: "petkeljarvi",
     name: "Petkeljärvi",
     category: "national-park",
-    region: "North Karelia",
+    region: "Pohjois-Karjala",
     description:
       "Narrow eskers wind between clear lakes in this small park near the eastern border. Its esker trail is a compact introduction to the North Karelian landscape.",
     areaKm2: 6,
@@ -809,7 +809,7 @@ export const landmarks: Landmark[] = [
     id: "pyha-hakki",
     name: "Pyhä-Häkki",
     category: "national-park",
-    region: "Central Finland",
+    region: "Keski-Suomi",
     description:
       "One of southern Finland's finest old-growth forests, where some pines are over 400 years old. Its landmark, the Big Old Tree, stands just off the Kotajärvi trail.",
     areaKm2: 13,
@@ -867,7 +867,7 @@ export const landmarks: Landmark[] = [
     id: "rokua",
     name: "Rokua",
     category: "national-park",
-    region: "Northern Ostrobothnia",
+    region: "Pohjois-Pohjanmaa",
     description:
       "Pine heaths on a huge esker, with inland dunes, kettle-hole lakes and white carpets of lichen. It is part of Rokua Geopark, Finland's first UNESCO Global Geopark.",
     areaKm2: 4.3,
@@ -880,7 +880,7 @@ export const landmarks: Landmark[] = [
     id: "archipelago",
     name: "Saaristomeri",
     category: "national-park",
-    region: "Southwest Finland",
+    region: "Varsinais-Suomi",
     description:
       "More than 2,000 islands and skerries in the outer Archipelago Sea, most of the park open water. Traditional farming keeps meadows open on the larger islands, with a nature centre at Kasnäs.",
     image: "",
@@ -896,7 +896,7 @@ export const landmarks: Landmark[] = [
     id: "salamajarvi",
     name: "Salamajärvi",
     category: "national-park",
-    region: "Central Ostrobothnia",
+    region: "Keski-Pohjanmaa",
     description:
       "Wide aapa mires and wild forests cover the uplands where Central Ostrobothnia meets Central Finland. It is home to the rare wild forest reindeer.",
     areaKm2: 62,
@@ -964,7 +964,7 @@ export const landmarks: Landmark[] = [
     id: "syote",
     name: "Syöte",
     category: "national-park",
-    region: "Northern Ostrobothnia",
+    region: "Pohjois-Pohjanmaa",
     description:
       "Old spruce forests cover rounded fells, eskers and mires in Finland's southernmost fell area. The Syöte circular trail loops over the Pytkynharju ridge.",
     areaKm2: 299,
@@ -993,7 +993,7 @@ export const landmarks: Landmark[] = [
     id: "teijo",
     name: "Teijo",
     category: "national-park",
-    region: "Southwest Finland",
+    region: "Varsinais-Suomi",
     description:
       "Pine heaths, lakes and mires in the Salo region of Southwest Finland. Lake Matildanjärvi, ringed by a popular trail, is its best-known spot.",
     areaKm2: 33.85,
@@ -1006,7 +1006,7 @@ export const landmarks: Landmark[] = [
     id: "tiilikkajarvi",
     name: "Tiilikkajärvi",
     category: "national-park",
-    region: "North Savo",
+    region: "Pohjois-Savo",
     description:
       "Mires, eskers and lakes in the backwoods between North Savo and Kainuu. Venäjänhiekka, a long sandy shore on Lake Tiilikkajärvi, is its most popular spot.",
     areaKm2: 34,
