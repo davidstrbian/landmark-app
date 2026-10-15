@@ -34,23 +34,23 @@ export function ParkDialog({ park, visited, onToggleVisited, onClose }: Props) {
           <LandmarkImage
             key={park.id}
             landmark={park}
-            sizes="(min-width: 704px) 672px, 100vw"
-            className="aspect-[4/1] w-full shrink-0"
+            sizes="(min-width: 640px) 576px, 100vw"
+            className="aspect-[4/1] w-full shrink-0 sm:aspect-[16/9]"
           />
 
-          <div className="p-4 sm:px-7 sm:py-6">
+          <div className="p-4 sm:p-8">
             <p className="font-body text-sm text-dusk">{park.region}</p>
             <h2
               id="park-dialog-title"
-              className="mt-0.5 font-heading text-2xl font-semibold tracking-tight sm:text-3xl"
+              className="mt-0.5 font-heading text-2xl font-semibold tracking-tight sm:mt-1 sm:text-3xl"
             >
               {park.name}
             </h2>
-            <p className="mt-3 font-body text-sm leading-relaxed sm:text-[0.9375rem] text-forest-muted">
+            <p className="mt-3 font-body text-sm leading-relaxed sm:mt-4 sm:text-base text-forest-muted">
               {park.description}
             </p>
 
-            <dl className="mt-3 grid gap-2 sm:mt-4 sm:grid-cols-2 sm:gap-2.5">
+            <dl className="mt-3 grid gap-2 sm:mt-6 sm:grid-cols-2 sm:gap-3">
               {/* Whole km². The sea parks have no size and show a dash. */}
               <FactTile label="Size" tone="forest">
                 <span className="tabular-nums">
@@ -74,7 +74,7 @@ export function ParkDialog({ park, visited, onToggleVisited, onClose }: Props) {
             <button
               type="button"
               onClick={() => onToggleVisited(park.id)}
-              className={`mt-3 flex w-full items-center justify-center gap-2 rounded-2xl px-5 py-3 sm:mt-4 font-body font-medium transition duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dusk ${
+              className={`mt-3 flex w-full items-center justify-center gap-2 rounded-2xl px-5 py-3 sm:mt-6 sm:py-3.5 font-body font-medium transition duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dusk ${
                 visited
                   ? "border border-dusk/40 bg-dusk/10 text-dusk hover:bg-dusk/20"
                   : "bg-dusk text-forest hover:bg-dusk/90"
@@ -100,7 +100,7 @@ export function ParkDialog({ park, visited, onToggleVisited, onClose }: Props) {
             )}
 
             {park.imageCredit && (
-              <p className="mt-4 font-body text-xs text-forest-muted">
+              <p className="mt-4 font-body text-xs sm:mt-6 text-forest-muted">
                 Photo: {park.imageCredit}
               </p>
             )}

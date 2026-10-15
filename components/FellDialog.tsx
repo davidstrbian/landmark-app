@@ -91,17 +91,17 @@ export function FellDialog({ fell, visited, onToggleVisited, onClose }: Props) {
           <LandmarkImage
             key={fell.id}
             landmark={fell}
-            sizes="(min-width: 704px) 672px, 100vw"
-            className="aspect-[4/1] w-full shrink-0"
+            sizes="(min-width: 640px) 576px, 100vw"
+            className="aspect-[4/1] w-full shrink-0 sm:aspect-[16/9]"
           />
 
-          <div className="p-4 sm:px-7 sm:py-6">
+          <div className="p-4 sm:p-8">
             <div className="flex items-start justify-between gap-4">
               <div className="min-w-0">
                 <p className="font-body text-sm text-dusk">{fell.region}</p>
                 <h2
                   id="fell-dialog-title"
-                  className="mt-0.5 font-heading text-2xl font-semibold tracking-tight sm:text-3xl"
+                  className="mt-0.5 font-heading text-2xl font-semibold tracking-tight sm:mt-1 sm:text-3xl"
                 >
                   {fell.name}
                 </h2>
@@ -117,11 +117,11 @@ export function FellDialog({ fell, visited, onToggleVisited, onClose }: Props) {
                 </div>
               )}
             </div>
-            <p className="mt-3 font-body text-sm leading-relaxed sm:text-[0.9375rem] text-night-muted">
+            <p className="mt-3 font-body text-sm leading-relaxed sm:mt-4 sm:text-base text-night-muted">
               {fell.description}
             </p>
 
-            <dl className="mt-3 grid gap-2 sm:mt-4 sm:grid-cols-2 sm:gap-2.5">
+            <dl className="mt-3 grid gap-2 sm:mt-6 sm:grid-cols-2 sm:gap-3">
               <FactTile label="Coordinates" note={note("coordinates")}>
                 {fell.lat !== undefined && fell.lng !== undefined && (
                   <CopyCoordinates
@@ -146,7 +146,7 @@ export function FellDialog({ fell, visited, onToggleVisited, onClose }: Props) {
                         {fell.hike.name}
                       </span>
                     )}
-                    <dl className="mt-2 grid grid-cols-3 gap-3">
+                    <dl className="mt-2 grid grid-cols-3 gap-3 sm:mt-3">
                       {[
                         { label: "Distance", value: fell.hike.distance },
                         { label: "Duration", value: fell.hike.duration },
@@ -170,7 +170,7 @@ export function FellDialog({ fell, visited, onToggleVisited, onClose }: Props) {
                           </div>
                         ))}
                     </dl>
-                    <span className="mt-2 block text-sm text-night-muted">
+                    <span className="mt-2 block text-sm text-night-muted sm:mt-3">
                       From {fell.hike.trailhead}
                     </span>
                   </>
@@ -181,7 +181,7 @@ export function FellDialog({ fell, visited, onToggleVisited, onClose }: Props) {
             <button
               type="button"
               onClick={() => onToggleVisited(fell.id)}
-              className={`mt-3 flex w-full items-center justify-center gap-2 rounded-2xl px-5 py-3 sm:mt-4 font-body font-medium transition duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dusk ${
+              className={`mt-3 flex w-full items-center justify-center gap-2 rounded-2xl px-5 py-3 sm:mt-6 sm:py-3.5 font-body font-medium transition duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dusk ${
                 visited
                   ? "border border-dusk/40 bg-dusk/10 text-dusk hover:bg-dusk/20"
                   : "bg-dusk text-night hover:bg-dusk/90"
@@ -207,7 +207,7 @@ export function FellDialog({ fell, visited, onToggleVisited, onClose }: Props) {
             )}
 
             {fell.imageCredit && (
-              <p className="mt-4 font-body text-xs text-night-muted">
+              <p className="mt-4 font-body text-xs sm:mt-6 text-night-muted">
                 Photo: {fell.imageCredit}
               </p>
             )}

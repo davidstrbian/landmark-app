@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useLayoutEffect, useRef, type ReactNode } from "react";
 import { X } from "lucide-react";
 
 type Props = {
@@ -12,8 +12,14 @@ type Props = {
   children: ReactNode;
 };
 
+const MARGIN = 32; // space kept around the dialog, in px (matches 2rem)
+
 // Native <dialog> opened with showModal(): the browser handles the focus trap,
 // Esc to close, and returning focus to the element that opened it.
+//
+// On wider screens a dialog taller than the window is scaled down as a whole
+// (CSS zoom), so its layout and picture keep their proportions and nothing
+// needs scrolling. Phones use the dialogs' own compact layout instead.
 export function Modal({
   open,
   onClose,
@@ -23,12 +29,50 @@ export function Modal({
   children,
 }: Props) {
   const ref = useRef<HTMLDialogElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const dialog = ref.current;
     if (!dialog) return;
     if (open && !dialog.open) dialog.showModal();
     if (!open && dialog.open) dialog.close();
+  }, [open]);
+
+  useLayoutEffect(() => {
+    const dialog = ref.current;
+    const scroller = scrollRef.current;
+    const content = contentRef.current;
+    if (!open || !dialog || !scroller || !content) return;
+    const wide = window.matchMedia("(min-width: 640px)");
+
+    const fit = () => {
+      // Measure at full size, then zoom out just enough to fit the window.
+      dialog.style.zoom = "";
+      scroller.style.maxHeight = "";
+      dialog.style.maxHeight = "";
+      if (!wide.matches) return;
+      const natural = content.offsetHeight;
+      const zoom = Math.min(1, (window.innerHeight - MARGIN) / natural);
+      if (zoom >= 1) return;
+      dialog.style.zoom = String(zoom);
+      // Heights inside a zoomed element are scaled too, so the window-height
+      // caps are divided by the zoom to keep their on-screen size.
+      const cap = `calc((100dvh - ${MARGIN}px) / ${zoom})`;
+      dialog.style.maxHeight = cap;
+      scroller.style.maxHeight = cap;
+    };
+
+    fit();
+    const observer = new ResizeObserver(fit);
+    observer.observe(content);
+    window.addEventListener("resize", fit);
+    wide.addEventListener("change", fit);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", fit);
+      wide.removeEventListener("change", fit);
+    };
   }, [open]);
 
   return (
@@ -40,10 +84,13 @@ export function Modal({
       onClick={(event) => {
         if (event.target === event.currentTarget) event.currentTarget.close();
       }}
-      className={`m-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-2xl overflow-hidden rounded-3xl p-0 shadow-lift ${className ?? ""}`}
+      className={`m-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-xl overflow-hidden rounded-3xl p-0 shadow-lift ${className ?? ""}`}
     >
       {open && (
-        <div className="relative flex max-h-[calc(100dvh-2rem)] flex-col overflow-y-auto">
+        <div
+          ref={scrollRef}
+          className="relative max-h-[calc(100dvh-2rem)] overflow-y-auto"
+        >
           <button
             type="button"
             onClick={() => ref.current?.close()}
@@ -52,7 +99,9 @@ export function Modal({
           >
             <X className="size-5" aria-hidden="true" />
           </button>
-          {children}
+          <div ref={contentRef} className="flex flex-col">
+            {children}
+          </div>
         </div>
       )}
     </dialog>

@@ -38,23 +38,23 @@ export function WildernessDialog({
           <LandmarkImage
             key={area.id}
             landmark={area}
-            sizes="(min-width: 704px) 672px, 100vw"
-            className="aspect-[4/1] w-full shrink-0"
+            sizes="(min-width: 640px) 576px, 100vw"
+            className="aspect-[4/1] w-full shrink-0 sm:aspect-[16/9]"
           />
 
-          <div className="p-4 sm:px-7 sm:py-6">
+          <div className="p-4 sm:p-8">
             <p className="font-body text-sm text-dusk">{area.region}</p>
             <h2
               id="wilderness-dialog-title"
-              className="mt-0.5 font-heading text-2xl font-semibold tracking-tight sm:text-3xl"
+              className="mt-0.5 font-heading text-2xl font-semibold tracking-tight sm:mt-1 sm:text-3xl"
             >
               {area.name}
             </h2>
-            <p className="mt-3 font-body text-sm leading-relaxed sm:text-[0.9375rem] text-tundra-muted">
+            <p className="mt-3 font-body text-sm leading-relaxed sm:mt-4 sm:text-base text-tundra-muted">
               {area.description}
             </p>
 
-            <dl className="mt-3 grid gap-2 sm:mt-4 sm:grid-cols-2 sm:gap-2.5">
+            <dl className="mt-3 grid gap-2 sm:mt-6 sm:grid-cols-2 sm:gap-3">
               <FactTile label="Size" tone="tundra">
                 {area.areaKm2 !== undefined && (
                   <span className="tabular-nums">
@@ -85,7 +85,7 @@ export function WildernessDialog({
             <button
               type="button"
               onClick={() => onToggleVisited(area.id)}
-              className={`mt-3 flex w-full items-center justify-center gap-2 rounded-2xl px-5 py-3 sm:mt-4 font-body font-medium transition duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dusk ${
+              className={`mt-3 flex w-full items-center justify-center gap-2 rounded-2xl px-5 py-3 sm:mt-6 sm:py-3.5 font-body font-medium transition duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dusk ${
                 visited
                   ? "border border-dusk/40 bg-dusk/10 text-dusk hover:bg-dusk/20"
                   : "bg-dusk text-tundra hover:bg-dusk/90"
@@ -111,7 +111,7 @@ export function WildernessDialog({
             )}
 
             {area.imageCredit && (
-              <p className="mt-4 font-body text-xs text-tundra-muted">
+              <p className="mt-4 font-body text-xs sm:mt-6 text-tundra-muted">
                 Photo: {area.imageCredit}
               </p>
             )}
