@@ -77,6 +77,7 @@ export function MapSearch({
   const listId = `${id}-list`;
   const inputRef = useRef<HTMLInputElement>(null);
   const [open, setOpen] = useState(false);
+  const [focused, setFocused] = useState(false);
   const [active, setActive] = useState(-1);
   // Loaded when the box is first focused, so the server render stays empty.
   const [recent, setRecent] = useState<string[] | null>(null);
@@ -161,8 +162,10 @@ export function MapSearch({
             onFocus={() => {
               if (recent === null) setRecent(getRecentSearches());
               setOpen(true);
+              setFocused(true);
             }}
             onBlur={() => {
+              setFocused(false);
               setOpen(false);
               setActive(-1);
             }}
@@ -324,7 +327,9 @@ export function MapSearch({
           })}
         </div>
       </div>
-      {category && !showList && (
+      {/* Out of the way while searching: hidden while the box is in use or
+          holds a search. */}
+      {category && !focused && !query.trim() && (
         <CategoryProgress
           // Remounts per category, so the percentage counts up again.
           key={category}
