@@ -125,7 +125,7 @@ export function ProgressBar({ landmarks, visited, ready }: Props) {
                 className={`block rounded-2xl p-5 transition duration-200 hover:brightness-110 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dusk ${c.tile}`}
               >
                 <div className="flex items-baseline justify-between gap-3">
-                  <span className="truncate font-heading font-medium">
+                  <span className="truncate font-heading text-sm font-medium md:text-base">
                     {c.label}
                   </span>
                   <span className={`shrink-0 text-sm tabular-nums ${c.muted}`}>

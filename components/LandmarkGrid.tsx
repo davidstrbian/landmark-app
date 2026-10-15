@@ -75,7 +75,7 @@ export function LandmarkGrid({
         <ul
           ref={listRef}
           id="park-list"
-          className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4"
+          className="mt-8 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4"
         >
           {shown.map((landmark) => (
             <li key={landmark.id} className="min-w-0">

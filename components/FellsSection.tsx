@@ -52,7 +52,7 @@ export function FellsSection({
           mark it conquered.
         </p>
 
-        <ul className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <ul className="mt-10 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
           {sorted.map((fell) => (
             <li key={fell.id} className="min-w-0">
               <FellCard
