@@ -32,8 +32,15 @@ export const PREVIEW_TONES: Record<
   },
 };
 
+// What each category is called in the preview's small type label.
+const TYPE_LABELS: Record<LandmarkCategory, string> = {
+  peak: "Fell",
+  "wilderness-area": "Wilderness area",
+  "national-park": "National park",
+};
+
 // The bottom half of a home-page card on its own (name, region, and a fell's
-// height), used as the map's hover preview. Completed landmarks get a small
+// height) plus a small label naming its type, used as the map's hover preview. Completed landmarks get a small
 // dusk check by the name.
 export function LandmarkPreview({
   landmark,
@@ -67,12 +74,17 @@ export function LandmarkPreview({
           </span>
         )}
       </div>
-      <p
-        className={`flex min-w-0 items-center gap-1.5 font-body text-sm ${tone.muted}`}
-      >
-        <MapPin className="size-4 shrink-0" aria-hidden="true" />
-        <span className="truncate">{landmark.region}</span>
-      </p>
+      <div className="flex items-center justify-between gap-3">
+        <p
+          className={`flex min-w-0 items-center gap-1.5 font-body text-sm ${tone.muted}`}
+        >
+          <MapPin className="size-4 shrink-0" aria-hidden="true" />
+          <span className="truncate">{landmark.region}</span>
+        </p>
+        <span className="shrink-0 rounded-full bg-white/10 px-2 py-0.5 font-body text-[0.6875rem] font-medium uppercase tracking-wide text-white/85">
+          {TYPE_LABELS[landmark.category]}
+        </span>
+      </div>
     </div>
   );
 }

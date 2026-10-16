@@ -43,7 +43,11 @@ export function WildernessCard({ area, visited, ready, onOpen }: Props) {
         </h3>
         <p className="flex min-w-0 items-center gap-1.5 font-body text-xs text-tundra-muted sm:text-sm">
           <MapPin className="size-3.5 shrink-0 sm:size-4" aria-hidden="true" />
-          <span className="truncate">{area.region}</span>
+          {/* Phones show just the municipality ("Inari"), as on fell cards. */}
+          <span className="truncate sm:hidden">
+            {area.region.split(",")[0]}
+          </span>
+          <span className="hidden truncate sm:inline">{area.region}</span>
         </p>
       </div>
     </button>

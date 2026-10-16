@@ -314,7 +314,7 @@ export const landmarks: Landmark[] = [
     id: "muotkatunturi",
     name: "Muotkatunturi",
     category: "wilderness-area",
-    region: "Inari",
+    region: "Inari, Lapland",
     description:
       "Muotkatunturi stretches from a rolling, treeless fell plateau cut by river valleys in the north to mountain birch woods, bogs and old pine forests in the south. Lake Peltojärvi is its largest lake, fed by countless rivers and brooks. There are no marked trails, so visitors plan their own routes.",
     areaKm2: 1570,
@@ -332,7 +332,7 @@ export const landmarks: Landmark[] = [
     id: "kaldoaivi",
     name: "Kaldoaivi",
     category: "wilderness-area",
-    region: "Utsjoki",
+    region: "Utsjoki, Lapland",
     description:
       "Kaldoaivi is Finland's largest wilderness area, a roadless expanse of fells that continues across the border into Norway. Its landscape ranges from deep, steep-sided river valleys to gentle fell slopes, and it is one of Finland's most important breeding grounds for arctic waders. The only marked route, the Sevettijärvi–Pulmanki trail, crosses it from south to north.",
     areaKm2: 2924,
@@ -350,7 +350,7 @@ export const landmarks: Landmark[] = [
     id: "paistunturi",
     name: "Paistunturi",
     category: "wilderness-area",
-    region: "Utsjoki",
+    region: "Utsjoki, Lapland",
     description:
       "Paistunturi is a land of fell heaths, mountain birch forest and aapa and palsa mires, split in two by the Kevo Strict Nature Reserve. Rolling highlands and deep river valleys fill its middle and north, where Gáimmoivi, its highest fell, looks out toward Norway's snowy peaks. Old nesting mounds recall the Arctic fox, which last bred here in 1996.",
     areaKm2: 1570,
@@ -368,7 +368,7 @@ export const landmarks: Landmark[] = [
     id: "hammastunturi",
     name: "Hammastunturi",
     category: "wilderness-area",
-    region: "Inari",
+    region: "Inari, Lapland",
     description:
       "Hammastunturi lies between Urho Kekkonen and Lemmenjoki national parks. Pine forests and low fells grow on nutrient-poor granulite bedrock, and the Ivalojoki river winds through the area. Its gold-rush past lives on at Kultala, where hundreds of prospectors once lived.",
     areaKm2: 1825,
@@ -386,7 +386,7 @@ export const landmarks: Landmark[] = [
     id: "vatsari",
     name: "Vätsäri",
     category: "wilderness-area",
-    region: "Inari",
+    region: "Inari, Lapland",
     description:
       "Vätsäri runs from the north-eastern shore of Lake Inari to the Norwegian border, a maze of thousands of small lakes, rocky ground and Scots pine taiga. The rocky bays of Lake Inari reach deep into its backwoods. The difficult terrain makes it one of Lapland's most demanding hiking destinations.",
     areaKm2: 1550,
@@ -404,7 +404,7 @@ export const landmarks: Landmark[] = [
     id: "poyrisjarvi",
     name: "Pöyrisjärvi",
     category: "wilderness-area",
-    region: "Enontekiö",
+    region: "Enontekiö, Lapland",
     description:
       "Pöyrisjärvi is known for its sand dunes and long sandy ridges, most of them on the north side of Lake Pöyrisjärvi. Small lakes with sandy shores dot the area, dry pine forest gives way to birch further north, and the Pöyrisvuoma mire is one of Finland's most valuable palsa bogs. Late summer and early autumn are the most popular times to visit.",
     areaKm2: 1280,
@@ -422,7 +422,7 @@ export const landmarks: Landmark[] = [
     id: "kasivarsi",
     name: "Käsivarsi",
     category: "wilderness-area",
-    region: "Enontekiö",
+    region: "Enontekiö, Lapland",
     description:
       "Käsivarsi, in Finland's north-western 'arm', lies mostly above the treeline and holds all but one of the country's fells over 1,000 metres. The average yearly temperature stays below freezing and the growing season lasts only about a hundred days. Its rocky plateau is home to rare plants and animals found nowhere else in Finland.",
     areaKm2: 2206,
@@ -440,7 +440,7 @@ export const landmarks: Landmark[] = [
     id: "tarvantovaara",
     name: "Tarvantovaara",
     category: "wilderness-area",
-    region: "Enontekiö",
+    region: "Enontekiö, Lapland",
     description:
       "Tarvantovaara is a landscape of free-flowing rivers, wetlands and low fells, bordered to the north-west by the Lätäseno-Hietajoki mire reserve. The Tarvantojoki river through its centre is gentle enough for beginner canoeists. Nature writer Yrjö Kokko found his first whooper swan nests here, work that helped save the species in Finland.",
     areaKm2: 670,
@@ -458,7 +458,7 @@ export const landmarks: Landmark[] = [
     id: "pulju",
     name: "Pulju",
     category: "wilderness-area",
-    region: "Enontekiö",
+    region: "Enontekiö, Lapland",
     description:
       "Pulju is a land of large mires and rounded hills and fells, with spruce on the southern hills giving way to pine and fell birch in the north. Road 956 runs through its centre, making it one of the easiest wilderness areas to reach. In late summer its mires draw cloudberry pickers.",
     areaKm2: 614,
@@ -476,7 +476,7 @@ export const landmarks: Landmark[] = [
     id: "kemihaara",
     name: "Kemihaara",
     category: "wilderness-area",
-    region: "Savukoski",
+    region: "Savukoski, Lapland",
     description:
       "Kemihaara borders Urho Kekkonen National Park to the north and the Kemijoki river to the east. Pine backwoods, spruce-filled ravines and rocky fells over 420 metres high meet wide aapa mires that feed the headwaters of the Kemijoki and Pihtijoki rivers. Its mires are an important breeding ground for wading birds.",
     areaKm2: 302,
@@ -494,7 +494,7 @@ export const landmarks: Landmark[] = [
     id: "tuntsa",
     name: "Tuntsa",
     category: "wilderness-area",
-    region: "Savukoski",
+    region: "Savukoski, Lapland",
     description:
       "Tuntsa lies where the northern limit of spruce forest crosses eastern Lapland. In 1960 it was hit by Finland's largest recorded forest fire, and much of the burnt land is still open today, visible from the UKK hiking trail. Its bogs yield rich cloudberry crops and its slopes are covered in blueberry and lingonberry.",
     areaKm2: 212,
@@ -516,7 +516,7 @@ export const landmarks: Landmark[] = [
     id: "tsarmitunturi",
     name: "Tsarmitunturi",
     category: "wilderness-area",
-    region: "Inari",
+    region: "Inari, Lapland",
     description:
       "Tsarmitunturi lies in south-eastern Inari on the Russian border, between the roads to Nellim and Raja-Jooseppi. Spruce and pine forests cover the Tsarmitunturi highland and Akalauttapää, separated by the deep Pahakuru gorge. It protects Finland's northernmost continuous spruce forest untouched by people.",
     areaKm2: 150,

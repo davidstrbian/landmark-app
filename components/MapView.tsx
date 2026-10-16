@@ -148,7 +148,7 @@ function Preview({
     <div
       ref={ref}
       inert
-      className="pointer-events-none absolute z-10 w-64"
+      className="pointer-events-none absolute z-10 w-max min-w-64 max-w-[min(22rem,calc(100%-1.5rem))]"
       style={
         pos ? { left: pos.left, top: pos.top } : { left: 0, top: 0, opacity: 0 }
       }
