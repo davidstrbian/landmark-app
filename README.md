@@ -20,6 +20,20 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Supabase setup
+
+Without Supabase settings the app uses the local data in `data/landmarks.ts`, so it runs as is. To load landmarks from Supabase:
+
+1. Create a project at [supabase.com](https://supabase.com).
+2. In the SQL editor, run `supabase/migrations/20261016000000_init.sql`, then `supabase/migrations/20261016000100_rls.sql` (or `supabase db push` with the Supabase CLI).
+3. Run `supabase/seed.sql` in the SQL editor to load all 63 landmarks. It is safe to run again: existing rows are updated.
+4. Copy `.env.example` to `.env.local` and fill in the project URL and anon key from Project Settings → API. Newer projects call the anon key the "publishable" key; either works. Add the same two variables to the Vercel project.
+5. Put the service role key (the "secret" key on newer projects) in `.env.local` only, then run `npm run test:rls`. It creates two test users, checks that each can only read and change their own profile and completions and that nobody can change landmarks, and deletes the users at the end. Every line should show ✓.
+
+After editing `data/landmarks.ts`, run `npm run db:seed:sql` to regenerate `supabase/seed.sql` and run it again in the SQL editor. The seed adds and updates landmarks but never deletes them: remove a dropped landmark in the Supabase table editor.
+
+Pages are rebuilt at most once an hour, so a change in the database shows up on the site within an hour. Builds reuse the cached database response for the same hour, so redeploying right after a change can still show the old data.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

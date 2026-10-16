@@ -8,6 +8,10 @@ export const metadata: Metadata = {
   description: "A map of Finland's fells, wilderness areas and national parks.",
 };
 
+// Landmarks load from Supabase (when configured) at build time; the page is
+// regenerated at most once an hour so edits in the database show up.
+export const revalidate = 3600;
+
 // The map fills the window below the header. The header's white text sits
 // on a night-coloured band, as it does over the hero on the home page.
 export default async function MapPage() {

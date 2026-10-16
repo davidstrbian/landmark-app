@@ -4,6 +4,10 @@ import { Hero } from "@/components/Hero";
 import { getLandmarks } from "@/lib/landmarks";
 import { Tracker } from "./tracker";
 
+// Landmarks load from Supabase (when configured) at build time; the page is
+// regenerated at most once an hour so edits in the database show up.
+export const revalidate = 3600;
+
 export default async function Home() {
   const landmarks = await getLandmarks();
 
