@@ -21,7 +21,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   const params = await searchParams;
   const next = safeNext(params.next);
   const error = typeof params.error === "string" ? ERRORS[params.error] : undefined;
-  const signupHref = next === "/account" ? "/signup" : `/signup?next=${encodeURIComponent(next)}`;
+  const signupHref = next === "/profile" ? "/signup" : `/signup?next=${encodeURIComponent(next)}`;
 
   return (
     <AuthCard title="Log in" intro="Welcome back to your landmarks.">

@@ -11,8 +11,11 @@ export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
   const tokenHash = searchParams.get("token_hash");
   const type = searchParams.get("type") as EmailOtpType | null;
-  const fallback = type === "recovery" ? "/reset-password" : "/account";
-  const next = safeNext(searchParams.get("next"), fallback);
+  const fallback = type === "recovery" ? "/reset-password" : "/profile";
+  // The "Confirm signup" template from V03.2 still says next=/account; new
+  // accounts now start on their profile instead.
+  const requested = searchParams.get("next");
+  const next = safeNext(type !== "recovery" && requested === "/account" ? "/profile" : requested, fallback);
 
   if (isSupabaseConfigured && tokenHash && type) {
     const supabase = await createClient();

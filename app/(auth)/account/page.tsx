@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { AuthCard } from "@/components/auth/AuthCard";
-import { DisplayNameForm } from "@/components/auth/DisplayNameForm";
 import { NotConfigured } from "@/components/auth/NotConfigured";
 import { TextLink } from "@/components/auth/TextLink";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { createClient } from "@/lib/supabase/server";
 import { signOut } from "./actions";
 
-export const metadata: Metadata = { title: "Your account · Landmark Tracker" };
+export const metadata: Metadata = { title: "Account settings · Landmark Tracker" };
 
 const NOTICES: Record<string, string> = { password: "Your new password is saved." };
 
@@ -21,17 +20,12 @@ export default async function AccountPage({ searchParams }: PageProps<"/account"
   const claims = data?.claims;
   if (!claims) redirect("/login?next=/account");
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("display_name")
-    .eq("id", claims.sub)
-    .maybeSingle();
   const provider = claims.app_metadata?.provider === "google" ? "Google" : "email and password";
   const noticeKey = (await searchParams).notice;
   const notice = typeof noticeKey === "string" ? NOTICES[noticeKey] : undefined;
 
   return (
-    <AuthCard title="Your account">
+    <AuthCard title="Account settings">
       {notice && (
         <p role="status" className="mb-5 rounded-xl bg-primary-soft px-3.5 py-2.5 text-sm text-primary-hover">
           {notice}
@@ -43,9 +37,11 @@ export default async function AccountPage({ searchParams }: PageProps<"/account"
         <dd className="text-muted">with {provider}</dd>
       </dl>
 
-      <div className="mt-6 border-t border-border pt-6">
-        <DisplayNameForm current={profile?.display_name ?? ""} />
-      </div>
+
+      <p className="mt-6 border-t border-border pt-6 text-sm">
+        <TextLink href="/profile">Your profile</TextLink>
+        <span className="text-muted"> · name, username, bio and photo</span>
+      </p>
 
       <p className="mt-6 border-t border-border pt-6 text-sm leading-relaxed text-muted">
         Landmarks you mark while signed in are saved to your account, on every device.

@@ -18,6 +18,7 @@ export async function proxy(request: NextRequest) {
 // cookies; the browser client keeps the session fresh there.
 export const config = {
   matcher: [
+    "/profile/:path*",
     "/account/:path*",
     "/login",
     "/signup",

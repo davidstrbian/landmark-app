@@ -5,8 +5,17 @@ export const PASSWORD_MIN = 8;
 // bcrypt, which Supabase uses, ignores anything after 72 bytes.
 export const PASSWORD_MAX = 72;
 
-// Matches the check on profiles.display_name.
+// These match the checks on public.profiles.
 export const DISPLAY_NAME_MAX = 80;
+export const USERNAME_MIN = 3;
+export const USERNAME_MAX = 20;
+export const USERNAME_PATTERN = /^[a-z0-9_]{3,20}$/;
+export const BIO_MAX = 160;
+
+// Avatars: what the picker accepts before resizing, and what is uploaded.
+export const AVATAR_INPUT_MAX_BYTES = 10 * 1024 * 1024;
+export const AVATAR_SIZE_PX = 256;
+export const AVATAR_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
 export function readString(formData: FormData, name: string): string {
   const value = formData.get(name);

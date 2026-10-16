@@ -25,7 +25,7 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 Without Supabase settings the app uses the local data in `data/landmarks.ts`, so it runs as is. To load landmarks from Supabase:
 
 1. Create a project at [supabase.com](https://supabase.com).
-2. Create the tables and policies, either with the Supabase CLI (installed as a dev dependency): `npx supabase login`, `npx supabase link --project-ref <your-project-ref>`, then `npx supabase db push`; or by running the files in `supabase/migrations/` in the SQL editor, in name order: `…000000_init.sql`, `…000100_rls.sql`, then `…000200_service_role_grants.sql`.
+2. Create the tables and policies, either with the Supabase CLI (installed as a dev dependency): `npx supabase login`, `npx supabase link --project-ref <your-project-ref>`, then `npx supabase db push`; or by running every file in `supabase/migrations/` in the SQL editor, in name order (oldest first). Each new feature adds a file; run only the ones you haven't run yet.
 3. Run `supabase/seed.sql` in the SQL editor to load all 63 landmarks. It is safe to run again: existing rows are updated. (`npx supabase db reset` runs it automatically against a local database started with `npx supabase start`.)
 4. Copy `.env.example` to `.env.local` and fill in the project URL and anon key from Project Settings → API. Newer projects call the anon key the "publishable" key; either works. Add the same two variables to the Vercel project.
 5. Put the service role key (the "secret" key on newer projects) in `.env.local` only, then run `npm run test:rls`. It creates two test users, checks that each can only read and change their own profile and completions and that nobody can change landmarks, and deletes the users at the end. Every line should show ✓.
@@ -51,6 +51,8 @@ Accounts use Supabase Auth: email and password (with email confirmation), Google
 5. **Email sending:** Supabase's built-in email sends only a few messages an hour and is meant for testing. Before real users sign up, set up your own SMTP under **Authentication → Emails → SMTP Settings** (for example with Resend).
 
 Then try it: sign up with a real email and open the confirmation link, log in with Google, and use "Forgot password?". Each new account gets a row in the `profiles` table.
+
+**Profiles and avatars.** `…000400_profile_page.sql` adds a username, bio and avatar to profiles and creates the `avatars` Storage bucket with its policies: people can upload, replace and delete pictures only in their own folder, and only JPEG, PNG or WebP up to 1 MB (the app shrinks pictures to 256×256 before uploading). The bucket is public to read, so an avatar's address works for anyone who has it; profiles themselves stay private. After running it, `npm run test:rls` also checks usernames and avatar storage.
 
 Signed-in visitors' ticks are saved to the `completions` table, so they follow them across devices. Anything ticked in a browser while signed out is copied into the account the next time someone logs in there, after which that browser's own list is cleared. To check: tick a few landmarks while signed out, log in, and look for "Added … landmarks from this browser to your account"; the rows appear in **Table Editor → completions**.
 

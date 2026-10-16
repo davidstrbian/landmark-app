@@ -3,7 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { isSupabaseConfigured, supabaseAnonKey, supabaseUrl } from "./config";
 
 // Pages only signed-in visitors may see, and pages signed-in visitors skip.
-const PROTECTED = ["/account", "/reset-password"];
+const PROTECTED = ["/profile", "/account", "/reset-password"];
 const GUEST_ONLY = ["/login", "/signup"];
 
 const matches = (path: string, prefixes: string[]) =>
@@ -54,6 +54,6 @@ export async function updateSession(request: NextRequest) {
   if (!signedIn && matches(path, PROTECTED)) {
     return redirectTo("/login", { next: path + request.nextUrl.search });
   }
-  if (signedIn && matches(path, GUEST_ONLY)) return redirectTo("/account");
+  if (signedIn && matches(path, GUEST_ONLY)) return redirectTo("/profile");
   return response;
 }

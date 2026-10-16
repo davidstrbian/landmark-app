@@ -1,5 +1,5 @@
 // Checks the Row Level Security policies against a real Supabase project with
-// two throwaway users, A and B.
+// two throwaway users, A and B: tables, profile fields and avatar storage.
 //
 //   npm run test:rls
 //
@@ -36,6 +36,14 @@ function check(name: string, ok: boolean, detail?: unknown) {
 // Postgres error codes PostgREST passes through.
 const RLS_VIOLATION = "42501"; // insufficient_privilege: a policy refused a write
 const UNIQUE_VIOLATION = "23505";
+const CHECK_VIOLATION = "23514";
+
+// A 1×1 PNG for the avatar storage checks.
+const PNG = Buffer.from(
+  "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==",
+  "base64",
+);
+const png = () => new Blob([PNG], { type: "image/png" });
 
 async function signIn(email: string, password: string) {
   const client = createClient(url!, anonKey!, options);
@@ -49,6 +57,7 @@ async function main() {
   const password = `Rls-test-${stamp}-${Math.random().toString(36).slice(2)}`;
   const emails = [`rls-test-a-${stamp}@example.com`, `rls-test-b-${stamp}@example.com`];
   const createdIds: string[] = [];
+  const uploaded: string[] = [];
 
   try {
     // The double-checks below read as the service role, which skips RLS but
@@ -121,6 +130,50 @@ async function main() {
     const anonProfiles = await anon.from("profiles").select("id");
     check("anon sees no profiles", (anonProfiles.data?.length ?? 0) === 0, anonProfiles.data);
 
+    console.log("Profile fields");
+    const name = `rls_${String(stamp).slice(-8)}`;
+    const setA = await a.client.from("profiles").update({ username: name, bio: "Testing" }).eq("id", a.id).select();
+    check("A can set her username and bio", setA.data?.length === 1, setA.error);
+    const takeName = await b.client.from("profiles").update({ username: name }).eq("id", b.id);
+    check("B can't take A's username", takeName.error?.code === UNIQUE_VIOLATION, takeName.error ?? "update succeeded");
+    const badName = await b.client.from("profiles").update({ username: "Not Valid" }).eq("id", b.id);
+    check("a badly formatted username is rejected", badName.error?.code === CHECK_VIOLATION, badName.error ?? "update succeeded");
+    const longBio = await a.client.from("profiles").update({ bio: "x".repeat(161) }).eq("id", a.id);
+    check("a bio over 160 characters is rejected", longBio.error?.code === CHECK_VIOLATION, longBio.error ?? "update succeeded");
+    const foreignAvatar = await a.client.from("profiles").update({ avatar_path: `${b.id}/x.png` }).eq("id", a.id);
+    check("A's avatar can't point into B's folder", foreignAvatar.error?.code === CHECK_VIOLATION, foreignAvatar.error ?? "update succeeded");
+
+    console.log("Avatar storage");
+    const aPath = `${a.id}/rls-test.png`;
+    const bPath = `${b.id}/rls-test.png`;
+    const ownUpload = await a.client.storage.from("avatars").upload(aPath, png(), { contentType: "image/png" });
+    if (!ownUpload.error) uploaded.push(aPath);
+    check("A can upload into her own folder", !ownUpload.error, ownUpload.error);
+    const bUpload = await b.client.storage.from("avatars").upload(bPath, png(), { contentType: "image/png" });
+    if (!bUpload.error) uploaded.push(bPath);
+    check("B can upload into his own folder", !bUpload.error, bUpload.error);
+    const intoB = await a.client.storage.from("avatars").upload(`${b.id}/from-a.png`, png(), { contentType: "image/png" });
+    if (!intoB.error) uploaded.push(`${b.id}/from-a.png`);
+    check("A can't upload into B's folder", !!intoB.error, "upload succeeded");
+    const anonUpload = await anon.storage.from("avatars").upload(`${a.id}/anon.png`, png(), { contentType: "image/png" });
+    if (!anonUpload.error) uploaded.push(`${a.id}/anon.png`);
+    check("anon can't upload", !!anonUpload.error, "upload succeeded");
+    const textFile = await a.client.storage
+      .from("avatars")
+      .upload(`${a.id}/note.txt`, new Blob(["hi"], { type: "text/plain" }), { contentType: "text/plain" });
+    if (!textFile.error) uploaded.push(`${a.id}/note.txt`);
+    check("the bucket refuses non-images", !!textFile.error, "upload succeeded");
+    const deleteB = await a.client.storage.from("avatars").remove([bPath]);
+    const bStill = await admin.storage.from("avatars").list(b.id);
+    check(
+      "A can't delete B's file",
+      (deleteB.data?.length ?? 0) === 0 && !!bStill.data?.some((f) => f.name === "rls-test.png"),
+      deleteB.data ?? deleteB.error,
+    );
+    const publicUrl = a.client.storage.from("avatars").getPublicUrl(aPath).data.publicUrl;
+    const served = await fetch(publicUrl);
+    check("the bucket's public URL serves A's avatar", served.ok, served.status);
+
     console.log("Completions");
     const aInsert = await a.client.from("completions").insert({ landmark_id: first }).select().single();
     check("A can mark a landmark completed (user_id defaults to her)", aInsert.data?.user_id === a.id, aInsert.error);
@@ -145,6 +198,10 @@ async function main() {
     const aDelete = await a.client.from("completions").delete().eq("landmark_id", first).select();
     check("A can delete her own completion", aDelete.data?.length === 1, aDelete.error);
   } finally {
+    if (uploaded.length) {
+      const { error } = await admin.storage.from("avatars").remove(uploaded);
+      if (error) console.error(`Could not delete test files: ${error.message}`);
+    }
     for (const id of createdIds) {
       const { error } = await admin.auth.admin.deleteUser(id);
       if (error) console.error(`Could not delete test user ${id}: ${error.message}`);
