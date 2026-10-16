@@ -102,6 +102,13 @@ body {
   );
 }
 
+/* A map marker being hovered or focused rises above its neighbours (over the
+   stacking order LandmarkMap sets inline). */
+.maplibregl-marker:has(> button:hover),
+.maplibregl-marker:has(> button:focus-visible) {
+  z-index: 10 !important;
+}
+
 /* Lock page scroll while a modal dialog is open. */
 html:has(dialog[open]) {
   overflow: hidden;

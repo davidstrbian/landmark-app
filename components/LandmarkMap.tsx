@@ -115,7 +115,6 @@ export function LandmarkMap({
         el.type = "button";
         el.innerHTML = CATEGORY_ICONS[landmark.category];
         el.setAttribute("aria-haspopup", "dialog");
-        styleMarker(el, landmark, visitedRef.current.has(landmark.id));
         el.addEventListener("click", () => {
           onHoverRef.current(null);
           onSelectRef.current(landmark.id);
@@ -141,6 +140,7 @@ export function LandmarkMap({
         // button is wrapped and only the button's classes change.
         const wrapper = document.createElement("div");
         wrapper.append(el);
+        styleMarker(el, landmark, visitedRef.current.has(landmark.id));
         setMarkerHidden(el, !visibleRef.current.has(landmark.id));
         new Marker({ element: wrapper })
           .setLngLat([landmark.lng, landmark.lat])
@@ -210,11 +210,23 @@ export function LandmarkMap({
 }
 
 function styleMarker(el: HTMLElement, landmark: Landmark, done: boolean) {
+  // Stacking order where markers overlap (on the wrapper MapLibre positions).
+  el.parentElement?.style.setProperty(
+    "z-index",
+    String(stackLevel(landmark, done)),
+  );
   el.className = `${MARKER_BASE} ${done ? MARKER_DONE[landmark.category] : MARKER_TODO}`;
   el.setAttribute(
     "aria-label",
     `${landmark.name}${done ? `, ${COMPLETION[landmark.category].done.toLowerCase()}` : ""}. Open details`,
   );
+}
+
+// Where markers overlap, completed ones sit on top, and within each group
+// fells sit above parks and wilderness areas: completed fells, then other
+// completed landmarks, then fells still to do, then everything else.
+function stackLevel(landmark: Landmark, done: boolean) {
+  return (done ? 2 : 0) + (landmark.category === "peak" ? 1 : 0) + 1;
 }
 
 // Hides the marker's wrapper (the element MapLibre positions).
