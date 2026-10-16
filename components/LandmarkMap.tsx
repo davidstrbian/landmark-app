@@ -51,7 +51,6 @@ type Props = {
   visible: Set<string>; // ids whose markers are shown (search and filter)
   visited: Set<string>;
   fitRequest: FitRequest | null;
-  sizeByHeight: boolean; // scale fell markers by elevation (fell filter on)
   onSelect: (id: string) => void;
   onHover: (hover: MarkerHover | null) => void;
 };
@@ -65,7 +64,6 @@ export function LandmarkMap({
   visible,
   visited,
   fitRequest,
-  sizeByHeight,
   onSelect,
   onHover,
 }: Props) {
@@ -165,20 +163,6 @@ export function LandmarkMap({
     }
   }, [visible]);
 
-  // With only fells showing, taller fells get slightly larger markers.
-  useEffect(() => {
-    for (const landmark of landmarks) {
-      const el = markersRef.current.get(landmark.id);
-      if (!el || landmark.category !== "peak") continue;
-      setMarkerScale(
-        el,
-        sizeByHeight && landmark.elevationM !== undefined
-          ? heightScale(landmark.elevationM)
-          : 1,
-      );
-    }
-  }, [landmarks, sizeByHeight]);
-
   // Zoom to the requested landmarks: close in on a single one, or fit them
   // all in view.
   useEffect(() => {
@@ -243,20 +227,6 @@ function styleMarker(el: HTMLElement, landmark: Landmark, done: boolean) {
 // completed landmarks, then fells still to do, then everything else.
 function stackLevel(landmark: Landmark, done: boolean) {
   return (done ? 2 : 0) + (landmark.category === "peak" ? 1 : 0) + 1;
-}
-
-// Marker scale per 400 m height band: 0–400, 400–800, 800–1200 and
-// 1200–1600 m.
-const HEIGHT_SCALES = [0.85, 1, 1.15, 1.3];
-function heightScale(elevationM: number) {
-  const band = Math.min(Math.floor(elevationM / 400), HEIGHT_SCALES.length - 1);
-  return HEIGHT_SCALES[band];
-}
-
-// CSS zoom scales the whole marker, symbol included; MapLibre keeps it
-// centred on its point.
-function setMarkerScale(el: HTMLElement, scale: number) {
-  el.style.setProperty("zoom", scale === 1 ? "" : String(scale));
 }
 
 // Hides the marker's wrapper (the element MapLibre positions).
