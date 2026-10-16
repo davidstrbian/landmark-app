@@ -92,7 +92,7 @@ export function FellDialog({ fell, visited, onToggleVisited, onClose }: Props) {
             key={fell.id}
             landmark={fell}
             sizes="(min-width: 640px) 640px, 100vw"
-            className="aspect-[4/1] w-full shrink-0 sm:aspect-[2/1]"
+            className="aspect-[4/1] w-full shrink-0 sm:aspect-[3/1] sm:[--ridge-height:85%]"
           />
 
           <div className="p-4 sm:p-8">

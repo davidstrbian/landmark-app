@@ -14,12 +14,19 @@ type Props = {
 
 const MARGIN = 32; // space kept around the dialog, in px (matches 2rem)
 
+// The tallest dialog's full height on wider screens (a fell marked
+// conquered, with its 3:1 picture). Every dialog is scaled as if it were
+// this tall, so fell, wilderness and park dialogs always share one width and
+// text size; a dialog that is taller still gets scaled further to fit.
+const DESIGN_HEIGHT = 930;
+
 // Native <dialog> opened with showModal(): the browser handles the focus trap,
 // Esc to close, and returning focus to the element that opened it.
 //
-// On wider screens a dialog taller than the window is scaled down as a whole
-// (CSS zoom), so its layout and picture keep their proportions and nothing
-// needs scrolling. Phones use the dialogs' own compact layout instead.
+// On wider screens dialogs are scaled down as a whole (CSS zoom) when the
+// window is shorter than DESIGN_HEIGHT, so their layout and pictures keep
+// their proportions, nothing needs scrolling, and all of them stay the same
+// size. Phones use the dialogs' own compact layout instead.
 export function Modal({
   open,
   onClose,
@@ -53,7 +60,7 @@ export function Modal({
       scroller.style.overflowY = "";
       dialog.style.maxHeight = "";
       if (!wide.matches) return;
-      const natural = content.offsetHeight;
+      const natural = Math.max(content.offsetHeight, DESIGN_HEIGHT);
       // Rounded down, so rounding never leaves the panel a pixel too tall.
       const zoom =
         Math.floor(((window.innerHeight - MARGIN) / natural) * 1000) / 1000;

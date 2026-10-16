@@ -80,7 +80,8 @@ export function LandmarkImage({ landmark, sizes, preload, className }: Props) {
   const [failed, setFailed] = useState(false);
 
   if ((!landmark.image || failed) && landmark.category === "peak") {
-    // Dusk sky over layered ridges, echoing the hero photo.
+    // Dusk sky over layered ridges, echoing the hero photo. Wide pictures can
+    // raise --ridge-height to trim sky rather than flatten the ridges.
     return (
       <div
         role="img"
@@ -91,7 +92,7 @@ export function LandmarkImage({ landmark, sizes, preload, className }: Props) {
           viewBox="0 0 400 300"
           preserveAspectRatio="none"
           aria-hidden="true"
-          className="absolute inset-x-0 -bottom-px h-3/5 w-full"
+          className="absolute inset-x-0 -bottom-px h-[var(--ridge-height,60%)] w-full"
         >
           <path
             d="M0 300V185l55-40 35 22 58-72 50 55 36-30 54 52 48-40 64 50v118z"
