@@ -42,6 +42,31 @@ const FRONT_SPRUCES = [
   .map(([x, y, h]) => spruce(x, y, h))
   .join("");
 
+// One layer of a placeholder scene, drawn in a 400×300 space. Ground layers
+// stretch to the full width; figures (birds, trees) keep their shape and stay
+// whole, centred and standing on the same ground line, however wide or
+// narrow the picture is (4:3 cards, 2:1 and 4:1 dialog pictures).
+function Layer({
+  stretch = false,
+  children,
+}: {
+  stretch?: boolean;
+  children: React.ReactNode;
+}) {
+  return (
+    <svg
+      viewBox="0 0 400 300"
+      preserveAspectRatio={stretch ? "none" : "xMidYMax meet"}
+      aria-hidden="true"
+      // Ground layers run 1px past the bottom so no seam shows against the
+      // card or dialog below.
+      className={`absolute inset-x-0 top-0 w-full ${stretch ? "h-[calc(100%+1px)]" : "h-full"}`}
+    >
+      {children}
+    </svg>
+  );
+}
+
 type Props = {
   landmark: Landmark;
   sizes: string;
@@ -90,21 +115,12 @@ export function LandmarkImage({ landmark, sizes, preload, className }: Props) {
         aria-label={`${landmark.name} (no photo yet)`}
         className={`relative overflow-hidden bg-gradient-to-b from-[#cfd7da] via-[#b4c1c6] to-[#93a5ac] ${className ?? ""}`}
       >
-        <svg
-          viewBox="0 0 400 300"
-          preserveAspectRatio="xMidYMid slice"
-          aria-hidden="true"
-          className="absolute inset-0 size-full"
-        >
-          {/* Large bird, then a smaller one further away. */}
-          <path
-            d={BIRD_LARGE}
-            className="fill-tundra"
-          />
-          <path
-            d={BIRD_SMALL}
-            className="fill-tundra/70"
-          />
+        {/* Large bird, then a smaller one further away. */}
+        <Layer>
+          <path d={BIRD_LARGE} className="fill-tundra" />
+          <path d={BIRD_SMALL} className="fill-tundra/70" />
+        </Layer>
+        <Layer stretch>
           <path
             d="M0 300V214c40-10 80-14 130-8s90 4 140-6 90-10 130 0v100z"
             className="fill-[#6f8289]"
@@ -113,7 +129,7 @@ export function LandmarkImage({ landmark, sizes, preload, className }: Props) {
             d="M0 300v-52c50-8 110-10 170-4s120 4 230-8v64z"
             className="fill-tundra"
           />
-        </svg>
+        </Layer>
       </div>
     );
   }
@@ -126,23 +142,24 @@ export function LandmarkImage({ landmark, sizes, preload, className }: Props) {
         aria-label={`${landmark.name} (no photo yet)`}
         className={`relative overflow-hidden bg-gradient-to-b from-[#eef1ea] via-[#d5e0d2] to-[#adc3b0] ${className ?? ""}`}
       >
-        <svg
-          viewBox="0 0 400 300"
-          preserveAspectRatio="xMidYMid slice"
-          aria-hidden="true"
-          className="absolute inset-0 size-full"
-        >
+        <Layer stretch>
           <path
             d="M0 300V232c60-12 120-14 190-8s140 4 210-8v84z"
             className="fill-[#7f9a88]"
           />
+        </Layer>
+        <Layer>
           <path d={BACK_SPRUCES} className="fill-[#5e7b68]" />
+        </Layer>
+        <Layer stretch>
           <path
             d="M0 300v-44c60-8 130-10 200-4s140 4 200-6v54z"
             className="fill-forest"
           />
+        </Layer>
+        <Layer>
           <path d={FRONT_SPRUCES} className="fill-forest" />
-        </svg>
+        </Layer>
       </div>
     );
   }

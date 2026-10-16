@@ -16,7 +16,7 @@ type Props = {
 };
 
 // Mirrors FellDialog: size where coordinates are, wilderness score where
-// difficulty is, reindeer sighting likelihood where the typical hike is.
+// difficulty is.
 export function WildernessDialog({
   area,
   visited,
@@ -71,14 +71,6 @@ export function WildernessDialog({
                     />
                   </span>
                 )}
-              </FactTile>
-              <FactTile
-                label="Reindeer sighting likelihood"
-                note={area.notes?.reindeer}
-                tone="tundra"
-                wide
-              >
-                {area.reindeer}
               </FactTile>
             </dl>
 
