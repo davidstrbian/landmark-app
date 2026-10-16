@@ -142,6 +142,8 @@ export function MapSearch({
             className="pointer-events-none absolute left-3.5 top-[1.125rem] size-4 -translate-y-1/2 text-[#5b646b]"
             aria-hidden="true"
           />
+          {/* 16px text on phones: smaller text makes mobile browsers zoom in
+              when the box is tapped. */}
           <input
             ref={inputRef}
             id={`${id}-input`}
@@ -200,7 +202,7 @@ export function MapSearch({
             }}
             placeholder="Search by name"
             autoComplete="off"
-            className={`h-9 w-full rounded-full bg-white pl-10 text-sm [&::-webkit-search-cancel-button]:appearance-none ${query ? "pr-9" : "pr-3"} text-mist-ink shadow-[0_4px_12px_rgb(20_24_28/0.3)] ring-1 ring-night/10 placeholder:text-[#5b646b] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-night`}
+            className={`h-9 w-full rounded-full bg-white pl-10 text-base sm:text-sm [&::-webkit-search-cancel-button]:appearance-none ${query ? "pr-9" : "pr-3"} text-mist-ink shadow-[0_4px_12px_rgb(20_24_28/0.3)] ring-1 ring-night/10 placeholder:text-[#5b646b] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-night`}
           />
           {/* Replaces the browser's own clear button, which doesn't match. */}
           {query && (

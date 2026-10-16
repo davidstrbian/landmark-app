@@ -53,6 +53,9 @@ type Props = {
   fitRequest: FitRequest | null;
   onSelect: (id: string) => void;
   onHover: (hover: MarkerHover | null) => void;
+  // Touch screens (no hover): a tap previews the marker instead of opening it.
+  onTap: (hover: MarkerHover) => void;
+  onDismiss: () => void; // tap on the map, or the map moved
 };
 
 // A full-size MapLibre map with a marker for each landmark that has
@@ -66,6 +69,8 @@ export function LandmarkMap({
   fitRequest,
   onSelect,
   onHover,
+  onTap,
+  onDismiss,
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<import("maplibre-gl").Map | null>(null);
@@ -73,11 +78,15 @@ export function LandmarkMap({
   // Latest values for the map's event handlers, which are set up once.
   const onSelectRef = useRef(onSelect);
   const onHoverRef = useRef(onHover);
+  const onTapRef = useRef(onTap);
+  const onDismissRef = useRef(onDismiss);
   const visitedRef = useRef(visited);
   const visibleRef = useRef(visible);
   useEffect(() => {
     onSelectRef.current = onSelect;
     onHoverRef.current = onHover;
+    onTapRef.current = onTap;
+    onDismissRef.current = onDismiss;
     visitedRef.current = visited;
     visibleRef.current = visible;
   });
@@ -107,7 +116,14 @@ export function LandmarkMap({
       map.addControl(new NavigationControl(), "top-right");
       map.addControl(new ScaleControl({ unit: "metric" }), "bottom-left");
       // A preview would drift away from its marker while the map moves.
-      map.on("movestart", () => onHoverRef.current(null));
+      map.on("movestart", () => onDismissRef.current());
+      // A tap on the map itself (not on a marker) closes a tapped preview.
+      map.on("click", (event) => {
+        const target = event.originalEvent.target;
+        if (target instanceof Element && target.closest(".maplibregl-marker"))
+          return;
+        onDismissRef.current();
+      });
 
       for (const landmark of landmarks) {
         if (landmark.lat === undefined || landmark.lng === undefined) continue;
@@ -115,20 +131,32 @@ export function LandmarkMap({
         el.type = "button";
         el.innerHTML = CATEGORY_ICONS[landmark.category];
         el.setAttribute("aria-haspopup", "dialog");
-        el.addEventListener("click", () => {
-          onHoverRef.current(null);
-          onSelectRef.current(landmark.id);
-        });
-        const show = () => {
+        // The marker's edges relative to the map, for placing its preview.
+        const where = (): MarkerHover | null => {
           const box = containerRef.current?.getBoundingClientRect();
-          if (!box) return;
+          if (!box) return null;
           const r = el.getBoundingClientRect();
-          onHoverRef.current({
+          return {
             id: landmark.id,
             x: r.left + r.width / 2 - box.left,
             top: r.top - box.top,
             bottom: r.bottom - box.top,
-          });
+          };
+        };
+        el.addEventListener("click", () => {
+          // Touch screens have no hover, so the first tap shows the preview;
+          // tapping the preview opens the dialog.
+          const spot = where();
+          if (window.matchMedia("(hover: none)").matches && spot) {
+            onTapRef.current(spot);
+            return;
+          }
+          onHoverRef.current(null);
+          onSelectRef.current(landmark.id);
+        });
+        const show = () => {
+          const spot = where();
+          if (spot) onHoverRef.current(spot);
         };
         const hide = () => onHoverRef.current(null);
         el.addEventListener("mouseenter", show);

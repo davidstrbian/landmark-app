@@ -28,6 +28,13 @@ export function MapView({ landmarks }: { landmarks: Landmark[] }) {
   const { visited, ready, toggle } = useVisited();
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [hover, setHover] = useState<MarkerHover | null>(null);
+  // A preview opened by a tap (touch screens) stays until it is tapped,
+  // another marker is tapped, or the map is tapped or moved.
+  const [pinned, setPinned] = useState(false);
+  const dismiss = () => {
+    setHover(null);
+    setPinned(false);
+  };
   const [query, setQuery] = useState("");
   const [category, setCategory] = useState<LandmarkCategory | null>(null);
   const [fitRequest, setFitRequest] = useState<FitRequest | null>(null);
@@ -69,7 +76,14 @@ export function MapView({ landmarks }: { landmarks: Landmark[] }) {
         visited={visited}
         fitRequest={fitRequest}
         onSelect={setSelectedId}
-        onHover={setHover}
+        onHover={(next) => {
+          if (!pinned) setHover(next);
+        }}
+        onTap={(spot) => {
+          setHover(spot);
+          setPinned(true);
+        }}
+        onDismiss={dismiss}
       />
       <MapSearch
         landmarks={inCategory}
@@ -88,7 +102,19 @@ export function MapView({ landmarks }: { landmarks: Landmark[] }) {
         ready={ready}
       />
       {hover && hovered && visible.has(hovered.id) && (
-        <Preview hover={hover} arrowFill={PREVIEW_TONES[hovered.category].fill}>
+        <Preview
+          hover={hover}
+          arrowFill={PREVIEW_TONES[hovered.category].fill}
+          label={`Open ${hovered.name} details`}
+          onActivate={
+            pinned
+              ? () => {
+                  setSelectedId(hovered.id);
+                  dismiss();
+                }
+              : undefined
+          }
+        >
           <LandmarkPreview
             landmark={hovered}
             visited={ready && visited.has(hovered.id)}
@@ -104,15 +130,21 @@ export function MapView({ landmarks }: { landmarks: Landmark[] }) {
 
 // Places the card above the marker, or below it when there is no room, and
 // keeps it inside the map. A small triangle on its edge points at the marker.
-// It ignores the pointer so it never steals the hover from the marker, and is inert (out of the tab order and hidden from
-// assistive tech, which gets the marker's own label).
+// A hover preview ignores the pointer so it never steals the hover from the
+// marker, and is inert (out of the tab order and hidden from assistive tech,
+// which gets the marker's own label). A tapped preview (touch screens) is a
+// button instead: tapping it opens the dialog.
 function Preview({
   hover,
   arrowFill,
+  label,
+  onActivate,
   children,
 }: {
   hover: MarkerHover;
   arrowFill: string; // matches the card's background
+  label: string; // accessible name when the preview is tappable
+  onActivate?: () => void; // set for a tapped preview: tapping it opens the dialog
   children: React.ReactNode;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -147,13 +179,24 @@ function Preview({
   return (
     <div
       ref={ref}
-      inert
-      className="pointer-events-none absolute z-10 w-max min-w-64 max-w-[min(22rem,calc(100%-1.5rem))]"
+      inert={!onActivate}
+      className={`absolute z-10 w-max min-w-64 max-w-[min(22rem,calc(100%-1.5rem))] ${onActivate ? "" : "pointer-events-none"}`}
       style={
         pos ? { left: pos.left, top: pos.top } : { left: 0, top: 0, opacity: 0 }
       }
     >
-      {children}
+      {onActivate ? (
+        <button
+          type="button"
+          aria-label={label}
+          onClick={onActivate}
+          className="block w-full rounded-2xl text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-night"
+        >
+          {children}
+        </button>
+      ) : (
+        children
+      )}
       {pos && (
         <svg
           viewBox={`0 0 ${ARROW * 2} ${ARROW}`}
