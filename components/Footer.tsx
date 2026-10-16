@@ -7,8 +7,9 @@ export function Footer() {
           <p className="mt-3 max-w-prose leading-relaxed text-muted">
             Landmark Tracker is a simple checklist of Finland&apos;s fells,
             national parks and natural sights. Open a landmark to learn about
-            it, then mark it conquered or visited. For now your progress is
-            saved in this browser, with or without an account.
+            it, then mark it conquered or visited. Signed in, your progress is
+            saved to your account; signed out, it stays in this browser and
+            moves to your account when you log in.
           </p>
         </div>
         <div className="text-sm text-muted">

@@ -1,6 +1,6 @@
-// Visited-state storage boundary. V0.1 keeps a list of landmark ids in
-// localStorage; V0.2 can swap this module for a Supabase-backed store with
-// the same getVisited/setVisited/subscribe shape.
+// The browser's own list of visited landmark ids, in localStorage. Signed-out
+// visitors use it directly; for signed-in visitors lib/visited-sync.ts copies
+// it into their account once and then clears it.
 
 const STORAGE_KEY = "landmarks.visited.v1";
 const EMPTY: readonly string[] = Object.freeze([]);
@@ -50,6 +50,19 @@ export function setVisited(ids: readonly string[]): void {
     memoryOnly = true;
     cachedIds = ids;
   }
+  listeners.forEach((listener) => listener());
+}
+
+// Called once the list has been safely copied into the visitor's account.
+export function clearVisited(): void {
+  try {
+    window.localStorage.removeItem(STORAGE_KEY);
+  } catch {
+    // Storage unavailable: the in-memory copy below is all there is.
+  }
+  cachedIds = EMPTY;
+  cachedRaw = null;
+  memoryOnly = false;
   listeners.forEach((listener) => listener());
 }
 

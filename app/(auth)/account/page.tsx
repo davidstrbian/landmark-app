@@ -48,8 +48,8 @@ export default async function AccountPage({ searchParams }: PageProps<"/account"
       </div>
 
       <p className="mt-6 border-t border-border pt-6 text-sm leading-relaxed text-muted">
-        Your visited landmarks are still saved in this browser. Saving them to your account
-        comes next.
+        Landmarks you mark while signed in are saved to your account, on every device.
+        Anything you mark in a browser while signed out is added the next time you log in there.
       </p>
 
       <div className="mt-6 flex flex-wrap items-center justify-between gap-4 border-t border-border pt-6 text-sm">

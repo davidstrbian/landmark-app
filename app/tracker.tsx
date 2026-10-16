@@ -5,6 +5,7 @@ import { useVisited } from "@/hooks/use-visited";
 import { FellsSection } from "@/components/FellsSection";
 import { LandmarkGrid } from "@/components/LandmarkGrid";
 import { ProgressBar } from "@/components/ProgressBar";
+import { SyncNotice } from "@/components/SyncNotice";
 import { WildernessSection } from "@/components/WildernessSection";
 
 // One useVisited instance shared by the progress bars and every section, so
@@ -69,6 +70,8 @@ export function Tracker({ landmarks }: { landmarks: Landmark[] }) {
           />
         </section>
       </div>
+
+      <SyncNotice />
     </>
   );
 }
