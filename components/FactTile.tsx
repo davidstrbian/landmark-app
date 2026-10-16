@@ -33,7 +33,7 @@ export function FactTile({
       >
         {label}
       </dt>
-      <dd className="mt-1 font-body text-white">
+      <dd className="mt-1 font-body text-white sm:text-lg">
         {missing ? <span className={muted}>Not found</span> : children}
       </dd>
       {(missing || note) && (

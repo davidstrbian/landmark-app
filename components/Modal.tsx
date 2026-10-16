@@ -50,10 +50,13 @@ export function Modal({
       // Measure at full size, then zoom out just enough to fit the window.
       dialog.style.zoom = "";
       scroller.style.maxHeight = "";
+      scroller.style.overflowY = "";
       dialog.style.maxHeight = "";
       if (!wide.matches) return;
       const natural = content.offsetHeight;
-      const zoom = Math.min(1, (window.innerHeight - MARGIN) / natural);
+      // Rounded down, so rounding never leaves the panel a pixel too tall.
+      const zoom =
+        Math.floor(((window.innerHeight - MARGIN) / natural) * 1000) / 1000;
       if (zoom >= 1) return;
       dialog.style.zoom = String(zoom);
       // Heights inside a zoomed element are scaled too, so the window-height
@@ -61,6 +64,8 @@ export function Modal({
       const cap = `calc((100dvh - ${MARGIN}px) / ${zoom})`;
       dialog.style.maxHeight = cap;
       scroller.style.maxHeight = cap;
+      // The scaled panel fits by construction; no stray scrollbar.
+      scroller.style.overflowY = "hidden";
     };
 
     fit();
@@ -84,7 +89,7 @@ export function Modal({
       onClick={(event) => {
         if (event.target === event.currentTarget) event.currentTarget.close();
       }}
-      className={`m-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-xl overflow-hidden rounded-3xl p-0 shadow-lift ${className ?? ""}`}
+      className={`m-auto max-h-[calc(100dvh-2rem)] w-[calc(100%-2rem)] max-w-[40rem] overflow-hidden rounded-3xl p-0 shadow-lift ${className ?? ""}`}
     >
       {open && (
         <div

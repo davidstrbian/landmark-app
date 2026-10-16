@@ -38,19 +38,19 @@ export function WildernessDialog({
           <LandmarkImage
             key={area.id}
             landmark={area}
-            sizes="(min-width: 640px) 576px, 100vw"
-            className="aspect-[4/1] w-full shrink-0 sm:aspect-[16/9]"
+            sizes="(min-width: 640px) 640px, 100vw"
+            className="aspect-[4/1] w-full shrink-0 sm:aspect-[2/1]"
           />
 
           <div className="p-4 sm:p-8">
             <p className="font-body text-sm text-dusk">{area.region}</p>
             <h2
               id="wilderness-dialog-title"
-              className="mt-0.5 font-heading text-2xl font-semibold tracking-tight sm:mt-1 sm:text-3xl"
+              className="mt-0.5 font-heading text-2xl font-semibold tracking-tight sm:mt-1 sm:text-[2.125rem]"
             >
               {area.name}
             </h2>
-            <p className="mt-3 font-body text-sm leading-relaxed sm:mt-4 sm:text-base text-tundra-muted">
+            <p className="mt-3 font-body text-sm leading-relaxed sm:mt-4 sm:text-lg text-tundra-muted">
               {area.description}
             </p>
 
