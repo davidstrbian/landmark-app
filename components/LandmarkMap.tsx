@@ -141,8 +141,6 @@ export function LandmarkMap({
         const wrapper = document.createElement("div");
         wrapper.append(el);
         styleMarker(el, landmark, visitedRef.current.has(landmark.id));
-        // Halti, Finland's highest point, gets a slightly larger marker.
-        if (landmark.id === "halti") el.style.setProperty("zoom", "1.1");
         setMarkerHidden(el, !visibleRef.current.has(landmark.id));
         new Marker({ element: wrapper })
           .setLngLat([landmark.lng, landmark.lat])
@@ -224,11 +222,16 @@ function styleMarker(el: HTMLElement, landmark: Landmark, done: boolean) {
   );
 }
 
-// Where markers overlap, completed ones sit on top, and within each group
-// fells sit above parks and wilderness areas: completed fells, then other
-// completed landmarks, then fells still to do, then everything else.
+// Where markers overlap, completed ones sit on top. Within the completed
+// and the not-yet-completed groups, national parks sit above wilderness
+// areas, which sit above fells.
+const CATEGORY_STACK: Record<LandmarkCategory, number> = {
+  peak: 1,
+  "wilderness-area": 2,
+  "national-park": 3,
+};
 function stackLevel(landmark: Landmark, done: boolean) {
-  return (done ? 2 : 0) + (landmark.category === "peak" ? 1 : 0) + 1;
+  return (done ? 3 : 0) + CATEGORY_STACK[landmark.category];
 }
 
 // Hides the marker's wrapper (the element MapLibre positions).
