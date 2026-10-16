@@ -51,6 +51,17 @@ async function main() {
   const createdIds: string[] = [];
 
   try {
+    // The double-checks below read as the service role, which skips RLS but
+    // still needs table privileges. Without them every one would fail with a
+    // confusing ✗, so stop early with the fix instead.
+    const serviceRead = await admin.from("landmarks").select("id").limit(1);
+    if (serviceRead.error) {
+      throw new Error(
+        `The service role can't read the tables (${serviceRead.error.message}). ` +
+          "Run the latest migration (npx supabase db push), then try again.",
+      );
+    }
+
     for (const email of emails) {
       const { data, error } = await admin.auth.admin.createUser({
         email,
@@ -88,7 +99,7 @@ async function main() {
       check(`${who} cannot delete landmarks`, (del.data?.length ?? 0) === 0, del.data);
     }
     const stillThere = await admin.from("landmarks").select("id, name").eq("id", first).single();
-    check("landmark is unchanged afterwards", !!stillThere.data && stillThere.data.name !== "Hacked", stillThere.data);
+    check("landmark is unchanged afterwards", !!stillThere.data && stillThere.data.name !== "Hacked", stillThere.error ?? stillThere.data);
 
     console.log("Profiles");
     const aProfiles = await a.client.from("profiles").select("id");
@@ -106,7 +117,7 @@ async function main() {
     const otherInsert = await a.client.from("profiles").insert({ id: b.id });
     check("A cannot create a profile for B", !!otherInsert.error, "insert succeeded");
     const bProfile = await admin.from("profiles").select("id, display_name").eq("id", b.id).single();
-    check("B's profile is untouched", !!bProfile.data && bProfile.data.display_name !== "Hacked", bProfile.data);
+    check("B's profile is untouched", !!bProfile.data && bProfile.data.display_name !== "Hacked", bProfile.error ?? bProfile.data);
     const anonProfiles = await anon.from("profiles").select("id");
     check("anon sees no profiles", (anonProfiles.data?.length ?? 0) === 0, anonProfiles.data);
 
@@ -130,7 +141,7 @@ async function main() {
     const anonSees = await anon.from("completions").select("id");
     check("anon sees no completions", (anonSees.data?.length ?? 0) === 0, anonSees.data);
     const aStill = await admin.from("completions").select("id").eq("user_id", a.id);
-    check("A's completion survived B's attempts", aStill.data?.length === 1, aStill.data);
+    check("A's completion survived B's attempts", aStill.data?.length === 1, aStill.error ?? aStill.data);
     const aDelete = await a.client.from("completions").delete().eq("landmark_id", first).select();
     check("A can delete her own completion", aDelete.data?.length === 1, aDelete.error);
   } finally {
