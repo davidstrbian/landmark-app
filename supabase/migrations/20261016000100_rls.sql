@@ -6,6 +6,14 @@ alter table public.landmarks enable row level security;
 alter table public.profiles enable row level security;
 alter table public.completions enable row level security;
 
+-- Table privileges come first: a role needs them before any policy applies.
+-- Supabase usually grants these on new tables by default, but projects can
+-- turn that off, so they are spelled out here. The policies below then limit
+-- which rows each role can reach.
+grant select on public.landmarks to anon, authenticated;
+grant select, insert, update, delete on public.profiles to authenticated;
+grant select, insert, update, delete on public.completions to authenticated;
+
 -- Landmarks: anyone, signed in or not, can read them. There are no insert,
 -- update or delete policies, so only the service role can change them.
 create policy "Landmarks are readable by everyone"
