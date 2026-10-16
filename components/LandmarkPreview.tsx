@@ -79,7 +79,13 @@ export function LandmarkPreview({
           className={`flex min-w-0 items-center gap-1.5 font-body text-sm ${tone.muted}`}
         >
           <MapPin className="size-4 shrink-0" aria-hidden="true" />
-          <span className="truncate">{landmark.region}</span>
+          <span className="truncate">
+            {/* Wilderness areas show just the region ("Lapland"); the
+                municipality stays in the data. */}
+            {landmark.category === "wilderness-area"
+              ? landmark.region.split(",").at(-1)?.trim()
+              : landmark.region}
+          </span>
         </p>
         <span className="shrink-0 rounded-full bg-white/10 px-2 py-0.5 font-body text-[0.6875rem] font-medium uppercase tracking-wide text-white/85">
           {TYPE_LABELS[landmark.category]}
