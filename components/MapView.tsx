@@ -6,6 +6,7 @@ import { useVisited } from "@/hooks/use-visited";
 import { FellDialog } from "./FellDialog";
 import { LandmarkPreview, PREVIEW_TONES } from "./LandmarkPreview";
 import { ParkDialog } from "./ParkDialog";
+import { SyncNotice } from "./SyncNotice";
 import { WildernessDialog } from "./WildernessDialog";
 import {
   LandmarkMap,
@@ -124,6 +125,7 @@ export function MapView({ landmarks }: { landmarks: Landmark[] }) {
       <FellDialog {...dialog} fell={pick("peak")} />
       <WildernessDialog {...dialog} area={pick("wilderness-area")} />
       <ParkDialog {...dialog} park={pick("national-park")} />
+      <SyncNotice />
     </div>
   );
 }

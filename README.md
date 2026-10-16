@@ -52,6 +52,8 @@ Accounts use Supabase Auth: email and password (with email confirmation), Google
 
 Then try it: sign up with a real email and open the confirmation link, log in with Google, and use "Forgot password?". Each new account gets a row in the `profiles` table.
 
+Signed-in visitors' ticks are saved to the `completions` table, so they follow them across devices. Anything ticked in a browser while signed out is copied into the account the next time someone logs in there, after which that browser's own list is cleared. To check: tick a few landmarks while signed out, log in, and look for "Added … landmarks from this browser to your account"; the rows appear in **Table Editor → completions**.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
