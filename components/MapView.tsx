@@ -68,6 +68,7 @@ export function MapView({ landmarks }: { landmarks: Landmark[] }) {
         visible={visible}
         visited={visited}
         fitRequest={fitRequest}
+        sizeByHeight={category === "peak"}
         onSelect={setSelectedId}
         onHover={setHover}
       />
