@@ -42,10 +42,10 @@ const FRONT_SPRUCES = [
   .map(([x, y, h]) => spruce(x, y, h))
   .join("");
 
-// One layer of a placeholder scene, drawn in a 400×300 space. Ground layers
-// stretch to the full width; figures (birds, trees) keep their shape and stay
-// whole, centred and standing on the same ground line, however wide or
-// narrow the picture is (4:3 cards, 2:1 and 4:1 dialog pictures).
+// One layer of the wilderness placeholder, drawn in a 400×300 space. Ground
+// layers stretch to the full width; the birds keep their shape and stay
+// whole and centred however wide the picture is (4:3 cards, 2:1 and 4:1
+// dialog pictures).
 function Layer({
   stretch = false,
   children,
@@ -142,24 +142,23 @@ export function LandmarkImage({ landmark, sizes, preload, className }: Props) {
         aria-label={`${landmark.name} (no photo yet)`}
         className={`relative overflow-hidden bg-gradient-to-b from-[#eef1ea] via-[#d5e0d2] to-[#adc3b0] ${className ?? ""}`}
       >
-        <Layer stretch>
+        <svg
+          viewBox="0 0 400 300"
+          preserveAspectRatio="xMidYMid slice"
+          aria-hidden="true"
+          className="absolute inset-0 size-full"
+        >
           <path
             d="M0 300V232c60-12 120-14 190-8s140 4 210-8v84z"
             className="fill-[#7f9a88]"
           />
-        </Layer>
-        <Layer>
           <path d={BACK_SPRUCES} className="fill-[#5e7b68]" />
-        </Layer>
-        <Layer stretch>
           <path
             d="M0 300v-44c60-8 130-10 200-4s140 4 200-6v54z"
             className="fill-forest"
           />
-        </Layer>
-        <Layer>
           <path d={FRONT_SPRUCES} className="fill-forest" />
-        </Layer>
+        </svg>
       </div>
     );
   }
