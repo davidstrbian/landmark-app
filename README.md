@@ -25,8 +25,8 @@ This project uses [`next/font`](https://nextjs.org/docs/app/building-your-applic
 Without Supabase settings the app uses the local data in `data/landmarks.ts`, so it runs as is. To load landmarks from Supabase:
 
 1. Create a project at [supabase.com](https://supabase.com).
-2. In the SQL editor, run `supabase/migrations/20261016000000_init.sql`, then `supabase/migrations/20261016000100_rls.sql` (or `supabase db push` with the Supabase CLI).
-3. Run `supabase/seed.sql` in the SQL editor to load all 63 landmarks. It is safe to run again: existing rows are updated.
+2. Create the tables and policies, either with the Supabase CLI (installed as a dev dependency): `npx supabase login`, `npx supabase link --project-ref <your-project-ref>`, then `npx supabase db push`; or by running `supabase/migrations/20261016000000_init.sql` and then `supabase/migrations/20261016000100_rls.sql` in the SQL editor.
+3. Run `supabase/seed.sql` in the SQL editor to load all 63 landmarks. It is safe to run again: existing rows are updated. (`npx supabase db reset` runs it automatically against a local database started with `npx supabase start`.)
 4. Copy `.env.example` to `.env.local` and fill in the project URL and anon key from Project Settings → API. Newer projects call the anon key the "publishable" key; either works. Add the same two variables to the Vercel project.
 5. Put the service role key (the "secret" key on newer projects) in `.env.local` only, then run `npm run test:rls`. It creates two test users, checks that each can only read and change their own profile and completions and that nobody can change landmarks, and deletes the users at the end. Every line should show ✓.
 
