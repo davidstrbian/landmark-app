@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useState } from "react";
 import { Check, Copy } from "lucide-react";
 import { COMPLETION, type FellField, type Landmark } from "@/data/landmarks";
 import { formatElevation } from "@/lib/format";
+import { FactTile } from "./FactTile";
 import { LandmarkImage } from "./LandmarkImage";
 import { Modal } from "./Modal";
 import { StarRating } from "./StarRating";
@@ -74,44 +75,6 @@ function CopyCoordinates({ lat, lng }: { lat: number; lng: number }) {
   );
 }
 
-// A fact tile. A missing value is shown as such, so gaps in the data are
-// visible and can be filled in later.
-function Fact({
-  label,
-  note,
-  wide,
-  children,
-}: {
-  label: string;
-  note?: string;
-  wide?: boolean;
-  children?: ReactNode;
-}) {
-  // Callers pass `cond && <el />`, so a missing value arrives as false.
-  const missing = children == null || children === false;
-  return (
-    <div
-      className={`rounded-2xl bg-night-raised p-4 ${wide ? "sm:col-span-2" : ""}`}
-    >
-      <dt className="font-body text-xs font-medium uppercase tracking-wide text-night-muted">
-        {label}
-      </dt>
-      <dd className="mt-1 font-body text-white">
-        {missing ? (
-          <span className="text-night-muted">Not found</span>
-        ) : (
-          children
-        )}
-      </dd>
-      {(missing || note) && (
-        <p className="mt-2 font-body text-xs leading-relaxed text-dusk">
-          {note ?? "No reliable source found yet. Needs to be added."}
-        </p>
-      )}
-    </div>
-  );
-}
-
 export function FellDialog({ fell, visited, onToggleVisited, onClose }: Props) {
   const note = (field: FellField) => fell?.notes?.[field];
 
@@ -128,17 +91,17 @@ export function FellDialog({ fell, visited, onToggleVisited, onClose }: Props) {
           <LandmarkImage
             key={fell.id}
             landmark={fell}
-            sizes="(min-width: 640px) 576px, 100vw"
-            className="aspect-[16/9] w-full shrink-0"
+            sizes="(min-width: 640px) 640px, 100vw"
+            className="aspect-[4/1] w-full shrink-0 sm:aspect-[3/1] sm:[--ridge-height:85%]"
           />
 
-          <div className="p-6 sm:p-8">
+          <div className="p-4 sm:p-8">
             <div className="flex items-start justify-between gap-4">
               <div className="min-w-0">
                 <p className="font-body text-sm text-dusk">{fell.region}</p>
                 <h2
                   id="fell-dialog-title"
-                  className="mt-1 font-heading text-3xl font-semibold tracking-tight"
+                  className="mt-0.5 font-heading text-2xl font-semibold tracking-tight sm:mt-1 sm:text-[2.125rem]"
                 >
                   {fell.name}
                 </h2>
@@ -154,12 +117,12 @@ export function FellDialog({ fell, visited, onToggleVisited, onClose }: Props) {
                 </div>
               )}
             </div>
-            <p className="mt-4 font-body leading-relaxed text-night-muted">
+            <p className="mt-3 font-body text-sm leading-relaxed sm:mt-4 sm:text-lg text-night-muted">
               {fell.description}
             </p>
 
-            <dl className="mt-6 grid gap-3 sm:grid-cols-2">
-              <Fact label="Coordinates" note={note("coordinates")}>
+            <dl className="mt-3 grid gap-2 sm:mt-6 sm:grid-cols-2 sm:gap-3">
+              <FactTile label="Coordinates" note={note("coordinates")}>
                 {fell.lat !== undefined && fell.lng !== undefined && (
                   <CopyCoordinates
                     key={fell.id}
@@ -167,15 +130,15 @@ export function FellDialog({ fell, visited, onToggleVisited, onClose }: Props) {
                     lng={fell.lng}
                   />
                 )}
-              </Fact>
-              <Fact label="Difficulty" note={note("difficulty")}>
+              </FactTile>
+              <FactTile label="Difficulty" note={note("difficulty")}>
                 {fell.difficulty !== undefined && (
                   <span className="mt-0.5 block">
                     <StarRating value={fell.difficulty} label="Difficulty" />
                   </span>
                 )}
-              </Fact>
-              <Fact label="Typical hike" note={note("hike")} wide>
+              </FactTile>
+              <FactTile label="Typical hike" note={note("hike")} wide>
                 {fell.hike && (
                   <>
                     {fell.hike.name && (
@@ -183,7 +146,7 @@ export function FellDialog({ fell, visited, onToggleVisited, onClose }: Props) {
                         {fell.hike.name}
                       </span>
                     )}
-                    <dl className="mt-3 grid grid-cols-3 gap-3">
+                    <dl className="mt-2 grid grid-cols-3 gap-3 sm:mt-3">
                       {[
                         { label: "Distance", value: fell.hike.distance },
                         { label: "Duration", value: fell.hike.duration },
@@ -207,18 +170,18 @@ export function FellDialog({ fell, visited, onToggleVisited, onClose }: Props) {
                           </div>
                         ))}
                     </dl>
-                    <span className="mt-3 block text-sm text-night-muted">
+                    <span className="mt-2 block text-sm text-night-muted sm:mt-3">
                       From {fell.hike.trailhead}
                     </span>
                   </>
                 )}
-              </Fact>
+              </FactTile>
             </dl>
 
             <button
               type="button"
               onClick={() => onToggleVisited(fell.id)}
-              className={`mt-6 flex w-full items-center justify-center gap-2 rounded-2xl px-5 py-3.5 font-body font-medium transition duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dusk ${
+              className={`mt-3 flex w-full items-center justify-center gap-2 rounded-2xl px-5 py-3 sm:mt-6 sm:py-3.5 font-body font-medium transition duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dusk ${
                 visited
                   ? "border border-dusk/40 bg-dusk/10 text-dusk hover:bg-dusk/20"
                   : "bg-dusk text-night hover:bg-dusk/90"
@@ -244,7 +207,7 @@ export function FellDialog({ fell, visited, onToggleVisited, onClose }: Props) {
             )}
 
             {fell.imageCredit && (
-              <p className="mt-6 font-body text-xs text-night-muted">
+              <p className="mt-4 font-body text-xs sm:mt-6 text-night-muted">
                 Photo: {fell.imageCredit}
               </p>
             )}

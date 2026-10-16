@@ -1,0 +1,12 @@
+-- handle_new_user() runs as its owner (security definer) to create a profile
+-- when someone signs up. Nobody should call it directly: Postgres grants
+-- EXECUTE on new functions to PUBLIC, and Supabase also grants it to anon and
+-- authenticated, so take those away.
+--
+-- The sign-up trigger keeps working: Postgres checks EXECUTE on a trigger
+-- function only when the trigger is created, not each time it fires.
+--
+-- The definition itself needs no change: it already has
+-- `set search_path = ''` and refers to public.profiles by its full name
+-- (see 20261016000000_init.sql).
+revoke execute on function public.handle_new_user() from public, anon, authenticated;

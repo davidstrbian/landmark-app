@@ -21,6 +21,11 @@ export function Hero() {
       />
       {/* Darkens the photo so the white text stays readable. */}
       <div aria-hidden="true" className="absolute inset-0 -z-10 bg-black/50" />
+      {/* Fades the bottom edge into the progress band's night colour. */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-x-0 bottom-0 -z-10 h-1/4 bg-gradient-to-b from-transparent to-night"
+      />
 
       <div>
         {/* Wide windows (aspect ratio 3:2 or wider) fit the heading on one

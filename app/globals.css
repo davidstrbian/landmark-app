@@ -26,6 +26,15 @@
 
   /* Wilderness Areas section: halfway between --mist and --background. */
   --haze: #dee1e2;
+  /* Wilderness cards: deep blue-grey "tundra" tones that sit on --haze. */
+  --tundra: #2b3940;
+  --tundra-raised: #36464e;
+  --tundra-muted: #b3c0c5;
+  /* National park cards: deep spruce-green "forest" tones on the off-white
+     page, keeping the dusk accent. */
+  --forest: #23392f;
+  --forest-raised: #2e473b;
+  --forest-muted: #b2c4b9;
 }
 
 @theme inline {
@@ -46,6 +55,12 @@
   --color-night-muted: var(--night-muted);
   --color-dusk: var(--dusk);
   --color-haze: var(--haze);
+  --color-tundra: var(--tundra);
+  --color-tundra-raised: var(--tundra-raised);
+  --color-tundra-muted: var(--tundra-muted);
+  --color-forest: var(--forest);
+  --color-forest-raised: var(--forest-raised);
+  --color-forest-muted: var(--forest-muted);
   --font-sans: var(--font-geist-sans);
   --font-heading: var(--font-manrope);
   --font-body: var(--font-poppins);
@@ -75,6 +90,23 @@ body {
     var(--haze) calc(100% - 6rem),
     var(--background)
   );
+}
+
+/* Progress band under the hero: night tones that fade into the Finnish
+   Fells mist at the bottom edge. */
+.bg-night-fade {
+  background: linear-gradient(
+    to bottom,
+    var(--night) calc(100% - 8rem),
+    var(--mist)
+  );
+}
+
+/* A map marker being hovered or focused rises above its neighbours (over the
+   stacking order LandmarkMap sets inline). */
+.maplibregl-marker:has(> button:hover),
+.maplibregl-marker:has(> button:focus-visible) {
+  z-index: 10 !important;
 }
 
 /* Lock page scroll while a modal dialog is open. */

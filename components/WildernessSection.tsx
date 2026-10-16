@@ -1,7 +1,30 @@
+"use client";
+
+import { useState } from "react";
+import type { Landmark } from "@/data/landmarks";
+import { WildernessCard } from "./WildernessCard";
+import { WildernessDialog } from "./WildernessDialog";
+
+type Props = {
+  areas: Landmark[];
+  visited: Set<string>;
+  ready: boolean;
+  onToggleVisited: (id: string) => void;
+};
+
 // Sits between Finnish Fells and National Parks. Its background fades from the
 // fells' grey into the page's off-white (see .bg-haze-fade in globals.css).
-// No wilderness areas have been added yet.
-export function WildernessSection() {
+export function WildernessSection({
+  areas,
+  visited,
+  ready,
+  onToggleVisited,
+}: Props) {
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const selected = areas.find((a) => a.id === selectedId) ?? null;
+  // Wildest first.
+  const sorted = [...areas].sort((a, b) => (a.rank ?? 99) - (b.rank ?? 99));
+
   return (
     <section
       id="wilderness"
@@ -16,8 +39,37 @@ export function WildernessSection() {
         >
           Wilderness Areas
         </h2>
-        <p className="mt-3 font-body text-sm text-mist-ink/70">Coming soon.</p>
+        <p className="mt-3 font-heading text-lg font-medium sm:text-xl">
+          Finland has 12 wilderness areas, all in the heart of Lapland.
+        </p>
+        <p className="mt-3 max-w-3xl font-body leading-relaxed text-mist-ink/75">
+          Set aside by the Wilderness Act of 1991, together they cover almost
+          15,000 km² of fells, forests and mires. They exist to keep these lands
+          wild while safeguarding Sámi culture and traditional livelihoods such
+          as reindeer herding, fishing and hunting. Marked trails are few, so a
+          visit here means finding your own way.
+        </p>
+
+        <ul className="mt-10 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-4">
+          {sorted.map((area) => (
+            <li key={area.id} className="min-w-0">
+              <WildernessCard
+                area={area}
+                visited={visited.has(area.id)}
+                ready={ready}
+                onOpen={(a) => setSelectedId(a.id)}
+              />
+            </li>
+          ))}
+        </ul>
       </div>
+
+      <WildernessDialog
+        area={selected}
+        visited={selected ? visited.has(selected.id) : false}
+        onToggleVisited={onToggleVisited}
+        onClose={() => setSelectedId(null)}
+      />
     </section>
   );
 }
