@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AccountLink } from "./AccountLink";
 
 export function Header() {
   return (
@@ -10,13 +11,14 @@ export function Header() {
         >
           Sokosti
         </Link>
-        <nav aria-label="Main" className="ml-auto">
+        <nav aria-label="Main" className="ml-auto flex items-center gap-6 sm:gap-8">
           <Link
             href="/map"
             className="rounded-lg font-body text-base font-medium text-white/90 transition hover:text-white focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
           >
             Map
           </Link>
+          <AccountLink />
         </nav>
       </div>
     </header>

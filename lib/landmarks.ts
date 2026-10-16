@@ -1,6 +1,6 @@
 import { landmarks as localLandmarks, type Landmark } from "@/data/landmarks";
 import { rowToLandmark, type LandmarkRow } from "@/lib/landmark-row";
-import { createServerClient } from "@/lib/supabase/server";
+import { createPublicClient } from "@/lib/supabase/public";
 
 // Data access boundary: UI code calls this, never the data file or Supabase
 // directly. With NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY
@@ -8,7 +8,7 @@ import { createServerClient } from "@/lib/supabase/server";
 // development, CI) they come from data/landmarks.ts, which is also what
 // supabase/seed.sql is generated from.
 export async function getLandmarks(): Promise<Landmark[]> {
-  const supabase = createServerClient();
+  const supabase = createPublicClient();
   if (!supabase) return localLandmarks;
 
   const { data, error } = await supabase
