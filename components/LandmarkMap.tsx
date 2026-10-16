@@ -141,6 +141,8 @@ export function LandmarkMap({
         const wrapper = document.createElement("div");
         wrapper.append(el);
         styleMarker(el, landmark, visitedRef.current.has(landmark.id));
+        // Halti, Finland's highest point, gets a slightly larger marker.
+        if (landmark.id === "halti") el.style.setProperty("zoom", "1.1");
         setMarkerHidden(el, !visibleRef.current.has(landmark.id));
         new Marker({ element: wrapper })
           .setLngLat([landmark.lng, landmark.lat])
