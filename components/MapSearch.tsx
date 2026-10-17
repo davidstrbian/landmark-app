@@ -302,6 +302,8 @@ export function MapSearch({
             </div>
           )}
         </form>
+        {/* CategoryProgress's phone width subtracts these buttons (size-9,
+            gap-2): change both together. */}
         <div
           role="group"
           aria-label="Show only one category"

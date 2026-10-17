@@ -36,11 +36,15 @@ export function CategoryProgress({
 
   return (
     <div
-      className={`mt-2 w-full rounded-2xl px-4 py-3 text-white shadow-[0_10px_30px_rgb(20_24_28/0.25)] sm:w-72 ${tone.bg}`}
+      // As wide as the search box: on phones that's the row minus the three
+      // round category buttons (3 × 2.25rem + 2 × 0.5rem gaps + the 0.5rem gap
+      // before them = 8.25rem); from sm up both are w-72.
+      className={`mt-2 w-[calc(100%-8.25rem)] rounded-2xl px-3.5 py-2.5 text-white shadow-[0_10px_30px_rgb(20_24_28/0.25)] sm:w-72 sm:px-4 sm:py-3 ${tone.bg}`}
     >
-      <div className="flex items-baseline justify-between gap-3">
+      <div className="flex items-baseline justify-between gap-2 sm:gap-3">
         <div className="min-w-0">
-          <p className="truncate font-heading font-medium">
+          {/* Wraps on phones rather than being cut off in the narrower card. */}
+          <p className="font-heading text-sm leading-snug font-medium sm:truncate sm:text-base">
             {LABELS[category]}
           </p>
           <p className={`text-xs ${tone.muted}`}>
@@ -50,7 +54,7 @@ export function CategoryProgress({
         </div>
         <p
           aria-hidden="true"
-          className="shrink-0 font-heading text-2xl font-semibold tabular-nums text-dusk"
+          className="shrink-0 font-heading text-lg font-semibold tabular-nums text-dusk sm:text-2xl"
         >
           {Math.round(shown)}
           <span className="text-sm">%</span>
