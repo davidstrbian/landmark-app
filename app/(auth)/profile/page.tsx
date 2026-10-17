@@ -16,10 +16,10 @@ import { createClient } from "@/lib/supabase/server";
 export const metadata: Metadata = { title: "Your profile · Landmark Tracker" };
 
 // Each category's tile, in its home-page section colours.
-const TILES: Record<LandmarkCategory, { label: string; short: string; tile: string; muted: string; track: string }> = {
-  peak: { label: "Fells conquered", short: "Fells", tile: "bg-night-sunken ring-1 ring-white/5", muted: "text-night-muted", track: "bg-night" },
-  "wilderness-area": { label: "Wilderness areas visited", short: "Wilderness", tile: "bg-tundra", muted: "text-tundra-muted", track: "bg-tundra-raised" },
-  "national-park": { label: "National parks visited", short: "Parks", tile: "bg-forest", muted: "text-forest-muted", track: "bg-forest-raised" },
+const TILES: Record<LandmarkCategory, { label: string; short: string; tile: string; muted: string }> = {
+  peak: { label: "Finnish Fells", short: "Fells", tile: "bg-night-sunken ring-1 ring-white/5", muted: "text-night-muted" },
+  "wilderness-area": { label: "Wilderness Areas", short: "Wilderness", tile: "bg-tundra", muted: "text-tundra-muted" },
+  "national-park": { label: "National Parks", short: "Parks", tile: "bg-forest", muted: "text-forest-muted" },
 };
 const MARKER_COLOURS: Record<LandmarkCategory, string> = {
   peak: "bg-night text-dusk",
@@ -30,10 +30,63 @@ const MARKER_COLOURS: Record<LandmarkCategory, string> = {
 const dayMonthYear = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "short", year: "numeric" });
 const percent = (done: number, total: number) => (total ? Math.round((done / total) * 100) : 0);
 
-function Bar({ done, total, track }: { done: number; total: number; track: string }) {
+// One progress card: title and count on the left, the percentage in dusk
+// on the right, a thin bar below (like the map's category progress card).
+// Phones show the category tiles three across, so they get a short title, a
+// plain "4 / 10" and no percentage; the full wording stays for screen readers.
+function ProgressTile({
+  title,
+  short,
+  done,
+  total,
+  verb,
+  tile,
+  muted,
+  className = "",
+}: {
+  title: string;
+  short?: string;
+  done: number;
+  total: number;
+  verb: string;
+  tile: string;
+  muted: string;
+  className?: string;
+}) {
+  const pct = percent(done, total);
   return (
-    <div className={`mt-3 h-1.5 overflow-hidden rounded-full ${track}`} aria-hidden="true">
-      <div className="h-full rounded-full bg-dusk" style={{ width: `${percent(done, total)}%` }} />
+    <div className={`rounded-2xl px-3.5 py-3 sm:px-4 ${tile} ${className}`}>
+      <div className="flex items-baseline justify-between gap-3">
+        <div className="min-w-0">
+          <p className={`font-heading font-medium ${short ? "text-sm sm:truncate sm:text-base" : "truncate"}`}>
+            {short ? (
+              <>
+                <span aria-hidden="true" className="sm:hidden">{short}</span>
+                <span className="sr-only sm:not-sr-only">{title}</span>
+              </>
+            ) : (
+              title
+            )}
+          </p>
+          <p className={`text-xs tabular-nums ${muted}`}>
+            {short ? (
+              <>
+                <span aria-hidden="true" className="sm:hidden">{done} / {total}</span>
+                <span className="sr-only sm:not-sr-only">{done} of {total} {verb}</span>
+              </>
+            ) : (
+              `${done} of ${total} ${verb}`
+            )}
+          </p>
+        </div>
+        <p className={`shrink-0 font-heading text-2xl font-semibold tabular-nums text-dusk ${short ? "hidden sm:block" : ""}`}>
+          {pct}
+          <span className="text-sm">%</span>
+        </p>
+      </div>
+      <div className="mt-2.5 h-1.5 overflow-hidden rounded-full bg-white/15" aria-hidden="true">
+        <div className="h-full rounded-full bg-dusk" style={{ width: `${pct}%` }} />
+      </div>
     </div>
   );
 }
@@ -67,35 +120,33 @@ export default async function ProfilePage() {
         memberSince={memberSince(profile?.created_at)}
       />
 
-      {/* Progress: the overall count and one tile per category. */}
+      {/* Progress: all landmarks across the top, then one tile per category,
+          in the style of the map's category progress card. */}
       <section aria-labelledby="progress-heading" className="mt-6">
         <h2 id="progress-heading" className="sr-only">Progress</h2>
-        <div className="grid grid-cols-3 gap-3 sm:gap-4 lg:grid-cols-4">
-          <div className="col-span-3 rounded-2xl bg-night-raised p-4 sm:p-5 lg:col-span-1">
-            <p className="text-sm text-night-muted">Landmarks completed</p>
-            <p className="mt-1 flex items-baseline gap-2">
-              <span className="font-heading text-4xl font-semibold tabular-nums">{stats.done}</span>
-              <span className="text-night-muted">of {stats.total}</span>
-              <span className="ml-auto font-heading text-2xl font-semibold text-dusk tabular-nums">
-                {percent(stats.done, stats.total)}%
-              </span>
-            </p>
-            <Bar done={stats.done} total={stats.total} track="bg-night" />
-          </div>
+        <div className="grid grid-cols-3 gap-3 sm:gap-4">
+          <ProgressTile
+            className="col-span-3"
+            title="All landmarks"
+            done={stats.done}
+            total={stats.total}
+            verb="completed"
+            tile="bg-night-raised"
+            muted="text-night-muted"
+          />
           {stats.categories.map((c) => {
             const t = TILES[c.category];
             return (
-              <div key={c.category} className={`rounded-2xl p-3.5 sm:p-5 ${t.tile}`}>
-                <p className={`text-sm leading-snug ${t.muted}`}>
-                  <span aria-hidden="true" className="sm:hidden">{t.short}</span>
-                  <span className="sr-only sm:not-sr-only">{t.label}</span>
-                </p>
-                <p className="mt-1 font-heading text-2xl font-semibold tabular-nums sm:text-3xl">
-                  {c.done}
-                  <span className={`text-sm font-normal sm:text-base ${t.muted}`}> / {c.total}</span>
-                </p>
-                <Bar done={c.done} total={c.total} track={t.track} />
-              </div>
+              <ProgressTile
+                key={c.category}
+                title={t.label}
+                short={t.short}
+                done={c.done}
+                total={c.total}
+                verb={COMPLETION[c.category].done.toLowerCase()}
+                tile={t.tile}
+                muted={t.muted}
+              />
             );
           })}
         </div>
