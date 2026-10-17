@@ -1,25 +1,23 @@
-import { CalendarDays, Mountain, Pencil, Settings, Sparkles, Trees } from "lucide-react";
+import { Mountain, Sparkles, Trees } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { NotConfigured } from "@/components/auth/NotConfigured";
-import { Avatar } from "@/components/profile/Avatar";
+import { ProfileHeader } from "@/components/profile/ProfileHeader";
 import { COMPLETION, type LandmarkCategory } from "@/data/landmarks";
 import { formatArea, formatElevation } from "@/lib/format";
 import { getLandmarks } from "@/lib/landmarks";
 import { CATEGORY_ICONS } from "@/lib/marker-icons";
-import { PROFILE_COLUMNS, avatarUrl, initialOf, memberSince, nameOf, type Profile } from "@/lib/profile";
+import { PROFILE_COLUMNS, avatarUrl, memberSince, type Profile } from "@/lib/profile";
 import { profileStats, type CompletionRow } from "@/lib/profile-stats";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = { title: "Your profile · Landmark Tracker" };
 
-const NOTICES: Record<string, string> = { saved: "Profile saved." };
-
 // Each category's tile, in its home-page section colours.
 const TILES: Record<LandmarkCategory, { label: string; short: string; tile: string; muted: string; track: string }> = {
-  peak: { label: "Fells conquered", short: "Fells", tile: "bg-night-raised", muted: "text-night-muted", track: "bg-night" },
+  peak: { label: "Fells conquered", short: "Fells", tile: "bg-night-sunken ring-1 ring-white/5", muted: "text-night-muted", track: "bg-night" },
   "wilderness-area": { label: "Wilderness areas visited", short: "Wilderness", tile: "bg-tundra", muted: "text-tundra-muted", track: "bg-tundra-raised" },
   "national-park": { label: "National parks visited", short: "Parks", tile: "bg-forest", muted: "text-forest-muted", track: "bg-forest-raised" },
 };
@@ -40,7 +38,7 @@ function Bar({ done, total, track }: { done: number; total: number; track: strin
   );
 }
 
-export default async function ProfilePage({ searchParams }: PageProps<"/profile">) {
+export default async function ProfilePage() {
   if (!isSupabaseConfigured) return <NotConfigured />;
   const supabase = await createClient();
   // The proxy already sends signed-out visitors to log in; this is the second check.
@@ -54,55 +52,20 @@ export default async function ProfilePage({ searchParams }: PageProps<"/profile"
     getLandmarks(),
   ]);
   const stats = profileStats(landmarks, (completions ?? []) as CompletionRow[]);
-  const name = nameOf(profile, claims.email);
-  const since = memberSince(profile?.created_at);
-  const noticeKey = (await searchParams).notice;
-  const notice = typeof noticeKey === "string" ? NOTICES[noticeKey] : undefined;
 
   return (
     <div className="w-full max-w-5xl self-start font-body text-white">
-      {notice && (
-        <p role="status" className="mb-4 rounded-2xl bg-primary-soft px-4 py-3 text-sm text-primary-hover">
-          {notice}
-        </p>
-      )}
 
-      {/* Who: avatar, name, username, bio, member since. */}
-      <section aria-labelledby="profile-name" className="rounded-3xl bg-night-raised p-5 sm:p-8">
-        <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:gap-7">
-          <Avatar url={avatarUrl(profile?.avatar_path)} initial={initialOf(profile, claims.email)} size={112} className="ring-4 ring-night" />
-          <div className="min-w-0 flex-1">
-            <h1 id="profile-name" className="font-heading text-2xl font-semibold tracking-tight break-words sm:text-3xl">
-              {name}
-            </h1>
-            {profile?.username && <p className="mt-0.5 text-night-muted">@{profile.username}</p>}
-            {profile?.bio && <p className="mt-3 max-w-prose leading-relaxed text-white/90">{profile.bio}</p>}
-            {since && (
-              <p className="mt-3 flex items-center gap-1.5 text-sm text-night-muted">
-                <CalendarDays className="size-4" aria-hidden="true" />
-                Member since {since}
-              </p>
-            )}
-          </div>
-          <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-col sm:items-stretch">
-            <Link
-              href="/profile/edit"
-              className="inline-flex items-center justify-center gap-2 rounded-xl bg-dusk px-4 py-2.5 text-sm font-semibold text-night transition hover:bg-dusk/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dusk"
-            >
-              <Pencil className="size-4" aria-hidden="true" />
-              Edit profile
-            </Link>
-            <Link
-              href="/account"
-              className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 px-4 py-2.5 text-sm font-semibold transition hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dusk"
-            >
-              <Settings className="size-4" aria-hidden="true" />
-              <span aria-hidden="true" className="sm:hidden">Settings</span>
-              <span className="sr-only sm:not-sr-only">Account settings</span>
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* Who: avatar, name, username, bio, member since; editable in place. */}
+      <ProfileHeader
+        userId={claims.sub}
+        email={claims.email}
+        displayName={profile?.display_name ?? ""}
+        username={profile?.username ?? ""}
+        bio={profile?.bio ?? ""}
+        avatarUrl={avatarUrl(profile?.avatar_path)}
+        memberSince={memberSince(profile?.created_at)}
+      />
 
       {/* Progress: the overall count and one tile per category. */}
       <section aria-labelledby="progress-heading" className="mt-6">

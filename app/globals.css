@@ -21,6 +21,9 @@
   --mist-ink: #1c2126;
   --night: #1d2226;
   --night-raised: #2a3035;
+  /* Between --night and --night-raised: the profile's fells tile, so it
+     reads apart from the overall tile next to it. */
+  --night-sunken: #24292d;
   --night-muted: #a3acb2;
   --dusk: #e2a47f;
 
@@ -52,6 +55,7 @@
   --color-mist-ink: var(--mist-ink);
   --color-night: var(--night);
   --color-night-raised: var(--night-raised);
+  --color-night-sunken: var(--night-sunken);
   --color-night-muted: var(--night-muted);
   --color-dusk: var(--dusk);
   --color-haze: var(--haze);
