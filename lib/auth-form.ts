@@ -17,6 +17,9 @@ export const AVATAR_INPUT_MAX_BYTES = 10 * 1024 * 1024;
 export const AVATAR_SIZE_PX = 256;
 export const AVATAR_TYPES = ["image/jpeg", "image/png", "image/webp"];
 
+// What to type to confirm deleting an account.
+export const DELETE_PHRASE = "DELETE";
+
 export function readString(formData: FormData, name: string): string {
   const value = formData.get(name);
   return typeof value === "string" ? value : "";

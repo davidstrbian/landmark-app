@@ -173,6 +173,9 @@ async function main() {
     const publicUrl = a.client.storage.from("avatars").getPublicUrl(aPath).data.publicUrl;
     const served = await fetch(publicUrl);
     check("the bucket's public URL serves A's avatar", served.ok, served.status);
+    const removeOwn = await a.client.storage.from("avatars").remove([aPath]);
+    if ((removeOwn.data?.length ?? 0) === 1) uploaded.splice(uploaded.indexOf(aPath), 1);
+    check("A can delete her own avatar file", (removeOwn.data?.length ?? 0) === 1, removeOwn.error);
 
     console.log("Completions");
     const aInsert = await a.client.from("completions").insert({ landmark_id: first }).select().single();
@@ -197,6 +200,21 @@ async function main() {
     check("A's completion survived B's attempts", aStill.data?.length === 1, aStill.error ?? aStill.data);
     const aDelete = await a.client.from("completions").delete().eq("landmark_id", first).select();
     check("A can delete her own completion", aDelete.data?.length === 1, aDelete.error);
+
+    console.log("Deleting an account");
+    const anonDelete = await anon.rpc("delete_own_account");
+    check("anon can't call delete_own_account", !!anonDelete.error, "call succeeded");
+    await a.client.from("completions").insert({ landmark_id: first });
+    const removeA = await a.client.rpc("delete_own_account");
+    check("A can delete her own account", !removeA.error, removeA.error);
+    const aUser = await admin.auth.admin.getUserById(a.id);
+    check("A's sign-in is gone", !aUser.data?.user, aUser.data);
+    const aRows = await admin.from("profiles").select("id").eq("id", a.id);
+    const aDone = await admin.from("completions").select("id").eq("user_id", a.id);
+    check("A's profile and completions went with it", aRows.data?.length === 0 && aDone.data?.length === 0, [aRows.data, aDone.data]);
+    const bRow = await admin.from("profiles").select("id").eq("id", b.id);
+    check("B's account is untouched", bRow.data?.length === 1, bRow.data);
+    if (!removeA.error) createdIds.splice(createdIds.indexOf(a.id), 1);
   } finally {
     if (uploaded.length) {
       const { error } = await admin.storage.from("avatars").remove(uploaded);

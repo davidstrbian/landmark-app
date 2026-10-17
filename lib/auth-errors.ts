@@ -17,6 +17,10 @@ export function authErrorMessage(error: AuthError): string {
     case "over_email_send_rate_limit":
     case "over_request_rate_limit":
       return "Too many attempts. Wait a few minutes and try again.";
+    case "email_address_invalid":
+      return "That email address can't be used. Check it and try again.";
+    case "reauthentication_needed":
+      return "For security, log out and back in, then try again.";
     case "signup_disabled":
       return "Sign-ups are switched off at the moment.";
     default:

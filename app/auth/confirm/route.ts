@@ -20,7 +20,9 @@ export async function GET(request: NextRequest) {
   if (isSupabaseConfigured && tokenHash && type) {
     const supabase = await createClient();
     const { error } = await supabase.auth.verifyOtp({ type, token_hash: tokenHash });
-    if (!error) return NextResponse.redirect(new URL(next, request.url));
+    // Email changes always return to the settings page, which says whether
+    // the change is done or still waits for the other address's link.
+    if (!error) return NextResponse.redirect(new URL(type === "email_change" ? "/account?notice=email" : next, request.url));
   }
   return NextResponse.redirect(new URL("/login?error=link", request.url));
 }
