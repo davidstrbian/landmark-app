@@ -211,7 +211,7 @@ export function ProfileHeader(props: Props) {
                   className={`${field} font-heading text-2xl leading-tight font-semibold tracking-tight sm:text-3xl sm:leading-tight`}
                 />
               </label>
-              <label className="mt-0.5 flex items-center text-night-muted">
+              <label className="mt-2 flex items-center text-night-muted">
                 <span aria-hidden="true">@</span>
                 <span className="sr-only">Username</span>
                 <input
@@ -231,7 +231,7 @@ export function ProfileHeader(props: Props) {
               <p id="username-hint" className={usernameOk ? "sr-only" : "mt-1 text-xs text-red-300"}>
                 3–20 characters: lowercase letters, numbers and _.
               </p>
-              <label className="relative mt-3 block">
+              <label className="relative mt-2 block">
                 <span className="sr-only">Bio</span>
                 <textarea
                   ref={bioRef}
