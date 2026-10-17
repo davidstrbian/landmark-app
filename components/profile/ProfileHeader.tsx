@@ -51,6 +51,7 @@ export function ProfileHeader(props: Props) {
   const [saved, setSaved] = useState(false);
   const fileId = useId();
   const nameRef = useRef<HTMLInputElement>(null);
+  const bioRef = useRef<HTMLTextAreaElement>(null);
 
   // Free the browser's copies of pictures that are no longer shown.
   useEffect(() => () => {
@@ -62,6 +63,13 @@ export function ProfileHeader(props: Props) {
   useEffect(() => {
     if (editing) nameRef.current?.focus();
   }, [editing]);
+  // The bio box is as tall as its text, like the bio it replaces.
+  useEffect(() => {
+    const el = bioRef.current;
+    if (!el) return;
+    el.style.height = "auto";
+    el.style.height = `${el.scrollHeight + 2}px`;
+  }, [editing, bio]);
 
   const draftProfile = { display_name: displayName, username };
   const shownUrl = avatar.kind === "new" ? avatar.previewUrl : avatar.kind === "remove" ? null : props.avatarUrl;
@@ -127,8 +135,10 @@ export function ProfileHeader(props: Props) {
     router.refresh();
   }
 
+  // Edit fields sit exactly where the text they replace sits: a thin border,
+  // a little side padding pulled back with a negative margin, no vertical padding.
   const field =
-    "w-full rounded-xl border border-white/15 bg-night/60 px-3 py-2 text-white placeholder:text-night-muted/70 focus-visible:border-dusk focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-dusk aria-[invalid=true]:border-red-300";
+    "-mx-2 w-[calc(100%+1rem)] min-w-0 rounded-lg border border-white/15 bg-night/40 px-2 py-0 text-white placeholder:text-night-muted/70 focus-visible:border-dusk focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-dusk aria-[invalid=true]:border-red-300";
   const primary =
     "inline-flex items-center justify-center gap-2 rounded-xl bg-dusk px-4 py-2.5 text-sm font-semibold text-night transition hover:bg-dusk/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-dusk disabled:cursor-wait disabled:opacity-70";
   const secondary =
@@ -184,7 +194,9 @@ export function ProfileHeader(props: Props) {
 
         <div className="min-w-0 flex-1">
           {editing ? (
-            <div className="space-y-2.5">
+            // Same text sizes and positions as the view below; the fields
+            // only add a thin border, so the card barely changes size.
+            <div>
               <h1 id="profile-name" className="sr-only">Edit your profile</h1>
               <label className="block">
                 <span className="sr-only">Name</span>
@@ -196,10 +208,10 @@ export function ProfileHeader(props: Props) {
                   autoComplete="name"
                   placeholder="Your name"
                   aria-invalid={error?.field === "displayName"}
-                  className={`${field} font-heading text-2xl font-semibold tracking-tight sm:text-3xl`}
+                  className={`${field} font-heading text-2xl leading-tight font-semibold tracking-tight sm:text-3xl sm:leading-tight`}
                 />
               </label>
-              <label className="flex items-center gap-1 text-night-muted">
+              <label className="mt-0.5 flex items-center text-night-muted">
                 <span aria-hidden="true">@</span>
                 <span className="sr-only">Username</span>
                 <input
@@ -212,28 +224,30 @@ export function ProfileHeader(props: Props) {
                   placeholder="username"
                   aria-invalid={!usernameOk || error?.field === "username"}
                   aria-describedby="username-hint"
-                  className={`${field} py-1.5 text-base sm:text-sm`}
+                  className="-mr-2 ml-0.5 min-w-0 flex-1 rounded-lg border border-white/15 bg-night/40 px-1 py-0 text-base text-night-muted placeholder:text-night-muted/70 focus-visible:border-dusk focus-visible:outline-2 focus-visible:outline-offset-0 focus-visible:outline-dusk aria-[invalid=true]:border-red-300"
                 />
               </label>
-              <p id="username-hint" className={`text-xs ${usernameOk ? "text-night-muted" : "text-red-300"}`}>
+              {/* Shown only while the username is invalid; always there for screen readers. */}
+              <p id="username-hint" className={usernameOk ? "sr-only" : "mt-1 text-xs text-red-300"}>
                 3–20 characters: lowercase letters, numbers and _.
               </p>
-              <label className="block">
+              <label className="relative mt-3 block">
                 <span className="sr-only">Bio</span>
                 <textarea
+                  ref={bioRef}
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
                   maxLength={BIO_MAX}
-                  rows={2}
+                  rows={1}
                   placeholder="A line about you: where you hike, what you're collecting."
                   aria-invalid={error?.field === "bio"}
                   aria-describedby="bio-count"
-                  className={`${field} block resize-none text-base leading-relaxed sm:text-sm`}
+                  className={`${field} block resize-none pr-16 text-base leading-relaxed text-white/90`}
                 />
+                <span id="bio-count" className="pointer-events-none absolute right-2 bottom-1 text-xs text-night-muted tabular-nums">
+                  {bio.length} / {BIO_MAX}
+                </span>
               </label>
-              <p id="bio-count" className="text-right text-xs text-night-muted tabular-nums">
-                {bio.length} / {BIO_MAX}
-              </p>
             </div>
           ) : (
             <>
